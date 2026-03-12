@@ -22,7 +22,7 @@ const Index = () => {
             LUXURIANT
           </h1>
           <p className="font-body text-lg md:text-xl text-card/80 mb-10 max-w-xl mx-auto animate-fade-in" style={{ animationDelay: "0.2s" }}>
-            Luxury Fashion & Hair Care Delivered Nationwide
+            Luxury Fashion & Hair Care — Global and Nationwide Delivery
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center animate-fade-in" style={{ animationDelay: "0.4s" }}>
             <Link
