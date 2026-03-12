@@ -212,5 +212,5 @@ export const getWhatsAppLink = (productName?: string) => {
   const message = productName
     ? `Hello, I would like to order ${productName} from Luxuriant.`
     : "Hello, I would like to order this product from Luxuriant.";
-  return `https://wa.me/2348000000000?text=${encodeURIComponent(message)}`;
+  return `https://wa.me/233594817032?text=${encodeURIComponent(message)}`;
 };

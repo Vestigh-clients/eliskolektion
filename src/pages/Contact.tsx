@@ -10,7 +10,7 @@ const Contact = () => {
 
       <div className="space-y-6">
         <a
-          href="https://wa.me/2348000000000"
+          href="https://wa.me/233594817032"
           target="_blank"
           rel="noopener noreferrer"
           className="flex items-center gap-5 bg-card border border-border rounded-2xl p-6 hover:shadow-lg transition-shadow"
@@ -20,12 +20,12 @@ const Contact = () => {
           </div>
           <div>
             <h3 className="font-display text-lg font-semibold">WhatsApp</h3>
-            <p className="font-body text-sm text-muted-foreground">+234 800 000 0000</p>
+            <p className="font-body text-sm text-muted-foreground">0594817032</p>
           </div>
         </a>
 
         <a
-          href="tel:+2348000000000"
+          href="tel:+233594817032"
           className="flex items-center gap-5 bg-card border border-border rounded-2xl p-6 hover:shadow-lg transition-shadow"
         >
           <div className="w-12 h-12 rounded-full bg-primary flex items-center justify-center flex-shrink-0">
@@ -33,12 +33,12 @@ const Contact = () => {
           </div>
           <div>
             <h3 className="font-display text-lg font-semibold">Phone</h3>
-            <p className="font-body text-sm text-muted-foreground">+234 800 000 0000</p>
+            <p className="font-body text-sm text-muted-foreground">0594817032</p>
           </div>
         </a>
 
         <a
-          href="https://instagram.com"
+          href="https://instagram.com/torriefebri"
           target="_blank"
           rel="noopener noreferrer"
           className="flex items-center gap-5 bg-card border border-border rounded-2xl p-6 hover:shadow-lg transition-shadow"
@@ -48,12 +48,12 @@ const Contact = () => {
           </div>
           <div>
             <h3 className="font-display text-lg font-semibold">Instagram</h3>
-            <p className="font-body text-sm text-muted-foreground">@luxuriant</p>
+            <p className="font-body text-sm text-muted-foreground">@Torrie Febri</p>
           </div>
         </a>
 
         <a
-          href="https://tiktok.com"
+          href="https://tiktok.com/@torrie"
           target="_blank"
           rel="noopener noreferrer"
           className="flex items-center gap-5 bg-card border border-border rounded-2xl p-6 hover:shadow-lg transition-shadow"
@@ -63,7 +63,52 @@ const Contact = () => {
           </div>
           <div>
             <h3 className="font-display text-lg font-semibold">TikTok</h3>
-            <p className="font-body text-sm text-muted-foreground">@luxuriant</p>
+            <p className="font-body text-sm text-muted-foreground">@TORRIE</p>
+          </div>
+        </a>
+
+        <a
+          href="https://facebook.com/luxuriant"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="flex items-center gap-5 bg-card border border-border rounded-2xl p-6 hover:shadow-lg transition-shadow"
+        >
+          <div className="w-12 h-12 rounded-full bg-[hsl(220,46%,48%)] flex items-center justify-center flex-shrink-0">
+            <span className="text-card font-body font-bold text-sm">f</span>
+          </div>
+          <div>
+            <h3 className="font-display text-lg font-semibold">Facebook</h3>
+            <p className="font-body text-sm text-muted-foreground">Luxuriant</p>
+          </div>
+        </a>
+
+        <a
+          href="https://pinterest.com/torriefebri"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="flex items-center gap-5 bg-card border border-border rounded-2xl p-6 hover:shadow-lg transition-shadow"
+        >
+          <div className="w-12 h-12 rounded-full bg-[hsl(0,70%,50%)] flex items-center justify-center flex-shrink-0">
+            <span className="text-card font-body font-bold text-sm">P</span>
+          </div>
+          <div>
+            <h3 className="font-display text-lg font-semibold">Pinterest</h3>
+            <p className="font-body text-sm text-muted-foreground">Torrie Febri</p>
+          </div>
+        </a>
+
+        <a
+          href="https://snapchat.com/add/torrie_febri"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="flex items-center gap-5 bg-card border border-border rounded-2xl p-6 hover:shadow-lg transition-shadow"
+        >
+          <div className="w-12 h-12 rounded-full bg-[hsl(55,100%,50%)] flex items-center justify-center flex-shrink-0">
+            <span className="text-foreground font-body font-bold text-sm">👻</span>
+          </div>
+          <div>
+            <h3 className="font-display text-lg font-semibold">Snapchat</h3>
+            <p className="font-body text-sm text-muted-foreground">Torrie_Febri</p>
           </div>
         </a>
       </div>

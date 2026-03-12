@@ -8,9 +8,10 @@ const Footer = () => {
       <div className="container mx-auto px-4 py-16">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-10">
           <div className="md:col-span-1">
-            <h3 className="font-display text-2xl font-bold tracking-wider mb-4">LUXURIANT</h3>
+            <h3 className="font-display text-2xl font-bold tracking-wider mb-2">LUXURIANT</h3>
+            <p className="font-body text-xs italic text-primary-foreground/60 mb-3">Satisfaction Our Hallmark</p>
             <p className="font-body text-sm text-primary-foreground/70 leading-relaxed">
-              Luxury Fashion & Hair Care Delivered Nationwide.
+              Luxury Fashion & Hair Care — Global and Nationwide Delivery.
             </p>
           </div>
 
@@ -35,12 +36,18 @@ const Footer = () => {
 
           <div>
             <h4 className="font-display text-sm font-semibold mb-4 tracking-wider uppercase">Connect</h4>
-            <div className="flex gap-4">
-              <a href={getWhatsAppLink()} target="_blank" rel="noopener noreferrer" className="text-primary-foreground/70 hover:text-accent transition-colors">
-                WhatsApp
+            <div className="flex flex-col gap-3">
+              <a href={getWhatsAppLink()} target="_blank" rel="noopener noreferrer" className="font-body text-sm text-primary-foreground/70 hover:text-accent transition-colors">
+                WhatsApp: 0594817032
               </a>
-              <a href="https://instagram.com" target="_blank" rel="noopener noreferrer" className="text-primary-foreground/70 hover:text-accent transition-colors">
-                <Instagram size={20} />
+              <a href="https://instagram.com/torriefebri" target="_blank" rel="noopener noreferrer" className="font-body text-sm text-primary-foreground/70 hover:text-accent transition-colors flex items-center gap-2">
+                <Instagram size={16} /> @Torrie Febri
+              </a>
+              <a href="https://tiktok.com/@torrie" target="_blank" rel="noopener noreferrer" className="font-body text-sm text-primary-foreground/70 hover:text-accent transition-colors">
+                TikTok: @TORRIE
+              </a>
+              <a href="https://facebook.com/luxuriant" target="_blank" rel="noopener noreferrer" className="font-body text-sm text-primary-foreground/70 hover:text-accent transition-colors">
+                Facebook: Luxuriant
               </a>
             </div>
           </div>

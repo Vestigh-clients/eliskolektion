@@ -22,7 +22,7 @@ const Index = () => {
             LUXURIANT
           </h1>
           <p className="font-body text-lg md:text-xl text-card/80 mb-10 max-w-xl mx-auto animate-fade-in" style={{ animationDelay: "0.2s" }}>
-            Luxury Fashion & Hair Care Delivered Nationwide
+            Luxury Fashion & Hair Care — Global and Nationwide Delivery
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center animate-fade-in" style={{ animationDelay: "0.4s" }}>
             <Link
@@ -120,15 +120,21 @@ const Index = () => {
         <p className="font-body text-muted-foreground mb-8 max-w-md mx-auto">
           Stay updated with our latest collections, offers, and style inspiration.
         </p>
-        <div className="flex justify-center gap-6">
-          <a href="https://instagram.com" target="_blank" rel="noopener noreferrer" className="font-body text-sm font-medium text-primary hover:text-accent transition-colors">
+        <div className="flex flex-wrap justify-center gap-6">
+          <a href="https://instagram.com/torriefebri" target="_blank" rel="noopener noreferrer" className="font-body text-sm font-medium text-primary hover:text-accent transition-colors">
             Instagram
           </a>
-          <a href="https://tiktok.com" target="_blank" rel="noopener noreferrer" className="font-body text-sm font-medium text-primary hover:text-accent transition-colors">
+          <a href="https://tiktok.com/@torrie" target="_blank" rel="noopener noreferrer" className="font-body text-sm font-medium text-primary hover:text-accent transition-colors">
             TikTok
           </a>
-          <a href="https://wa.me/2348000000000" target="_blank" rel="noopener noreferrer" className="font-body text-sm font-medium text-primary hover:text-accent transition-colors">
+          <a href="https://facebook.com/luxuriant" target="_blank" rel="noopener noreferrer" className="font-body text-sm font-medium text-primary hover:text-accent transition-colors">
+            Facebook
+          </a>
+          <a href="https://wa.me/233594817032" target="_blank" rel="noopener noreferrer" className="font-body text-sm font-medium text-primary hover:text-accent transition-colors">
             WhatsApp
+          </a>
+          <a href="https://snapchat.com/add/torrie_febri" target="_blank" rel="noopener noreferrer" className="font-body text-sm font-medium text-primary hover:text-accent transition-colors">
+            Snapchat
           </a>
         </div>
       </section>
