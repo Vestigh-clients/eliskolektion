@@ -1,7 +1,6 @@
 import { Link } from "react-router-dom";
 import { type Product, formatPrice, getWhatsAppLink } from "@/data/products";
 import { productImages } from "@/data/images";
-import { ShoppingBag, Eye } from "lucide-react";
 
 interface ProductCardProps {
   product: Product;
@@ -11,52 +10,32 @@ const ProductCard = ({ product }: ProductCardProps) => {
   const image = productImages[product.id];
 
   return (
-    <div className="group relative bg-card rounded-2xl overflow-hidden border border-border transition-all duration-300 hover:shadow-xl hover:-translate-y-1">
-      {product.isBestSeller && (
-        <span className="absolute top-3 left-3 z-10 bg-gold-gradient text-foreground text-xs font-body font-semibold px-3 py-1 rounded-full">
-          Best Seller
-        </span>
-      )}
-
+    <div className="group bg-card rounded-[4px] overflow-hidden">
       <Link to={`/product/${product.id}`} className="block">
-        <div className="aspect-square overflow-hidden bg-muted">
+        <div className="aspect-[4/5] overflow-hidden bg-muted/20">
           <img
             src={image}
             alt={product.name}
-            className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+            className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-[1.03]"
             loading="lazy"
           />
         </div>
       </Link>
 
-      <div className="p-5">
+      <div className="pt-5 text-left">
         <Link to={`/product/${product.id}`}>
-          <h3 className="font-display text-lg font-semibold text-foreground mb-1 group-hover:text-teal transition-colors">
-            {product.name}
-          </h3>
+          <h3 className="font-display text-[1.35rem] md:text-[1.5rem] font-normal italic leading-tight">{product.name}</h3>
         </Link>
-        <p className="font-body text-accent font-bold text-lg mb-4">
-          {formatPrice(product.price)}
-        </p>
+        <p className="font-body font-light text-lg mt-2">{formatPrice(product.price)}</p>
 
-        <div className="flex gap-2">
-          <Link
-            to={`/product/${product.id}`}
-            className="flex-1 flex items-center justify-center gap-2 bg-secondary text-secondary-foreground py-2.5 rounded-lg font-body text-sm font-medium hover:bg-secondary/80 transition-colors"
-          >
-            <Eye size={16} />
-            Quick View
-          </Link>
-          <a
-            href={getWhatsAppLink(product.name)}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="flex-1 flex items-center justify-center gap-2 bg-primary text-primary-foreground py-2.5 rounded-lg font-body text-sm font-medium hover:bg-teal-light transition-colors"
-          >
-            <ShoppingBag size={16} />
-            Buy
-          </a>
-        </div>
+        <a
+          href={getWhatsAppLink(product.name)}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="mt-6 inline-flex items-center justify-center border border-foreground text-foreground px-6 py-3 rounded-[4px] font-body text-xs md:text-sm font-medium tracking-[0.12em] uppercase transition-colors hover:bg-foreground hover:text-background"
+        >
+          Add to Cart
+        </a>
       </div>
     </div>
   );

@@ -19,7 +19,7 @@ const Navbar = () => {
   const location = useLocation();
 
   return (
-    <nav className="sticky top-0 z-50 bg-card/95 backdrop-blur-md border-b border-border">
+    <nav className="sticky top-0 z-50 bg-background/95 backdrop-blur-md border-b border-border">
       <div className="container mx-auto flex items-center justify-between py-4 px-4">
         <Link to="/" className="font-display text-2xl font-bold tracking-wider text-primary">
           LUXURIANT
@@ -48,7 +48,7 @@ const Navbar = () => {
 
       {/* Mobile menu */}
       {open && (
-        <div className="lg:hidden bg-card border-b border-border px-4 pb-4 animate-fade-in">
+        <div className="lg:hidden bg-background/95 backdrop-blur-md border-b border-border px-4 pb-4 animate-fade-in">
           {navLinks.map((link) => (
             <Link
               key={link.to}
