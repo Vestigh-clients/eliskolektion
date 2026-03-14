@@ -480,4 +480,16 @@ export const triggerOrderConfirmationEmail = async (orderNumber: string): Promis
   }
 };
 
+export const triggerNewOrderAdminNotification = async (orderNumber: string): Promise<void> => {
+  const { error } = await supabase.functions.invoke("send_new_order_admin_notification", {
+    body: {
+      order_number: orderNumber,
+    },
+  });
+
+  if (error) {
+    throw error;
+  }
+};
+
 export const fetchOrderByOrderNumber = fetchOrderConfirmationDetails;

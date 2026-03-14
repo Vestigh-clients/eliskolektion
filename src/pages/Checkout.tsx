@@ -24,6 +24,7 @@ import {
   resolveCustomerIdForOrder,
   resolveShippingRateForState,
   submitOrderRpc,
+  triggerNewOrderAdminNotification,
 } from "@/services/orderService";
 import { validateCartStock } from "@/services/stockService";
 
@@ -1720,6 +1721,12 @@ const Checkout = () => {
         mobileMoneyNumber: sanitizedMobileMoneyNumber,
         marketingOptIn: sanitizedContact.marketingOptIn,
         ipAddress: null,
+      });
+
+      void triggerNewOrderAdminNotification(orderResponse.order_number).catch((notificationError) => {
+        if (import.meta.env.DEV) {
+          console.warn("New-order admin notification trigger failed", notificationError);
+        }
       });
 
       if (isLoggedIn && deliveryValues.saveForFuture) {

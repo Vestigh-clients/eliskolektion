@@ -976,6 +976,7 @@ export const updateAdminOrderStatus = async ({
   notifyCustomer,
   adminEmail,
 }: UpdateOrderStatusInput) => {
+  const trimmedNote = note.trim();
   const nowIso = new Date().toISOString();
   const updates: Database["public"]["Tables"]["orders"]["Update"] = {
     status: nextStatus,
@@ -996,7 +997,7 @@ export const updateAdminOrderStatus = async ({
     previous_status: order.status,
     new_status: nextStatus,
     changed_by: adminEmail,
-    note: note.trim() ? note.trim() : null,
+    note: trimmedNote || null,
     notified_customer: notifyCustomer,
   });
 
@@ -1008,8 +1009,8 @@ export const updateAdminOrderStatus = async ({
     const { error: emailError } = await supabase.functions.invoke("send_order_status_update_email", {
       body: {
         order_number: order.order_number,
-        status: nextStatus,
-        note: note.trim() || null,
+        new_status: nextStatus,
+        cancel_reason: nextStatus === "cancelled" && trimmedNote ? trimmedNote : undefined,
       },
     });
 
@@ -1022,7 +1023,7 @@ export const updateAdminOrderStatus = async ({
     order_number: order.order_number,
     previous_status: order.status,
     new_status: nextStatus,
-    note: note.trim() || null,
+    note: trimmedNote || null,
     notified_customer: notifyCustomer,
   });
 };

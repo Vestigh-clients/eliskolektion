@@ -55,77 +55,28 @@ const groupedProducts = products.reduce<Record<Category, Product[]>>(
 );
 
 const renderProductRows = (items: Product[]) => {
-  const rows: JSX.Element[] = [];
-  let pointer = 0;
-  let patternIndex = 0;
-
-  while (pointer < items.length) {
-    const rowItems = items.slice(pointer, pointer + 3);
-    const key = `row-${patternIndex}-${pointer}`;
-    const rowType = patternIndex % 4;
-
-    if (rowType === 0 || rowType === 2) {
-      rows.push(
-        <div key={key} className="grid grid-cols-1 md:grid-cols-3 gap-8">
-          {rowItems.map((product) => (
-            <ShopProductCard key={product.id} product={product} size="regular" />
-          ))}
-        </div>,
-      );
-    } else if (rowType === 1) {
-      rows.push(
-        <div key={key} className="grid grid-cols-1 md:grid-cols-5 gap-8">
-          {rowItems[0] && (
-            <div className="md:col-span-3">
-              <ShopProductCard product={rowItems[0]} size="large" />
-            </div>
-          )}
-
-          {rowItems.length > 1 && (
-            <div className="md:col-span-2 flex flex-col gap-8">
-              {rowItems.slice(1).map((product) => (
-                <ShopProductCard key={product.id} product={product} size="small" />
-              ))}
-            </div>
-          )}
-        </div>,
-      );
-    } else {
-      if (rowItems.length === 1) {
-        rows.push(
-          <div key={key} className="grid grid-cols-1 md:grid-cols-5 gap-8">
-            <div className="md:col-span-3 md:col-start-3">
-              <ShopProductCard product={rowItems[0]} size="large" />
-            </div>
-          </div>,
-        );
-      } else {
-        const largeItem = rowItems[rowItems.length - 1];
-        const stackedItems = rowItems.slice(0, rowItems.length - 1);
-
-        rows.push(
-          <div key={key} className="grid grid-cols-1 md:grid-cols-5 gap-8">
-            <div className="md:col-span-2 flex flex-col gap-8">
-              {stackedItems.map((product) => (
-                <ShopProductCard key={product.id} product={product} size="small" />
-              ))}
-            </div>
-
-            {largeItem && (
-              <div className="md:col-span-3">
-                <ShopProductCard product={largeItem} size="large" />
-              </div>
-            )}
-          </div>,
-        );
-      }
-    }
-
-    pointer += rowItems.length;
-    patternIndex += 1;
+  if (items.length === 0) {
+    return null;
   }
 
-  return rows;
+  const standardProducts = items.slice(0, -1);
+  const bannerProduct = items[items.length - 1];
+
+  return (
+    <>
+      {standardProducts.length > 0 ? (
+        <div className="grid grid-cols-3 gap-[2px]">
+          {standardProducts.map((product) => (
+            <ShopProductCard key={product.id} product={product} size="regular" />
+          ))}
+        </div>
+      ) : null}
+
+      <div className={standardProducts.length > 0 ? "mt-[2px]" : ""}>
+        <ShopProductCard product={bannerProduct} size="banner" />
+      </div>
+    </>
+  );
 };
 
 const Shop = () => {
@@ -147,7 +98,7 @@ const Shop = () => {
         <h1 className="font-display text-[42px] md:text-[52px] font-light italic leading-tight">Our Collection</h1>
       </div>
 
-      <div className="mb-16 border-b border-[#d4ccc2] py-6 md:py-8">
+      <div className="mb-12 border-b border-[#d4ccc2] pb-6">
         <div className="flex flex-col gap-5 md:flex-row md:items-center md:justify-between">
           <div className="flex flex-wrap gap-2.5">
             {filterItems.map((filter) => {
@@ -158,9 +109,9 @@ const Shop = () => {
                   key={filter.value}
                   type="button"
                   onClick={() => setActiveFilter(filter.value)}
-                  className={`border px-5 py-2.5 font-body text-[11px] font-light uppercase tracking-[0.1em] transition-colors duration-300 ${
+                  className={`border px-7 py-[10px] font-body text-[11px] font-light uppercase tracking-[0.1em] transition-colors duration-300 ${
                     isActive
-                      ? "border-[#1A1A1A] bg-[#1A1A1A] text-[#F5F0E8] rounded-[2px]"
+                      ? "border-[#1A1A1A] bg-[#1A1A1A] text-[#F5F0E8]"
                       : "border-[#d4ccc2] text-foreground hover:border-foreground/40"
                   }`}
                 >
@@ -170,27 +121,27 @@ const Shop = () => {
             })}
           </div>
 
-          <p className="font-body text-[12px] font-light text-[#888888] md:text-right">
+          <p className="font-body text-[12px] font-normal text-[#888888] md:text-right">
             Showing {visibleProductCount} products
           </p>
         </div>
       </div>
 
-      <div className="space-y-20">
+      <div>
         {categoriesToShow.map((category, index) => {
           const categoryProducts = groupedProducts[category];
           const showDivider = index > 0;
 
           return (
-            <section key={category} className="space-y-10">
+            <section key={category} className={showDivider ? "pt-20" : ""}>
               {showDivider ? (
-                <div className="border-t border-[#d4ccc2] pt-10 pb-6">
+                <div className="mt-0 mb-10 border-t border-[#d4ccc2] pt-8">
                   <p className="font-body text-[10px] font-light uppercase tracking-[0.2em] text-accent">
                     {categoryNames[category]}
                   </p>
                 </div>
               ) : (
-                <div className="pb-6">
+                <div className="mb-10">
                   <p className="font-body text-[10px] font-light uppercase tracking-[0.2em] text-accent">
                     {categoryNames[category]}
                   </p>
@@ -198,7 +149,7 @@ const Shop = () => {
               )}
 
               {showDivider && activeFilter === "all" && (
-                <div className="relative left-1/2 right-1/2 min-h-[60vh] w-screen -translate-x-1/2 overflow-hidden">
+                <div className="relative left-1/2 right-1/2 my-20 min-h-[60vh] w-screen -translate-x-1/2 overflow-hidden">
                   <img
                     src={bannerImageByCategory[category]}
                     alt={categoryNames[category]}
@@ -220,7 +171,7 @@ const Shop = () => {
                 </div>
               )}
 
-              <div className="space-y-10">{renderProductRows(categoryProducts)}</div>
+              <div>{renderProductRows(categoryProducts)}</div>
             </section>
           );
         })}

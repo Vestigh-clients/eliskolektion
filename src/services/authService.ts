@@ -178,6 +178,18 @@ const resolveSiteUrl = (): string => {
   return "";
 };
 
+const triggerWelcomeEmail = async (customerId: string): Promise<void> => {
+  const { error } = await supabase.functions.invoke("send_welcome_email", {
+    body: {
+      customer_id: customerId,
+    },
+  });
+
+  if (error) {
+    throw error;
+  }
+};
+
 export const onAuthStateChange = (
   callback: (event: AuthChangeEvent, session: Session | null) => void,
 ): (() => void) => {
@@ -272,6 +284,12 @@ export const signUpWithEmail = async (input: RegisterWithEmailInput): Promise<Re
     lastName: input.lastName,
   });
 
+  void triggerWelcomeEmail(data.user.id).catch((error) => {
+    if (import.meta.env.DEV) {
+      console.warn("Welcome email trigger failed", error);
+    }
+  });
+
   return {
     email,
     user: data.user,
@@ -362,4 +380,3 @@ export const signOut = async (): Promise<void> => {
     throw toAuthError(error);
   }
 };
-
