@@ -1,6 +1,7 @@
 ﻿import { useCallback, useEffect, useMemo, useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import { Banknote, Check, ChevronDown, Smartphone, X } from "lucide-react";
+import PaystackPop from "@paystack/inline-js";
+import { Banknote, Check, ChevronDown, CreditCard, X } from "lucide-react";
 import {
   Command,
   CommandEmpty,
@@ -26,6 +27,8 @@ import {
   submitOrderRpc,
   triggerNewOrderAdminNotification,
 } from "@/services/orderService";
+import { getPaystackConfig, getTransactionCharge, isPaymentConfigured } from "@/services/paystackService";
+import { getPaymentSettings, type PaymentSettings } from "@/services/paymentSettingsService";
 import { storeConfig, storeKeyPrefix } from "@/config/store.config";
 import { REDIRECT_AFTER_LOGIN_KEY } from "@/services/authService";
 
@@ -57,14 +60,11 @@ interface ReviewFormValues {
   orderNotes: string;
 }
 
-type PaymentMethod = "mobile_money" | "cash_on_delivery";
+type PaymentMethod = "online" | "cash_on_delivery" | null;
 
 interface PaymentFormValues {
   method: PaymentMethod;
-  mobileMoneyNumber: string;
 }
-
-type PaymentField = "mobileMoneyNumber";
 
 interface ShippingQuote {
   state: string;
@@ -259,8 +259,7 @@ const DEFAULT_REVIEW_VALUES: ReviewFormValues = {
 };
 
 const DEFAULT_PAYMENT_VALUES: PaymentFormValues = {
-  method: "cash_on_delivery",
-  mobileMoneyNumber: "",
+  method: null,
 };
 
 const FALLBACK_DISCOUNT_CODES: Record<
@@ -639,41 +638,13 @@ const validateDeliveryForm = (values: DeliveryFormValues): Partial<Record<Delive
   return errors;
 };
 
-const getPaymentFieldError = (
-  field: PaymentField,
-  method: PaymentMethod,
-  value: string,
-): string | undefined => {
-  if (field !== "mobileMoneyNumber" || method !== "mobile_money") {
-    return undefined;
-  }
-
-  const trimmed = sanitizeText(value);
-  if (!trimmed) {
-    return "Mobile Money number is required";
-  }
-
-  if (!validateGhanaianPhone(trimmed)) {
-    return "Enter a valid Ghanaian phone number";
-  }
-
-  return undefined;
-};
-
-const validatePaymentForm = (values: PaymentFormValues): Partial<Record<PaymentField, string>> => {
-  const errors: Partial<Record<PaymentField, string>> = {};
-  const numberError = getPaymentFieldError("mobileMoneyNumber", values.method, values.mobileMoneyNumber);
-
-  if (numberError) {
-    errors.mobileMoneyNumber = numberError;
-  }
-
-  return errors;
-};
+const validatePaymentForm = (values: PaymentFormValues, availableMethods: PaymentMethod[]): boolean =>
+  values.method !== null && availableMethods.includes(values.method);
 
 const isContactComplete = (values: ContactFormValues): boolean => Object.keys(validateContactForm(values)).length === 0;
 const isDeliveryComplete = (values: DeliveryFormValues): boolean => Object.keys(validateDeliveryForm(values)).length === 0;
-const isPaymentComplete = (values: PaymentFormValues): boolean => Object.keys(validatePaymentForm(values)).length === 0;
+const isPaymentComplete = (values: PaymentFormValues, availableMethods: PaymentMethod[]): boolean =>
+  validatePaymentForm(values, availableMethods);
 
 const getDiscountAmount = (type: DiscountType, value: number, subtotal: number): number => {
   if (type === "percentage") {
@@ -971,14 +942,13 @@ const Checkout = () => {
   const [deliveryValues, setDeliveryValues] = useState<DeliveryFormValues>(DEFAULT_DELIVERY_VALUES);
   const [paymentValues, setPaymentValues] = useState<PaymentFormValues>(DEFAULT_PAYMENT_VALUES);
   const [reviewValues, setReviewValues] = useState<ReviewFormValues>(DEFAULT_REVIEW_VALUES);
+  const [paymentSettings, setPaymentSettings] = useState<PaymentSettings | null>(null);
 
   const [contactTouched, setContactTouched] = useState<Partial<Record<ContactField, boolean>>>({});
   const [deliveryTouched, setDeliveryTouched] = useState<Partial<Record<DeliveryField, boolean>>>({});
-  const [paymentTouched, setPaymentTouched] = useState<Partial<Record<PaymentField, boolean>>>({});
 
   const [contactErrors, setContactErrors] = useState<Partial<Record<ContactField, string>>>({});
   const [deliveryErrors, setDeliveryErrors] = useState<Partial<Record<DeliveryField, string>>>({});
-  const [paymentErrors, setPaymentErrors] = useState<Partial<Record<PaymentField, string>>>({});
 
   const [completedSteps, setCompletedSteps] = useState<CheckoutStep[]>([]);
 
@@ -1012,6 +982,39 @@ const Checkout = () => {
   const pathStep = useMemo(() => getStepFromPath(location.pathname), [location.pathname]);
   const currentStep: CheckoutStep = pathStep ?? "contact";
   const currentStepIndex = CHECKOUT_STEPS.indexOf(currentStep);
+  const paystackConfig = useMemo(() => getPaystackConfig(), []);
+  const onlinePaymentAvailable = useMemo(() => {
+    if (!paymentSettings?.online_payment_enabled) {
+      return false;
+    }
+
+    if (!paystackConfig.publicKey || !isPaymentConfigured()) {
+      return false;
+    }
+
+    return true;
+  }, [
+    paymentSettings?.online_payment_enabled,
+    paystackConfig.isSubaccountMode,
+    paystackConfig.publicKey,
+    paystackConfig.subaccountCode,
+  ]);
+  const cashOnDeliveryAvailable = Boolean(paymentSettings?.cash_on_delivery_enabled);
+  const availablePaymentMethods = useMemo(() => {
+    const methods: Exclude<PaymentMethod, null>[] = [];
+
+    if (onlinePaymentAvailable) {
+      methods.push("online");
+    }
+
+    if (cashOnDeliveryAvailable) {
+      methods.push("cash_on_delivery");
+    }
+
+    return methods;
+  }, [cashOnDeliveryAvailable, onlinePaymentAvailable]);
+  const shouldRenderPaymentMethodChoice = availablePaymentMethods.length > 1;
+  const hasNoAvailablePaymentMethods = paymentSettings !== null && availablePaymentMethods.length === 0;
 
   const shippingQuote = useMemo(() => {
     if (!deliveryValues.state) {
@@ -1034,7 +1037,11 @@ const Checkout = () => {
 
   const orderItemCountLabel = `${totalItems} ${totalItems === 1 ? "item" : "items"}`;
   const selectedPaymentLabel =
-    paymentValues.method === "mobile_money" ? "Mobile Money" : "Cash on Delivery";
+    paymentValues.method === "online"
+      ? "Pay Online"
+      : paymentValues.method === "cash_on_delivery"
+        ? "Cash on Delivery"
+        : "Not selected";
   const shouldShowSavedDetailsPrompt =
     isSessionChecked && isLoggedIn && Boolean(savedContactDetails) && isSavedDetailsPromptVisible;
   const isGuestCheckout = isGuestCheckoutEnabled && isSessionChecked && !isLoggedIn && checkoutMode === "guest";
@@ -1042,6 +1049,61 @@ const Checkout = () => {
   useEffect(() => {
     void validateCart();
   }, [validateCart]);
+
+  useEffect(() => {
+    let cancelled = false;
+
+    const loadPaymentSettings = async () => {
+      try {
+        const settings = await getPaymentSettings();
+        if (!cancelled) {
+          setPaymentSettings(settings);
+        }
+      } catch (error) {
+        if (import.meta.env.DEV) {
+          console.error("Failed to load payment settings", error);
+        }
+
+        if (!cancelled) {
+          setPaymentSettings({
+            id: "local-fallback",
+            cash_on_delivery_enabled: false,
+            online_payment_enabled: false,
+            updated_at: new Date(0).toISOString(),
+          });
+        }
+      }
+    };
+
+    void loadPaymentSettings();
+
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
+  useEffect(() => {
+    if (!paymentSettings) {
+      return;
+    }
+
+    if (availablePaymentMethods.length === 0) {
+      setPaymentValues({ method: null });
+      return;
+    }
+
+    if (availablePaymentMethods.length === 1) {
+      const onlyMethod = availablePaymentMethods[0];
+      setPaymentValues((previous) => (previous.method === onlyMethod ? previous : { method: onlyMethod }));
+      return;
+    }
+
+    setPaymentValues((previous) =>
+      previous.method !== null && availablePaymentMethods.includes(previous.method)
+        ? previous
+        : { method: null },
+    );
+  }, [availablePaymentMethods, paymentSettings]);
 
   useEffect(() => {
     if (typeof window === "undefined") {
@@ -1095,11 +1157,14 @@ const Checkout = () => {
       }
 
       if (isPlainRecord(parsed.payment)) {
-        const method = parsed.payment.method === "mobile_money" ? "mobile_money" : "cash_on_delivery";
-        setPaymentValues({
-          method,
-          mobileMoneyNumber: readString(parsed.payment.mobileMoneyNumber),
-        });
+        const rawMethod = readString(parsed.payment.method);
+        const method =
+          rawMethod === "online" || rawMethod === "mobile_money"
+            ? "online"
+            : rawMethod === "cash_on_delivery"
+              ? "cash_on_delivery"
+              : null;
+        setPaymentValues({ method });
       }
 
       if (isPlainRecord(parsed.review)) {
@@ -1375,10 +1440,10 @@ const Checkout = () => {
       return;
     }
 
-    if (!isPaymentComplete(paymentValues)) {
+    if (!isPaymentComplete(paymentValues, availablePaymentMethods)) {
       setCompletedSteps((previous) => previous.filter((step) => step !== "payment"));
     }
-  }, [completedSteps, paymentValues]);
+  }, [availablePaymentMethods, completedSteps, paymentValues]);
 
   useEffect(() => {
     setStepAdvanceError(null);
@@ -1428,18 +1493,6 @@ const Checkout = () => {
     });
   }, []);
 
-  const updatePaymentError = useCallback((field: PaymentField, error?: string) => {
-    setPaymentErrors((previous) => {
-      const next = { ...previous };
-      if (error) {
-        next[field] = error;
-      } else {
-        delete next[field];
-      }
-      return next;
-    });
-  }, []);
-
   const validateContactStep = useCallback((): boolean => {
     const errors = validateContactForm(contactValues);
 
@@ -1472,13 +1525,8 @@ const Checkout = () => {
   }, [deliveryValues]);
 
   const validatePaymentStep = useCallback((): boolean => {
-    const errors = validatePaymentForm(paymentValues);
-    setPaymentTouched({
-      mobileMoneyNumber: true,
-    });
-    setPaymentErrors(errors);
-    return Object.keys(errors).length === 0;
-  }, [paymentValues]);
+    return validatePaymentForm(paymentValues, availablePaymentMethods);
+  }, [availablePaymentMethods, paymentValues]);
 
   const handleContactBlur = useCallback(
     (field: ContactField) => {
@@ -1539,18 +1587,6 @@ const Checkout = () => {
     [deliveryValues, updateDeliveryError],
   );
 
-  const handlePaymentBlur = useCallback(() => {
-    setPaymentTouched((previous) => ({
-      ...previous,
-      mobileMoneyNumber: true,
-    }));
-
-    updatePaymentError(
-      "mobileMoneyNumber",
-      getPaymentFieldError("mobileMoneyNumber", paymentValues.method, paymentValues.mobileMoneyNumber),
-    );
-  }, [paymentValues.method, paymentValues.mobileMoneyNumber, updatePaymentError]);
-
   const handleNextStep = useCallback(() => {
     if (currentStep === "contact") {
       const isValid = validateContactStep();
@@ -1579,14 +1615,18 @@ const Checkout = () => {
     if (currentStep === "payment") {
       const isValid = validatePaymentStep();
       if (!isValid) {
-        setStepAdvanceError(ERROR_SUMMARY_TEXT);
+        setStepAdvanceError(
+          hasNoAvailablePaymentMethods
+            ? "No payment methods are currently available. Please contact the store."
+            : ERROR_SUMMARY_TEXT,
+        );
         return;
       }
 
       setCompletedSteps((previous) => uniqueCheckoutSteps([...previous, "contact", "delivery", "payment"]));
       navigate(STEP_PATH.review);
     }
-  }, [currentStep, navigate, validateContactStep, validateDeliveryStep, validatePaymentStep]);
+  }, [currentStep, hasNoAvailablePaymentMethods, navigate, validateContactStep, validateDeliveryStep, validatePaymentStep]);
 
   const handleBack = useCallback(() => {
     if (currentStep === "review") {
@@ -1944,7 +1984,11 @@ const Checkout = () => {
     }
 
     if (!paymentIsValid) {
-      setStepAdvanceError(ERROR_SUMMARY_TEXT);
+      setStepAdvanceError(
+        hasNoAvailablePaymentMethods
+          ? "No payment methods are currently available. Please contact the store."
+          : ERROR_SUMMARY_TEXT,
+      );
       navigate(STEP_PATH.payment);
       return;
     }
@@ -1980,9 +2024,17 @@ const Checkout = () => {
       const sanitizedReview = {
         orderNotes: sanitizeMultilineText(reviewValues.orderNotes),
       };
-
-      const sanitizedMobileMoneyNumber =
-        paymentValues.method === "mobile_money" ? sanitizeText(paymentValues.mobileMoneyNumber) : null;
+      const selectedPaymentMethod = paymentValues.method;
+      if (!selectedPaymentMethod) {
+        setSubmissionError("Please select a payment method to continue.");
+        setSubmissionPhase("idle");
+        return;
+      }
+      if (selectedPaymentMethod === "online" && !paystackConfig.publicKey) {
+        setSubmissionError("Online payment is unavailable at the moment.");
+        setSubmissionPhase("idle");
+        return;
+      }
 
       const preSubmitValidation = await validateCartBeforeSubmit(items);
       if (preSubmitValidation.hasChanges) {
@@ -2007,6 +2059,7 @@ const Checkout = () => {
       const shippingRate = await resolveShippingRateForState(cleanAddress.state);
       const validatedShippingFee = Number(shippingRate.base_rate ?? 0);
       const validatedTotal = Math.max(0, validatedSubtotal + validatedShippingFee - discountAmount);
+      const isOnlinePayment = selectedPaymentMethod === "online";
 
       setSubmissionPhase("submitting");
 
@@ -2029,17 +2082,23 @@ const Checkout = () => {
         discountAmount,
         total: validatedTotal,
         notes: sanitizedReview.orderNotes,
-        paymentMethod: paymentValues.method,
-        mobileMoneyNumber: sanitizedMobileMoneyNumber,
+        paymentMethod: selectedPaymentMethod,
+        mobileMoneyNumber: null,
+        orderStatus: isOnlinePayment ? "pending_payment" : "confirmed",
+        paymentStatus: "pending",
         marketingOptIn: sanitizedContact.marketingOptIn,
         ipAddress: "",
       });
 
-      void triggerNewOrderAdminNotification(orderResponse.order_number).catch((notificationError) => {
-        if (import.meta.env.DEV) {
-          console.warn("New-order admin notification trigger failed", notificationError);
+      const finalizeCheckoutSession = (orderNumber: string) => {
+        clearCart();
+
+        if (typeof window !== "undefined") {
+          window.sessionStorage.removeItem(CHECKOUT_SESSION_STORAGE_KEY);
+          window.sessionStorage.removeItem(CHECKOUT_MODE_STORAGE_KEY);
+          window.sessionStorage.setItem(LAST_ORDER_STORAGE_KEY, orderNumber);
         }
-      });
+      };
 
       if (isLoggedIn && deliveryValues.saveForFuture) {
         const savedAddress: SavedAddressCard = {
@@ -2057,15 +2116,50 @@ const Checkout = () => {
         saveAddressForFutureOrders(savedAddress);
       }
 
-      clearCart();
+      if (!isOnlinePayment) {
+        void triggerNewOrderAdminNotification(orderResponse.order_number).catch((notificationError) => {
+          if (import.meta.env.DEV) {
+            console.warn("New-order admin notification trigger failed", notificationError);
+          }
+        });
 
-      if (typeof window !== "undefined") {
-        window.sessionStorage.removeItem(CHECKOUT_SESSION_STORAGE_KEY);
-        window.sessionStorage.removeItem(CHECKOUT_MODE_STORAGE_KEY);
-        window.sessionStorage.setItem(LAST_ORDER_STORAGE_KEY, orderResponse.order_number);
+        finalizeCheckoutSession(orderResponse.order_number);
+        navigate("/checkout/confirmation", { replace: true });
+        return;
       }
 
-      navigate("/checkout/confirmation", { replace: true });
+      const totalAmountInPesewas = Math.round(validatedTotal * 100);
+      if (!Number.isFinite(totalAmountInPesewas) || totalAmountInPesewas <= 0) {
+        throw new Error("Invalid online payment amount.");
+      }
+
+      const handler = PaystackPop.setup({
+        key: paystackConfig.publicKey,
+        email: sanitizedContact.email,
+        amount: totalAmountInPesewas,
+        currency: "GHS",
+        ref: orderResponse.order_number,
+        ...(paystackConfig.isSubaccountMode && paystackConfig.subaccountCode
+          ? {
+              subaccount: paystackConfig.subaccountCode,
+              bearer: paystackConfig.bearer,
+              transaction_charge: getTransactionCharge(validatedSubtotal),
+            }
+          : {}),
+        onSuccess: () => {
+          finalizeCheckoutSession(orderResponse.order_number);
+          setSubmissionPhase("idle");
+          navigate(`/orders/${encodeURIComponent(orderResponse.order_number)}`);
+        },
+        onCancel: () => {
+          setSubmissionPhase("idle");
+          const message = "Payment was cancelled. You can try again or choose a different method.";
+          setStepAdvanceError(message);
+          setSubmissionError(message);
+        },
+      });
+
+      handler.openIframe();
     } catch (error) {
       if (import.meta.env.DEV) {
         console.error("Checkout submission failed", error);
@@ -2110,11 +2204,15 @@ const Checkout = () => {
     currentUserId,
     deliveryValues,
     discountAmount,
+    hasNoAvailablePaymentMethods,
     isLoggedIn,
     items,
     navigate,
+    paystackConfig.bearer,
+    paystackConfig.isSubaccountMode,
+    paystackConfig.publicKey,
+    paystackConfig.subaccountCode,
     paymentValues.method,
-    paymentValues.mobileMoneyNumber,
     replaceItems,
     reviewValues.orderNotes,
     saveAddressForFutureOrders,
@@ -2715,74 +2813,65 @@ const Checkout = () => {
               <div>
                 <h1 className="font-display text-[32px] italic text-[var(--color-primary)]">How would you like to pay?</h1>
 
-                <div className="mt-6 grid gap-4 md:grid-cols-2">
-                  <button
-                    type="button"
-                    onClick={() => {
-                      setPaymentValues((previous) => ({
-                        ...previous,
-                        method: "mobile_money",
-                      }));
-                    }}
-                    className={`rounded-[var(--border-radius)] border px-6 py-7 text-left transition-colors duration-200 ${
-                      paymentValues.method === "mobile_money" ? "border-[var(--color-primary)]" : "border-[var(--color-border)]"
-                    }`}
-                    style={{ backgroundColor: paymentValues.method === "mobile_money" ? "rgba(var(--color-primary-rgb),0.08)" : "transparent" }}
-                  >
-                    <Smartphone size={28} strokeWidth={1.25} className="mb-4 text-[var(--color-accent)]" />
-                    <p className="font-display text-[18px] italic text-[var(--color-primary)]">Mobile Money</p>
-                    <p className="mt-1 font-body text-[11px] font-light text-[var(--color-muted)]">
-                      Pay via MTN MoMo, Telecel Cash or AirtelTigo
-                    </p>
-                  </button>
+                {paymentSettings === null ? (
+                  <p className="mt-6 font-body text-[12px] text-[var(--color-muted)]">Loading payment methods...</p>
+                ) : hasNoAvailablePaymentMethods ? (
+                  <p className="font-body text-[12px] text-[var(--color-danger)]">
+                    No payment methods are currently available. Please contact the store.
+                  </p>
+                ) : shouldRenderPaymentMethodChoice ? (
+                  <div className="mt-6 grid gap-4 md:grid-cols-2">
+                    {onlinePaymentAvailable ? (
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setPaymentValues({
+                            method: "online",
+                          });
+                        }}
+                        className={`rounded-[var(--border-radius)] border px-6 py-7 text-left transition-colors duration-200 ${
+                          paymentValues.method === "online" ? "border-[var(--color-primary)]" : "border-[var(--color-border)]"
+                        }`}
+                        style={{
+                          backgroundColor:
+                            paymentValues.method === "online" ? "rgba(var(--color-primary-rgb),0.08)" : "transparent",
+                        }}
+                      >
+                        <CreditCard size={28} strokeWidth={1.25} className="mb-4 text-[var(--color-accent)]" />
+                        <p className="font-display text-[18px] italic text-[var(--color-primary)]">Pay Online</p>
+                        <p className="mt-1 font-body text-[11px] font-light text-[var(--color-muted)]">
+                          Pay securely with card or mobile money via Paystack
+                        </p>
+                      </button>
+                    ) : null}
 
-                  <button
-                    type="button"
-                    onClick={() => {
-                      setPaymentValues((previous) => ({
-                        ...previous,
-                        method: "cash_on_delivery",
-                      }));
-                      setPaymentErrors({});
-                    }}
-                    className={`rounded-[var(--border-radius)] border px-6 py-7 text-left transition-colors duration-200 ${
-                      paymentValues.method === "cash_on_delivery" ? "border-[var(--color-primary)]" : "border-[var(--color-border)]"
-                    }`}
-                    style={{
-                      backgroundColor: paymentValues.method === "cash_on_delivery" ? "rgba(var(--color-primary-rgb),0.08)" : "transparent",
-                    }}
-                  >
-                    <Banknote size={28} strokeWidth={1.25} className="mb-4 text-[var(--color-accent)]" />
-                    <p className="font-display text-[18px] italic text-[var(--color-primary)]">Cash on Delivery</p>
-                    <p className="mt-1 font-body text-[11px] font-light text-[var(--color-muted)]">
-                      Pay in cash when your order arrives
-                    </p>
-                  </button>
-                </div>
-
-                <div
-                  className={`overflow-hidden transition-all duration-300 ${
-                    paymentValues.method === "mobile_money" ? "mt-4 max-h-[220px] opacity-100" : "max-h-0 opacity-0"
-                  }`}
-                >
-                  <FloatingInput
-                    id="checkout-mobile-money-number"
-                    label="Mobile Money Number"
-                    placeholder="05X XXX XXXX"
-                    required
-                    value={paymentValues.mobileMoneyNumber}
-                    touched={paymentTouched.mobileMoneyNumber}
-                    error={paymentErrors.mobileMoneyNumber}
-                    helperText="Enter the number registered with your mobile money provider"
-                    onChange={(value) =>
-                      setPaymentValues((previous) => ({
-                        ...previous,
-                        mobileMoneyNumber: value,
-                      }))
-                    }
-                    onBlur={handlePaymentBlur}
-                  />
-                </div>
+                    {cashOnDeliveryAvailable ? (
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setPaymentValues({
+                            method: "cash_on_delivery",
+                          });
+                        }}
+                        className={`rounded-[var(--border-radius)] border px-6 py-7 text-left transition-colors duration-200 ${
+                          paymentValues.method === "cash_on_delivery"
+                            ? "border-[var(--color-primary)]"
+                            : "border-[var(--color-border)]"
+                        }`}
+                        style={{
+                          backgroundColor:
+                            paymentValues.method === "cash_on_delivery" ? "rgba(var(--color-primary-rgb),0.08)" : "transparent",
+                        }}
+                      >
+                        <Banknote size={28} strokeWidth={1.25} className="mb-4 text-[var(--color-accent)]" />
+                        <p className="font-display text-[18px] italic text-[var(--color-primary)]">Cash on Delivery</p>
+                        <p className="mt-1 font-body text-[11px] font-light text-[var(--color-muted)]">
+                          Pay in cash when your order arrives
+                        </p>
+                      </button>
+                    ) : null}
+                  </div>
+                ) : null}
 
                 <div className="mt-10">
                   {stepAdvanceError ? (
@@ -2921,9 +3010,6 @@ const Checkout = () => {
 
                   <p className="font-body text-[13px] text-[var(--color-muted)]">
                     {selectedPaymentLabel}
-                    {paymentValues.method === "mobile_money" && paymentValues.mobileMoneyNumber
-                      ? ` (${paymentValues.mobileMoneyNumber})`
-                      : ""}
                   </p>
                 </div>
 

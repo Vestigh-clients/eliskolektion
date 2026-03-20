@@ -18,6 +18,7 @@ export interface LiveStatusStep {
 const ORDER_STATUS_SEQUENCE = ["pending", "confirmed", "processing", "shipped", "delivered"] as const;
 
 const STATUS_LABEL: Record<string, string> = {
+  pending_payment: "Pending Payment",
   pending: "Pending",
   confirmed: "Confirmed",
   processing: "Processing",
@@ -27,6 +28,7 @@ const STATUS_LABEL: Record<string, string> = {
 };
 
 const STATUS_DESCRIPTION: Record<string, string> = {
+  pending_payment: "We're waiting for your online payment to be confirmed.",
   pending: "We've received your order and are preparing it for dispatch.",
   confirmed: "Your order has been confirmed and queued for handling.",
   processing: "Our team is preparing your order for shipment.",
@@ -63,6 +65,10 @@ export const getPaymentMethodLabel = (paymentMethod: string | null): string => {
 
   if (paymentMethod === "cash_on_delivery") {
     return "Cash on Delivery";
+  }
+
+  if (paymentMethod === "online") {
+    return "Pay Online";
   }
 
   if (paymentMethod === "mobile_money") {
@@ -134,6 +140,7 @@ const normalizeStatusHistory = (history: OrderStatusSummary[]): OrderStatusSumma
 
 export const buildLiveStatusSteps = (orderStatus: string, history: OrderStatusSummary[]): LiveStatusStep[] => {
   const normalizedOrderStatus = orderStatus.trim().toLowerCase();
+  const normalizedTimelineStatus = normalizedOrderStatus === "pending_payment" ? "pending" : normalizedOrderStatus;
   const normalizedHistory = normalizeStatusHistory(history);
   const latestByStatus = new Map<string, OrderStatusSummary>();
 
@@ -142,7 +149,7 @@ export const buildLiveStatusSteps = (orderStatus: string, history: OrderStatusSu
   }
 
   const currentIndex = ORDER_STATUS_SEQUENCE.indexOf(
-    normalizedOrderStatus as (typeof ORDER_STATUS_SEQUENCE)[number],
+    normalizedTimelineStatus as (typeof ORDER_STATUS_SEQUENCE)[number],
   );
 
   const baselineIndex = currentIndex >= 0 ? currentIndex : 0;

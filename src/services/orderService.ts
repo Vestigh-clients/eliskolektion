@@ -80,6 +80,8 @@ export interface SubmitOrderInput {
   notes: string;
   paymentMethod: string;
   mobileMoneyNumber: string | null;
+  orderStatus: string;
+  paymentStatus: "pending" | "paid" | "failed" | "review";
   marketingOptIn: boolean;
   ipAddress: string | null;
 }
@@ -132,6 +134,9 @@ export interface OrderDetails {
   total: number;
   payment_method: string | null;
   mobile_money_number: string | null;
+  payment_status?: "pending" | "paid" | "failed" | "review";
+  paystack_reference?: string | null;
+  paid_at?: string | null;
   shipping_address_snapshot: Json;
   created_at: string;
   updated_at: string | null;
@@ -502,6 +507,8 @@ export const submitOrderRpc = async (input: SubmitOrderInput): Promise<SubmitOrd
     p_notes: input.notes,
     p_payment_method: input.paymentMethod,
     p_mobile_money_number: input.mobileMoneyNumber,
+    p_status: input.orderStatus,
+    p_payment_status: input.paymentStatus,
     p_marketing_opt_in: input.marketingOptIn,
     p_ip_address: input.ipAddress,
   };

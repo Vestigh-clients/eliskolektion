@@ -192,14 +192,15 @@ export function isPaymentConfigured(): boolean {
   return true;
 }
 
-export function getTransactionCharge(amountGHS: number): number {
+// Always pass subtotal only - never pass total including shipping.
+export function getTransactionCharge(subtotalGHS: number): number {
   const config = getPaystackConfig();
 
-  if (!config.isSubaccountMode || !Number.isFinite(amountGHS) || amountGHS <= 0) {
+  if (!config.isSubaccountMode || !Number.isFinite(subtotalGHS) || subtotalGHS <= 0) {
     return 0;
   }
 
-  return Math.round((amountGHS * 100 * config.platformFeePercent) / 100);
+  return Math.round((subtotalGHS * config.platformFeePercent) / 100) * 100;
 }
 
 export function canConfigurePaymentMethods(): boolean {

@@ -48,6 +48,8 @@ const baseInput: SubmitOrderInput = {
   notes: "",
   paymentMethod: "cash_on_delivery",
   mobileMoneyNumber: null,
+  orderStatus: "confirmed",
+  paymentStatus: "pending",
   marketingOptIn: false,
   ipAddress: null,
 };

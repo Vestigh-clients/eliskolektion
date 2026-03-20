@@ -4,11 +4,12 @@ import { storeKeyPrefix } from "@/config/store.config";
 import { buildOrdersCsv, fetchAdminOrders, fetchAdminOrdersForExport, type AdminOrderListItem } from "@/services/adminService";
 import { formatAdminDate, formatCurrency } from "@/lib/adminFormatting";
 
-type StatusFilter = "" | "pending" | "confirmed" | "processing" | "shipped" | "delivered" | "cancelled";
-type PaymentFilter = "" | "unpaid" | "paid" | "refunded" | "partially_refunded";
+type StatusFilter = "" | "pending_payment" | "pending" | "confirmed" | "processing" | "shipped" | "delivered" | "cancelled";
+type PaymentFilter = "" | "pending" | "paid" | "failed" | "review";
 
 const statusTabs: Array<{ label: string; value: StatusFilter }> = [
   { label: "All", value: "" },
+  { label: "Pending Payment", value: "pending_payment" },
   { label: "Pending", value: "pending" },
   { label: "Confirmed", value: "confirmed" },
   { label: "Processing", value: "processing" },
@@ -19,13 +20,14 @@ const statusTabs: Array<{ label: string; value: StatusFilter }> = [
 
 const paymentOptions: Array<{ label: string; value: PaymentFilter }> = [
   { label: "All Payments", value: "" },
-  { label: "Unpaid", value: "unpaid" },
+  { label: "Pending", value: "pending" },
   { label: "Paid", value: "paid" },
-  { label: "Refunded", value: "refunded" },
-  { label: "Partially Refunded", value: "partially_refunded" },
+  { label: "Failed", value: "failed" },
+  { label: "Review", value: "review" },
 ];
 
 const statusBadgeClass: Record<string, string> = {
+  pending_payment: "border border-[var(--color-accent)] text-[var(--color-accent)]",
   pending: "border border-[var(--color-border)] text-[var(--color-muted)]",
   confirmed: "border border-[var(--color-primary)] text-[var(--color-primary)]",
   processing: "border border-[var(--color-accent)] text-[var(--color-accent)]",
@@ -35,10 +37,10 @@ const statusBadgeClass: Record<string, string> = {
 };
 
 const paymentBadgeClass: Record<string, string> = {
-  unpaid: "border border-[var(--color-border)] text-[var(--color-muted-soft)]",
+  pending: "border border-[var(--color-border)] text-[var(--color-muted-soft)]",
   paid: "border border-[var(--color-success)] text-[var(--color-success)]",
-  refunded: "border border-[var(--color-danger)] text-[var(--color-danger)]",
-  partially_refunded: "border border-[var(--color-accent)] text-[var(--color-accent)]",
+  failed: "border border-[var(--color-danger)] text-[var(--color-danger)]",
+  review: "border border-[var(--color-accent)] text-[var(--color-accent)]",
 };
 
 const toTitleCase = (value: string) =>

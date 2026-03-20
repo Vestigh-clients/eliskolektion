@@ -547,8 +547,7 @@ export const fetchPaymentTransactionSummary = async (): Promise<PaymentTransacti
 
   const [paidOrdersResult, pendingOrdersResult] = await Promise.all([
     supabase.from("orders").select("total, created_at").eq("payment_status", "paid"),
-    // The schema stores unpaid orders as `unpaid`; the UI labels this bucket as Pending.
-    supabase.from("orders").select("total").eq("payment_status", "unpaid"),
+    supabase.from("orders").select("total").eq("payment_status", "pending"),
   ]);
 
   if (paidOrdersResult.error) {
@@ -800,7 +799,7 @@ const mapOrderRow = (row: Record<string, unknown>): AdminOrderListItem => {
     discount_amount:
       row.discount_amount === null || row.discount_amount === undefined ? null : safeNumber(row.discount_amount),
     status: String(row.status ?? "pending") as OrderStatus,
-    payment_status: String(row.payment_status ?? "unpaid") as PaymentStatus,
+    payment_status: String(row.payment_status ?? "pending") as PaymentStatus,
     payment_method: typeof row.payment_method === "string" ? row.payment_method : null,
     created_at: String(row.created_at ?? ""),
     customer: {

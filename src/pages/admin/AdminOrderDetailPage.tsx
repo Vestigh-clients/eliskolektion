@@ -14,6 +14,7 @@ import { useAuth } from "@/contexts/AuthContext";
 import type { Json } from "@/integrations/supabase/types";
 
 const statusBadgeClass: Record<string, string> = {
+  pending_payment: "border border-[var(--color-accent)] text-[var(--color-accent)]",
   pending: "border border-[var(--color-border)] text-[var(--color-muted)]",
   confirmed: "border border-[var(--color-primary)] text-[var(--color-primary)]",
   processing: "border border-[var(--color-accent)] text-[var(--color-accent)]",
@@ -23,20 +24,21 @@ const statusBadgeClass: Record<string, string> = {
 };
 
 const paymentBadgeClass: Record<string, string> = {
-  unpaid: "border border-[var(--color-border)] text-[var(--color-muted-soft)]",
+  pending: "border border-[var(--color-border)] text-[var(--color-muted-soft)]",
   paid: "border border-[var(--color-success)] text-[var(--color-success)]",
-  refunded: "border border-[var(--color-danger)] text-[var(--color-danger)]",
-  partially_refunded: "border border-[var(--color-accent)] text-[var(--color-accent)]",
+  failed: "border border-[var(--color-danger)] text-[var(--color-danger)]",
+  review: "border border-[var(--color-accent)] text-[var(--color-accent)]",
 };
 
 const paymentStatuses = [
-  { label: "Unpaid", value: "unpaid" },
+  { label: "Pending", value: "pending" },
   { label: "Paid", value: "paid" },
-  { label: "Refunded", value: "refunded" },
-  { label: "Partially Refunded", value: "partially_refunded" },
+  { label: "Failed", value: "failed" },
+  { label: "Review", value: "review" },
 ] as const;
 
 const nextStatusMap: Record<string, Array<string>> = {
+  pending_payment: ["confirmed", "cancelled"],
   pending: ["confirmed", "cancelled"],
   confirmed: ["processing", "cancelled"],
   processing: ["shipped", "cancelled"],
@@ -87,7 +89,7 @@ const AdminOrderDetailPage = () => {
   const [isStatusSubmitting, setIsStatusSubmitting] = useState(false);
   const [statusSuccess, setStatusSuccess] = useState(false);
 
-  const [paymentStatus, setPaymentStatus] = useState("unpaid");
+  const [paymentStatus, setPaymentStatus] = useState("pending");
   const [paymentReference, setPaymentReference] = useState("");
   const [isPaymentSubmitting, setIsPaymentSubmitting] = useState(false);
   const [paymentSuccess, setPaymentSuccess] = useState(false);

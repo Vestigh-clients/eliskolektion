@@ -458,6 +458,8 @@ export type Database = {
           mobile_money_number: string | null
           notes: string | null
           order_number: string
+          paid_at: string | null
+          paystack_reference: string | null
           payment_method: string | null
           payment_reference: string | null
           payment_status: Database["public"]["Enums"]["payment_status"]
@@ -484,6 +486,8 @@ export type Database = {
           mobile_money_number?: string | null
           notes?: string | null
           order_number: string
+          paid_at?: string | null
+          paystack_reference?: string | null
           payment_method?: string | null
           payment_reference?: string | null
           payment_status?: Database["public"]["Enums"]["payment_status"]
@@ -510,6 +514,8 @@ export type Database = {
           mobile_money_number?: string | null
           notes?: string | null
           order_number?: string
+          paid_at?: string | null
+          paystack_reference?: string | null
           payment_method?: string | null
           payment_reference?: string | null
           payment_status?: Database["public"]["Enums"]["payment_status"]
@@ -762,9 +768,11 @@ export type Database = {
           p_mobile_money_number: string | null
           p_notes: string
           p_payment_method: string
+          p_payment_status: string
           p_phone: string
           p_save_address: boolean
           p_shipping_fee: number
+          p_status: string
           p_state: string
           p_subtotal: number
           p_total: number
@@ -783,13 +791,14 @@ export type Database = {
       discount_type: "percentage" | "fixed_amount"
       gender_type: "male" | "female" | "prefer_not_to_say"
       order_status:
+        | "pending_payment"
         | "pending"
         | "confirmed"
         | "processing"
         | "shipped"
         | "delivered"
         | "cancelled"
-      payment_status: "unpaid" | "paid" | "refunded" | "partially_refunded"
+      payment_status: "pending" | "paid" | "failed" | "review"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -921,6 +930,7 @@ export const Constants = {
       discount_type: ["percentage", "fixed_amount"],
       gender_type: ["male", "female", "prefer_not_to_say"],
       order_status: [
+        "pending_payment",
         "pending",
         "confirmed",
         "processing",
@@ -928,7 +938,7 @@ export const Constants = {
         "delivered",
         "cancelled",
       ],
-      payment_status: ["unpaid", "paid", "refunded", "partially_refunded"],
+      payment_status: ["pending", "paid", "failed", "review"],
     },
   },
 } as const

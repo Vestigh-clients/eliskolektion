@@ -83,7 +83,7 @@ const PaymentTransactionSummary = () => {
         <div className="grid gap-6 md:grid-cols-3">
           <SummaryCard value={formatCurrency(summary?.totalPaid ?? 0)} label="Total Paid" description="All time" />
           <SummaryCard value={formatCurrency(summary?.paidThisMonth ?? 0)} label="This Month" description="Paid orders" />
-          <SummaryCard value={formatCurrency(summary?.pendingTotal ?? 0)} label="Pending" description="Unpaid orders" />
+          <SummaryCard value={formatCurrency(summary?.pendingTotal ?? 0)} label="Pending" description="Pending payments" />
         </div>
       ) : null}
     </section>

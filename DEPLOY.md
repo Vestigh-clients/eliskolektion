@@ -23,7 +23,10 @@ Target time: under 2 hours end-to-end.
 - [ ] Deploy all edge functions
 - [ ] Add `RESEND_API_KEY` to edge function secrets
 - [ ] Add `STYLESYNC_API_KEY` to edge function secrets
+- [ ] Add `PAYSTACK_SECRET_KEY` to edge function secrets
 - [ ] Add `GEMINI_API_KEY` secret if `ai_product_autofill` is still using Gemini
+- [ ] In Paystack dashboard, set webhook URL to `https://[your-supabase-project].supabase.co/functions/v1/handle_paystack_webhook`
+- [ ] In Paystack webhook settings, subscribe to `charge.success` and `charge.failed`
 - [ ] Enable Google OAuth in Supabase Auth settings (if needed)
 - [ ] Note Supabase project URL and publishable key
 
