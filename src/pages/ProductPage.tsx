@@ -29,7 +29,7 @@ import {
   type ProductOptionValue,
   type ProductVariant,
 } from "@/types/product";
-import { ChevronLeft, ChevronRight, Star, X } from "lucide-react";
+import { ChevronDown, ChevronLeft, ChevronRight, Star, X } from "lucide-react";
 
 const TRYON_CATEGORY_KEYWORDS = ["mens", "womens", "men", "women", "bag", "shoe"];
 const REVIEW_STAR_LEVELS = [5, 4, 3, 2, 1] as const;
@@ -361,7 +361,7 @@ const ProductPage = () => {
   const { slug } = useParams<{ slug: string }>();
   const location = useLocation();
   const { user, isAuthenticated } = useAuth();
-  const { addToCart } = useCart();
+  const { addToCart, isCartOpen } = useCart();
   const {
     preset: {
       tokens: { primary: primaryThemeColor },
@@ -396,6 +396,7 @@ const ProductPage = () => {
   const [isSubmittingReview, setIsSubmittingReview] = useState(false);
   const [reviewMessage, setReviewMessage] = useState<string | null>(null);
   const [reviewMessageTone, setReviewMessageTone] = useState<"success" | "error" | "info">("info");
+  const [isReviewSectionOpen, setReviewSectionOpen] = useState(false);
   const lightboxTouchStartXRef = useRef<number | null>(null);
 
   useEffect(() => {
@@ -1357,17 +1358,31 @@ const ProductPage = () => {
 
         {storeConfig.features.reviews ? (
           <section className="mt-16 border-t border-[rgba(227,189,199,0.3)] pt-12">
-          <div className="mb-8 flex flex-wrap items-end justify-between gap-4">
+          <button
+            type="button"
+            onClick={() => setReviewSectionOpen((current) => !current)}
+            className="group flex w-full items-center justify-between rounded-lg border border-[rgba(227,189,199,0.4)] bg-white/70 px-4 py-4 text-left transition-colors hover:border-primary"
+            aria-expanded={isReviewSectionOpen}
+            aria-controls="product-reviews-content"
+          >
             <div>
-              <span className="mb-2 block text-xs font-bold uppercase tracking-widest text-primary">Customer Voice</span>
-              <h2 className="font-notoSerif text-3xl font-bold text-on-surface">Ratings &amp; Reviews</h2>
+              <span className="mb-1 block text-xs font-bold uppercase tracking-widest text-primary">Customer Voice</span>
+              <h2 className="font-notoSerif text-2xl font-bold text-on-surface md:text-3xl">Ratings &amp; Reviews</h2>
             </div>
-            <p className="text-xs uppercase tracking-widest text-on-surface-variant">
-              {reviewSummary.totalReviews} review{reviewSummary.totalReviews === 1 ? "" : "s"}
-            </p>
-          </div>
+            <div className="ml-4 flex shrink-0 items-center gap-3">
+              <p className="text-[11px] uppercase tracking-widest text-on-surface-variant">
+                {reviewSummary.totalReviews} review{reviewSummary.totalReviews === 1 ? "" : "s"}
+              </p>
+              <ChevronDown
+                size={18}
+                className={`text-on-surface transition-transform duration-200 ${isReviewSectionOpen ? "rotate-180" : "rotate-0"}`}
+                aria-hidden
+              />
+            </div>
+          </button>
 
-          <div className="grid grid-cols-1 gap-8 lg:grid-cols-12">
+          {isReviewSectionOpen ? (
+          <div id="product-reviews-content" className="mt-8 grid grid-cols-1 gap-8 lg:grid-cols-12">
             <aside className="rounded-lg border border-[rgba(227,189,199,0.35)] bg-white/70 p-6 lg:col-span-4">
               <p className="text-xs font-semibold uppercase tracking-widest text-on-surface-variant">Overall Rating</p>
               <div className="mt-3 flex items-end gap-3">
@@ -1540,6 +1555,7 @@ const ProductPage = () => {
               )}
             </div>
           </div>
+          ) : null}
           </section>
         ) : null}
 
@@ -1564,34 +1580,36 @@ const ProductPage = () => {
         ) : null}
       </main>
 
-      <div className="fixed inset-x-0 bottom-0 z-[900] border-t border-[rgba(227,189,199,0.45)] bg-surface/95 backdrop-blur md:hidden">
-        <div className="mx-auto flex max-w-screen-2xl flex-col gap-2 px-4 pb-4 pt-3">
-          <button
-            type="button"
-            onClick={handleAddToCart}
-            disabled={isAddToCartDisabled}
-            className={`flex items-center justify-center gap-2 rounded-md py-3 text-[11px] font-bold uppercase tracking-widest transition-all ${
-              isAddToCartDisabled
-                ? "cursor-not-allowed bg-[rgba(227,189,199,0.7)] text-on-surface-variant"
-                : "bg-gradient-to-r from-[#D81B60] to-[#F06292] text-white shadow-[0_8px_22px_rgba(216,27,96,0.2)] active:scale-[0.98]"
-            }`}
-          >
-            <span className="material-symbols-outlined text-base">shopping_cart</span>
-            {addToCartButtonText}
-          </button>
-
-          {showTryOn ? (
+      {!isCartOpen ? (
+        <div className="fixed inset-x-0 bottom-0 z-[900] border-t border-[rgba(227,189,199,0.45)] bg-surface/95 backdrop-blur md:hidden">
+          <div className="mx-auto flex max-w-screen-2xl flex-col gap-2 px-4 pb-4 pt-3">
             <button
               type="button"
-              onClick={() => setTryOnOpen(true)}
-              className="flex items-center justify-center gap-2 rounded-md border border-[rgba(227,189,199,0.4)] bg-[rgba(232,232,232,0.45)] py-3 text-[11px] font-bold uppercase tracking-widest text-on-surface transition-all active:scale-[0.98]"
+              onClick={handleAddToCart}
+              disabled={isAddToCartDisabled}
+              className={`flex items-center justify-center gap-2 rounded-md py-3 text-[11px] font-bold uppercase tracking-widest transition-all ${
+                isAddToCartDisabled
+                  ? "cursor-not-allowed bg-[rgba(227,189,199,0.7)] text-on-surface-variant"
+                  : "bg-gradient-to-r from-[#D81B60] to-[#F06292] text-white shadow-[0_8px_22px_rgba(216,27,96,0.2)] active:scale-[0.98]"
+              }`}
             >
-              <span className="material-symbols-outlined text-base">photo_camera</span>
-              Virtual Try-On
+              <span className="material-symbols-outlined text-base">shopping_cart</span>
+              {addToCartButtonText}
             </button>
-          ) : null}
+
+            {showTryOn ? (
+              <button
+                type="button"
+                onClick={() => setTryOnOpen(true)}
+                className="flex items-center justify-center gap-2 rounded-md border border-[rgba(227,189,199,0.4)] bg-[rgba(232,232,232,0.45)] py-3 text-[11px] font-bold uppercase tracking-widest text-on-surface transition-all active:scale-[0.98]"
+              >
+                <span className="material-symbols-outlined text-base">photo_camera</span>
+                Virtual Try-On
+              </button>
+            ) : null}
+          </div>
         </div>
-      </div>
+      ) : null}
 
       {isLightboxOpen ? (
         <div

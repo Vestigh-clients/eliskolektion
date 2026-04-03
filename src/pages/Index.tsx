@@ -117,20 +117,22 @@ const Index = () => {
           </div>
         </section>
 
-        <section className="bg-[#FFFFFF] py-24">
+        <section className="bg-[#FFFFFF] py-6 md:py-8">
           <div className="mx-auto max-w-[1536px] px-4 sm:px-8">
-            <div className="mb-10">
+            <div className="mb-6 md:mb-7">
               <span className="font-manrope text-xs font-semibold uppercase tracking-[0.18em] text-[#B0004A]">
                 Why E&S Closet
               </span>
-              <h2 className="mt-2 font-notoSerif text-5xl font-bold text-[#1A1C1C]">Built for a Better Store Experience</h2>
+              <h2 className="mt-2 font-notoSerif text-3xl font-bold text-[#1A1C1C] md:text-4xl lg:text-5xl">Built for a Better Store Experience</h2>
             </div>
 
-            <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-4">
+            <div className="grid grid-cols-2 gap-3.5 sm:gap-4 md:grid-cols-2 lg:grid-cols-4 lg:gap-6">
               {FUNDAMENTALS.map((item) => (
-                <article key={item.title} className="border border-[#e3bdc7] bg-[#F9F9F9] p-8">
-                  <h3 className="font-notoSerif text-2xl font-bold text-[#1A1C1C]">{item.title}</h3>
-                  <p className="mt-4 font-manrope text-sm leading-relaxed text-[#5E5E5E]">{item.description}</p>
+                <article key={item.title} className="border border-[#e3bdc7] bg-[#F9F9F9] p-4 sm:p-5 md:p-6">
+                  <h3 className="font-notoSerif text-base font-bold leading-tight text-[#1A1C1C] sm:text-lg md:text-xl">{item.title}</h3>
+                  <p className="mt-2 font-manrope text-[11px] leading-relaxed text-[#5E5E5E] sm:text-xs md:mt-3 md:text-sm">
+                    {item.description}
+                  </p>
                 </article>
               ))}
             </div>
@@ -138,13 +140,13 @@ const Index = () => {
         </section>
 
         {categoryTiles.length > 0 ? (
-          <section className="mx-auto max-w-[1536px] px-4 py-24 sm:px-8">
-            <div className="mb-12 flex items-end justify-between gap-4">
+          <section className="mx-auto max-w-[1536px] px-4 py-6 sm:px-8 md:py-8">
+            <div className="mb-8 flex items-end justify-between gap-4 md:mb-10">
               <div>
                 <span className="font-manrope text-xs font-semibold uppercase tracking-[0.18em] text-[#B0004A]">
                   Discover Collections
                 </span>
-                <h2 className="mt-2 font-notoSerif text-5xl font-bold text-[#1A1C1C]">Shop by Category</h2>
+                <h2 className="mt-2 font-notoSerif text-3xl font-bold text-[#1A1C1C] md:text-4xl lg:text-5xl">Shop by Category</h2>
               </div>
               <Link
                 to="/shop"
@@ -154,7 +156,7 @@ const Index = () => {
               </Link>
             </div>
 
-            <div className="grid grid-cols-2 gap-6 md:hidden">
+            <div className="grid grid-cols-2 gap-4 md:hidden">
               {categoryTiles.map((tile) => (
                 <Link key={`${tile.key}-mobile`} to={tile.to} className="group relative block cursor-pointer overflow-hidden">
                   <img
@@ -172,7 +174,7 @@ const Index = () => {
             </div>
 
             <div
-              className="hidden gap-8 md:grid"
+              className="hidden gap-5 md:grid"
               style={{
                 gridTemplateColumns:
                   categoryTiles.length > 0 ? `repeat(${categoryTiles.length}, minmax(0, 1fr))` : undefined,
@@ -196,14 +198,14 @@ const Index = () => {
           </section>
         ) : null}
 
-        <section className="bg-[#FFFFFF] py-24">
+        <section className="bg-[#FFFFFF] py-6 md:py-8">
           <div className="mx-auto max-w-[1536px] px-4 sm:px-8">
-            <div className="mb-12 flex items-end justify-between gap-4">
+            <div className="mb-8 flex items-end justify-between gap-4 md:mb-10">
               <div>
                 <span className="font-manrope text-xs font-semibold uppercase tracking-[0.18em] text-[#B0004A]">
                   Curated Collection
                 </span>
-                <h2 className="mt-2 font-notoSerif text-5xl font-bold text-[#1A1C1C]">New Arrivals</h2>
+                <h2 className="mt-2 font-notoSerif text-3xl font-bold text-[#1A1C1C] md:text-4xl lg:text-5xl">New Arrivals</h2>
               </div>
               <Link
                 to="/shop"
@@ -214,7 +216,7 @@ const Index = () => {
             </div>
 
             {newArrivals.length > 0 ? (
-              <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-4">
+              <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-4">
                 {newArrivals.map((product) => (
                   <StorefrontProductCard key={product.id} product={product} />
                 ))}
@@ -227,14 +229,14 @@ const Index = () => {
           </div>
         </section>
 
-        <section className="bg-[#F9F9F9] py-24">
+        <section className="bg-[#F9F9F9] py-6 md:py-8">
           <div className="mx-auto max-w-[1536px] px-4 sm:px-8">
-            <div className="mb-12 flex items-end justify-between gap-4">
+            <div className="mb-8 flex items-end justify-between gap-4 md:mb-10">
               <div>
                 <span className="font-manrope text-xs font-semibold uppercase tracking-[0.18em] text-[#B0004A]">
                   Most Loved
                 </span>
-                <h2 className="mt-2 font-notoSerif text-5xl font-bold text-[#1A1C1C]">Best Sellers</h2>
+                <h2 className="mt-2 font-notoSerif text-3xl font-bold text-[#1A1C1C] md:text-4xl lg:text-5xl">Best Sellers</h2>
               </div>
               <Link
                 to="/shop"
@@ -245,7 +247,7 @@ const Index = () => {
             </div>
 
             {bestSellers.length > 0 ? (
-              <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-4">
+              <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-4">
                 {bestSellers.map((product) => (
                   <StorefrontProductCard key={product.id} product={product} actionLabel="View Product" />
                 ))}
@@ -258,9 +260,9 @@ const Index = () => {
           </div>
         </section>
 
-        <section className="bg-[#F9F9F9] py-32">
+        <section className="bg-[#F9F9F9] py-6 md:py-8">
           <div className="mx-auto max-w-[1280px] px-4 sm:px-8">
-            <div className="grid grid-cols-1 items-center gap-16 lg:grid-cols-2 lg:gap-20">
+            <div className="grid grid-cols-1 items-center gap-10 lg:grid-cols-2 lg:gap-12">
               <div className="relative">
                 <div className="absolute -left-10 -top-10 h-64 w-64 bg-[#fce4ec]/80 blur-3xl" />
                 <img
@@ -271,11 +273,11 @@ const Index = () => {
               </div>
 
               <div>
-                <h2 className="font-notoSerif text-5xl font-bold leading-tight text-[#1A1C1C]">
+                <h2 className="font-notoSerif text-3xl font-bold leading-tight text-[#1A1C1C] md:text-4xl lg:text-5xl">
                   Elevating Ghanaian Fashion to New Heights
                 </h2>
 
-                <div className="mt-8 space-y-6 text-lg leading-relaxed text-[#5E5E5E]">
+                <div className="mt-6 space-y-4 text-base leading-relaxed text-[#5E5E5E] md:text-lg">
                   <p>
                     At E&S Closet, we believe that luxury shouldn&apos;t be an unreachable dream. Born in the heart of
                     Ghana, our mission is to redefine the digital atelier experience for the modern African consumer.
@@ -285,7 +287,7 @@ const Index = () => {
                     sophistication. Every garment in our closet is a testament to quality craftsmanship and timeless
                     style, brought to you at prices that respect your lifestyle.
                   </p>
-                  <div className="flex items-center gap-4 pt-6">
+                  <div className="flex items-center gap-4 pt-4">
                     <span className="h-[2px] w-12 bg-[#D81B60]" />
                     <span className="font-manrope text-sm font-semibold uppercase tracking-[0.18em] text-[#B0004A]">
                       Established 2024

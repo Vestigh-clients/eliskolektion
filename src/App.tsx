@@ -8,6 +8,7 @@ import { AdminRoute, ProtectedRoute, SuperAdminRoute } from "@/components/auth/R
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import CartDrawer from "@/components/cart/CartDrawer";
+import RouteExperienceManager from "@/components/navigation/RouteExperienceManager";
 import { AuthProvider } from "@/contexts/AuthContext";
 import { CartProvider } from "@/contexts/CartContext";
 import Index from "./pages/Index";
@@ -83,89 +84,92 @@ const AppShell = () => {
 
   return (
     <>
+      <RouteExperienceManager />
       {showNavbar ? <Navbar /> : null}
       <main className={showFooter ? "min-h-screen" : ""}>
-        <Routes>
-          <Route path="/" element={<Index />} />
-          <Route path="/shop" element={<Shop />} />
-          <Route path="/shop/:slug" element={<ProductPage />} />
-          <Route
-            path="/checkout/confirmation"
-            element={<CheckoutConfirmation />}
-          />
-          <Route path="/checkout" element={<CheckoutEntry />} />
-          <Route
-            path="/orders/:orderNumber"
-            element={storeConfig.features.orderTracking ? <OrderTracking /> : <Navigate to="/" replace />}
-          />
-          <Route path="/checkout/*" element={<Checkout />} />
-          <Route path="/about" element={<About />} />
-          <Route path="/contact" element={<Contact />} />
-
-          <Route path="/auth/login" element={<Login />} />
-          <Route path="/auth/register" element={<Register />} />
-          <Route path="/auth/forgot-password" element={<ForgotPassword />} />
-          <Route path="/auth/reset-password" element={<ResetPassword />} />
-          <Route path="/auth/verify-email" element={<VerifyEmail />} />
-
-          <Route
-            path="/account"
-            element={
-              <ProtectedRoute>
-                <AccountLayout />
-              </ProtectedRoute>
-            }
-          >
-            <Route index element={<AccountOverview />} />
-            <Route path="orders" element={<AccountOrders />} />
-            <Route path="addresses" element={<AccountAddresses />} />
-            <Route path="profile" element={<AccountProfile />} />
-            <Route path="password" element={<AccountPassword />} />
-            <Route path="*" element={<Navigate to="/account" replace />} />
-          </Route>
-
-          <Route
-            path="/admin"
-            element={
-              <AdminRoute>
-                <AdminLayout />
-              </AdminRoute>
-            }
-          >
-            <Route index element={<AdminDashboard />} />
-            <Route path="orders" element={<AdminOrdersPage />} />
-            <Route path="orders/:orderNumber" element={<AdminOrderDetailPage />} />
-            <Route path="products" element={<AdminProductsPage />} />
-            <Route path="products/new" element={<AdminProductEditorPage />} />
-            <Route path="products/:id/edit" element={<AdminProductEditorPage />} />
-            <Route path="categories" element={<AdminCategoriesPage />} />
-            <Route path="customers" element={<AdminCustomersPage />} />
-            <Route path="customers/:id" element={<AdminCustomerDetailPage />} />
-            <Route path="discounts" element={<AdminDiscountCodesPage />} />
-            <Route path="reviews" element={<AdminProductReviewsPage />} />
-            <Route path="shipping" element={<AdminShippingRatesPage />} />
-            <Route path="payments" element={<AdminPaymentsPage />} />
+        <div key={`${location.pathname}${location.search}`} className="lux-page-enter">
+          <Routes>
+            <Route path="/" element={<Index />} />
+            <Route path="/shop" element={<Shop />} />
+            <Route path="/shop/:slug" element={<ProductPage />} />
             <Route
-              path="users"
-              element={
-                <SuperAdminRoute>
-                  <AdminUsersPage />
-                </SuperAdminRoute>
-              }
+              path="/checkout/confirmation"
+              element={<CheckoutConfirmation />}
             />
+            <Route path="/checkout" element={<CheckoutEntry />} />
             <Route
-              path="settings"
-              element={
-                <SuperAdminRoute>
-                  <AdminSettingsPage />
-                </SuperAdminRoute>
-              }
+              path="/orders/:orderNumber"
+              element={storeConfig.features.orderTracking ? <OrderTracking /> : <Navigate to="/" replace />}
             />
-            <Route path="*" element={<Navigate to="/admin" replace />} />
-          </Route>
+            <Route path="/checkout/*" element={<Checkout />} />
+            <Route path="/about" element={<About />} />
+            <Route path="/contact" element={<Contact />} />
 
-          <Route path="*" element={<NotFound />} />
-        </Routes>
+            <Route path="/auth/login" element={<Login />} />
+            <Route path="/auth/register" element={<Register />} />
+            <Route path="/auth/forgot-password" element={<ForgotPassword />} />
+            <Route path="/auth/reset-password" element={<ResetPassword />} />
+            <Route path="/auth/verify-email" element={<VerifyEmail />} />
+
+            <Route
+              path="/account"
+              element={
+                <ProtectedRoute>
+                  <AccountLayout />
+                </ProtectedRoute>
+              }
+            >
+              <Route index element={<AccountOverview />} />
+              <Route path="orders" element={<AccountOrders />} />
+              <Route path="addresses" element={<AccountAddresses />} />
+              <Route path="profile" element={<AccountProfile />} />
+              <Route path="password" element={<AccountPassword />} />
+              <Route path="*" element={<Navigate to="/account" replace />} />
+            </Route>
+
+            <Route
+              path="/admin"
+              element={
+                <AdminRoute>
+                  <AdminLayout />
+                </AdminRoute>
+              }
+            >
+              <Route index element={<AdminDashboard />} />
+              <Route path="orders" element={<AdminOrdersPage />} />
+              <Route path="orders/:orderNumber" element={<AdminOrderDetailPage />} />
+              <Route path="products" element={<AdminProductsPage />} />
+              <Route path="products/new" element={<AdminProductEditorPage />} />
+              <Route path="products/:id/edit" element={<AdminProductEditorPage />} />
+              <Route path="categories" element={<AdminCategoriesPage />} />
+              <Route path="customers" element={<AdminCustomersPage />} />
+              <Route path="customers/:id" element={<AdminCustomerDetailPage />} />
+              <Route path="discounts" element={<AdminDiscountCodesPage />} />
+              <Route path="reviews" element={<AdminProductReviewsPage />} />
+              <Route path="shipping" element={<AdminShippingRatesPage />} />
+              <Route path="payments" element={<AdminPaymentsPage />} />
+              <Route
+                path="users"
+                element={
+                  <SuperAdminRoute>
+                    <AdminUsersPage />
+                  </SuperAdminRoute>
+                }
+              />
+              <Route
+                path="settings"
+                element={
+                  <SuperAdminRoute>
+                    <AdminSettingsPage />
+                  </SuperAdminRoute>
+                }
+              />
+              <Route path="*" element={<Navigate to="/admin" replace />} />
+            </Route>
+
+            <Route path="*" element={<NotFound />} />
+          </Routes>
+        </div>
       </main>
       {showFooter ? <Footer /> : null}
       {showCartDrawer ? <CartDrawer /> : null}

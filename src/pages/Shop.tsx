@@ -17,8 +17,6 @@ import {
   getStockQuantity,
   isInStock,
   type Product,
-  type ProductOptionType,
-  type ProductOptionValue,
 } from "@/types/product";
 
 type ShopFilter = "all" | string;
@@ -648,9 +646,48 @@ const Shop = () => {
     (priceLimit < priceCeiling ? 1 : 0);
 
   const handleAddToCart = (product: Product) => {
-    const requiresVariantSelection = product.has_variants === true;
-    if (requiresVariantSelection) {
-      navigate(`/shop/${product.slug}`);
+    const basePayload = {
+      product_id: product.id,
+      name: product.name,
+      slug: product.slug,
+      category: product.categories?.name?.trim() || "Collection",
+      image_url: getPrimaryImage(product),
+      image_alt: product.name,
+    };
+
+    if (product.has_variants) {
+      const firstAvailableVariant = (product.product_variants ?? []).find(
+        (variant) => variant.is_available && variant.stock_quantity > 0,
+      );
+
+      if (!firstAvailableVariant) {
+        return;
+      }
+
+      const optionValueById = new Map<string, string>();
+      for (const optionType of product.product_option_types ?? []) {
+        for (const optionValue of optionType.product_option_values) {
+          const label = optionValue.value.trim();
+          if (label) {
+            optionValueById.set(optionValue.id, label);
+          }
+        }
+      }
+
+      const derivedVariantLabel = firstAvailableVariant.product_variant_options
+        .map((optionLink) => optionValueById.get(optionLink.option_value_id) ?? "")
+        .filter(Boolean)
+        .join(" / ");
+
+      addToCart({
+        ...basePayload,
+        price: firstAvailableVariant.price ?? product.price,
+        compare_at_price: firstAvailableVariant.compare_at_price ?? product.compare_at_price ?? null,
+        sku: firstAvailableVariant.sku ?? product.sku ?? null,
+        stock_quantity: firstAvailableVariant.stock_quantity,
+        variant_id: firstAvailableVariant.id,
+        variant_label: firstAvailableVariant.label?.trim() || derivedVariantLabel || null,
+      });
       return;
     }
 
@@ -659,14 +696,9 @@ const Shop = () => {
     }
 
     addToCart({
-      product_id: product.id,
-      name: product.name,
-      slug: product.slug,
-      category: product.categories?.name?.trim() || "Collection",
+      ...basePayload,
       price: product.price,
       compare_at_price: product.compare_at_price ?? null,
-      image_url: getPrimaryImage(product),
-      image_alt: product.name,
       sku: product.sku ?? null,
       stock_quantity: getStockQuantity(product),
       variant_id: null,
