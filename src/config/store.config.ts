@@ -1,8 +1,8 @@
-import { brandingConfig } from "./branding.config";
-import { catalogConfig } from "./catalog.config";
-import { commerceConfig } from "./commerce.config";
-import { integrationsConfig } from "./integrations.config";
-import type { StoreConfig } from "./store.types";
+import { brandingConfig } from "./branding.config.ts";
+import { catalogConfig } from "./catalog.config.ts";
+import { commerceConfig } from "./commerce.config.ts";
+import { integrationsConfig } from "./integrations.config.ts";
+import type { StoreConfig } from "./store.types.ts";
 
 export type {
   BrandingConfig,
@@ -17,7 +17,7 @@ export type {
   PaymentMode,
   PaystackChargeBearer,
   StoreConfig,
-} from "./store.types";
+} from "./store.types.ts";
 
 export const storeConfig: StoreConfig = {
   storeName: brandingConfig.storeName,

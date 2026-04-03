@@ -1,4 +1,4 @@
-import type { ThemePreset } from "../registry";
+import type { ThemePreset } from "../registry.ts";
 
 export const sandstoneThemePreset: ThemePreset = {
   key: "sandstone",

@@ -1,5 +1,5 @@
-import type { ThemePreset } from "./registry";
-import { buildFontStack, hexToRgb, mixHex, normalizeHex, rgbString, rgbToHsl } from "./utils";
+import type { ThemePreset } from "./registry.ts";
+import { buildFontStack, hexToRgb, mixHex, normalizeHex, rgbString, rgbToHsl } from "./utils.ts";
 
 const colorVarNameByToken: Record<keyof ThemePreset["tokens"], string> = {
   canvas: "--theme-canvas",

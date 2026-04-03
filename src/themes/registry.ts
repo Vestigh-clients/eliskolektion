@@ -1,5 +1,5 @@
-import { atelierThemePreset } from "./atelier/preset";
-import { sandstoneThemePreset } from "./sandstone/preset";
+import { atelierThemePreset } from "./atelier/preset.ts";
+import { sandstoneThemePreset } from "./sandstone/preset.ts";
 
 export const themePresetKeys = ["atelier", "sandstone"] as const;
 export type ThemePresetKey = (typeof themePresetKeys)[number];

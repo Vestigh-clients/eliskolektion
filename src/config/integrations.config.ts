@@ -1,4 +1,4 @@
-import type { IntegrationsConfig } from "./store.types";
+import type { IntegrationsConfig } from "./store.types.ts";
 
 export const integrationsConfig: IntegrationsConfig = {
   styleSyncs: {

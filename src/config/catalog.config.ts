@@ -3,7 +3,7 @@ import category_hair_care from "@/assets/category-haircare.jpg";
 import category_men from "@/assets/category-mens.jpg";
 import category_shoes from "@/assets/category-shoes.jpg";
 import category_womens from "@/assets/category-womens.jpg";
-import type { CatalogConfig } from "./store.types";
+import type { CatalogConfig } from "./store.types.ts";
 
 export const catalogConfig: CatalogConfig = {
   categories: [

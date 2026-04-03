@@ -1,4 +1,4 @@
-import type { ThemePresetKey } from "./registry";
+import type { ThemePresetKey } from "./registry.ts";
 
 const loadedThemePresetFonts = new Set<ThemePresetKey>();
 

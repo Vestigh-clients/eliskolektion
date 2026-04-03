@@ -566,7 +566,7 @@ Deno.serve(async (request: Request) => {
       body: JSON.stringify({
         from: formatFromEmail(
           snapshot.identity.storeName,
-          Deno.env.get("ORDER_FROM_EMAIL_ADDRESS") ?? "orders@luxuriantgh.store",
+          Deno.env.get("ORDER_FROM_EMAIL_ADDRESS") ?? "orders@store.com",
         ),
         to: [customerEmail],
         reply_to: snapshot.identity.supportEmail,

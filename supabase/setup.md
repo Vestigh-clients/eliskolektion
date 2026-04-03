@@ -643,7 +643,7 @@ EXECUTE FUNCTION public.sync_product_stock_from_variants();
 -- =====================
 INSERT INTO public.site_settings (key, value)
 VALUES
-  ('site_name', 'Luxuriant'),
+  ('site_name', 'Vestigh Store'),
   ('site_tagline', ''),
   ('support_email', ''),
   ('support_phone', ''),

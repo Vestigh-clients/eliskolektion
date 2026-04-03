@@ -1,4 +1,4 @@
-import type { CommerceConfig, PaymentMode, PaystackChargeBearer } from "./store.types";
+import type { CommerceConfig, PaymentMode, PaystackChargeBearer } from "./store.types.ts";
 
 export const commerceConfig: CommerceConfig = {
   features: {

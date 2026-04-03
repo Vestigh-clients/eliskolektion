@@ -1,4 +1,4 @@
-import type { BrandingConfig } from "./store.types";
+import type { BrandingConfig } from "./store.types.ts";
 
 export const brandingConfig: BrandingConfig = {
   storeName: "Vestigh Store",

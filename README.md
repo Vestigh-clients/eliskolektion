@@ -1,4 +1,4 @@
-# Luxuriant
+# Vestigh Store
 
 E-commerce storefront and admin panel built with Vite, React, TypeScript, shadcn-ui, and Tailwind CSS.
 

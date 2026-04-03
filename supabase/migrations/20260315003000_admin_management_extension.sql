@@ -131,7 +131,7 @@ ALTER TABLE public.site_settings ENABLE ROW LEVEL SECURITY;
 
 INSERT INTO public.site_settings (key, value)
 VALUES
-  ('site_name', 'Luxuriant'),
+  ('site_name', 'Vestigh Store'),
   ('site_tagline', ''),
   ('support_email', ''),
   ('support_phone', ''),

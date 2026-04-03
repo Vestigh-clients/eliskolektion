@@ -1,4 +1,4 @@
-import { storeConfig, type StoreConfig } from "./store.config";
+import { storeConfig, type StoreConfig } from "./store.config.ts";
 import type { PublicSiteSettings } from "@/services/publicSiteSettingsService";
 import { resolveActiveThemePreset, type ThemePresetKey } from "@/themes/registry";
 

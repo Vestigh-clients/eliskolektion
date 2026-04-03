@@ -314,7 +314,7 @@ Deno.serve(async (request: Request) => {
       body: JSON.stringify({
         from: formatFromEmail(
           snapshot.identity.storeName,
-          Deno.env.get("ORDER_CONFIRMATION_FROM_EMAIL") || "orders@luxuriantgh.store",
+          Deno.env.get("ORDER_CONFIRMATION_FROM_EMAIL") || "orders@store.com",
         ),
         to: [customerEmail],
         reply_to: snapshot.identity.supportEmail,

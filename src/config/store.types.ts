@@ -1,4 +1,4 @@
-import type { ThemePresetKey } from "../themes/registry";
+import type { ThemePresetKey } from "../themes/registry.ts";
 
 export type CurrencyPosition = "before" | "after";
 export type PaymentMode = "subaccount" | "own_account";

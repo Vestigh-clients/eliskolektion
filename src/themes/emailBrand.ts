@@ -1,6 +1,6 @@
-import type { ThemePresetKey } from "./registry";
-import { resolveActiveThemePreset } from "./registry";
-import { buildFontStack } from "./utils";
+import type { ThemePresetKey } from "./registry.ts";
+import { resolveActiveThemePreset } from "./registry.ts";
+import { buildFontStack } from "./utils.ts";
 
 interface EmailBrandIdentity {
   storeName: string;

@@ -610,7 +610,7 @@ Deno.serve(async (request: Request) => {
             to: [adminNotificationEmail],
             from: formatFromEmail(
               `${snapshot.identity.storeName} Orders`,
-              Deno.env.get("ADMIN_NOTIFICATION_FROM_EMAIL_ADDRESS") ?? "orders@luxuriantgh.store",
+              Deno.env.get("ADMIN_NOTIFICATION_FROM_EMAIL_ADDRESS") ?? "orders@store.com",
             ),
             subject: `New Order ${order.order_number} - ${formatAmount(safeNumber(order.total))}`,
             html: emailHtml,
