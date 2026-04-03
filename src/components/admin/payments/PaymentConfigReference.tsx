@@ -6,8 +6,8 @@ const envValue = (value: unknown) => (typeof value === "string" ? value.trim() :
 
 const statusRows = [
   {
-    label: "VITE_PAYSTACK_PUBLIC_KEY",
-    isSet: envValue(import.meta.env.VITE_PAYSTACK_PUBLIC_KEY).length > 0,
+    label: "PAYSTACK_PUBLIC_KEY",
+    isSet: envValue(import.meta.env.PAYSTACK_PUBLIC_KEY).length > 0,
   },
   {
     label: "VITE_PAYSTACK_SUBACCOUNT_CODE",
