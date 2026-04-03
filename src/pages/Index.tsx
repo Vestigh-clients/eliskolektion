@@ -5,45 +5,14 @@ import { useStorefrontConfig } from "@/contexts/StorefrontConfigContext";
 import { getAllProducts, getFeaturedProducts } from "@/services/productService";
 import { type Product } from "@/types/product";
 
-const NEW_ARRIVALS = [
-  {
-    name: "Champagne Silk Slip",
-    category: "Women's Premium",
-    price: "GH\u20B5 450.00",
-    imageAlt: "Silk Slip Dress",
-    imageUrl:
-      "https://lh3.googleusercontent.com/aida-public/AB6AXuD5uw-EcjyELejFHeTJ-DD4v5VS1-NXY359QVggXw7TBB5Z19y0hn8CrhDFlO64FzGUT3rH1WcyZmWOfa84zNDuOiXaW6egeILtgslvKewTASQQaHhY4IVk6QZqiHCCo04N8rbuiW7RuZm7Z3d0h5nx0GZ-dbiGbMPnf8CFpGugA02qFRa7GteRKFW2w4gLZRrNzLXwi4UZS9Yyde41pmqmO0VSJ58z8t6SxmFaEO4M7KWgTuIbqNQT01zTKQ-YNe5c9SCCYDvM-qQ",
-  },
-  {
-    name: "Linen Tailored Shirt",
-    category: "Men's Essentials",
-    price: "GH\u20B5 320.00",
-    imageAlt: "Tailored Linen Shirt",
-    imageUrl:
-      "https://lh3.googleusercontent.com/aida-public/AB6AXuCO8_j4tUGr0KIjJ-lnZ2Xc8GHHkkob1ewxqu2GL_MOROvSN4cUI0nEN9Z0LkdJZ07jTGj6BFwJkzLc16-zhR8MS8ens8ienYW9NVOZHPmI9_64jpt_SkWNhBWfZ1F7IW6R0kudkWl6UldLGlJ2DK8SwUThacekwpwkSA5AJxVQX1jG4r9jSgTjlNK_AdCsvf3rlUsxDH54zWmHomhc80qB8lwGFMFMmTEBuKGHki-IxblJM9ZJ-5tPKMEgBhFbKbuovyac8n7K9js",
-  },
-  {
-    name: "Petite Crossbody Bag",
-    category: "Accessories",
-    price: "GH\u20B5 580.00",
-    imageAlt: "Leather Crossbody Bag",
-    imageUrl:
-      "https://lh3.googleusercontent.com/aida-public/AB6AXuCl-hCdN7jOByn89zinmeeGvgQuG4qkZ84yPd3Vo9iC7IdFXCoTqB1hONyjmkLmou2cSuGSq5akSLaoZPwwVmZKghprJz40lKa4F3G7e7PF4fKPUQZZmABY_g_TorfNKLjFUW-hqJ679LrKxh-i6B3KtFoTH_BGzkJuoE39C7QqJP6x9KkMG7nOjrjuu32p85tBOKO4xh4XGelVIhzzPCNYbzQvl0xUPTxGsqL8Id3Vaqpm2sPx9ySs-KNUcD2gWriyuI7sCEiK22w",
-  },
-  {
-    name: "Heritage Maxi Dress",
-    category: "Women's Collection",
-    price: "GH\u20B5 750.00",
-    imageAlt: "Patterned Maxi Dress",
-    imageUrl:
-      "https://lh3.googleusercontent.com/aida-public/AB6AXuD68EweOv7fPJ6aEpfL9-RQxWJq2YwztZtP5nXXeaFfrWMbNBbLKvN7S6sQOZIFsJ07rpBUXzXrQ-EUXiaE-r325KUkXqjknSkiW7UNbSA4Ac3hcrgu3aecnsBbwNULXwvQV8rFcuS2Lci5P_mfJUN_SIAsIKPqlOymhEvS6shzmrf2SPjLQpT4XzgFu5cAqeqdxj58UE27wkMbNSIT5Eq6mXEbv96jBrpMn-3sI7QwB_4lOzImIBjq80NNjIDcIadOVxPERLXJ6r0",
-  },
-];
-
 const FUNDAMENTALS = [
   {
     title: "Curated Quality",
     description: "Every piece is selected for design quality, fit consistency, and lasting wear.",
+  },
+  {
+    title: "Shipping & Delivery",
+    description: "Reliable shipping with delivery updates so customers always know when to expect their order.",
   },
   {
     title: "Secure Checkout",
@@ -57,31 +26,32 @@ const FUNDAMENTALS = [
 
 const Index = () => {
   const { storefrontCategories } = useStorefrontConfig();
+  const [newArrivals, setNewArrivals] = useState<Product[]>([]);
   const [bestSellers, setBestSellers] = useState<Product[]>([]);
 
   useEffect(() => {
     let isMounted = true;
 
-    const loadBestSellers = async () => {
-      try {
-        const featured = await getFeaturedProducts();
-        if (!isMounted) return;
+    const loadHomepageProducts = async () => {
+      const [allProductsResult, featuredProductsResult] = await Promise.allSettled([
+        getAllProducts(),
+        getFeaturedProducts(),
+      ]);
 
-        if (featured.length > 0) {
-          setBestSellers(featured.slice(0, 4));
-          return;
-        }
+      if (!isMounted) return;
 
-        const fallbackProducts = await getAllProducts();
-        if (!isMounted) return;
-        setBestSellers((fallbackProducts ?? []).slice(0, 4));
-      } catch {
-        if (!isMounted) return;
-        setBestSellers([]);
-      }
+      const allProducts =
+        allProductsResult.status === "fulfilled" && Array.isArray(allProductsResult.value) ? allProductsResult.value : [];
+      const featuredProducts =
+        featuredProductsResult.status === "fulfilled" && Array.isArray(featuredProductsResult.value)
+          ? featuredProductsResult.value
+          : [];
+
+      setNewArrivals(allProducts.slice(0, 4));
+      setBestSellers((featuredProducts.length > 0 ? featuredProducts : allProducts).slice(0, 4));
     };
 
-    void loadBestSellers();
+    void loadHomepageProducts();
 
     return () => {
       isMounted = false;
@@ -143,6 +113,26 @@ const Index = () => {
               >
                 Shop Now
               </Link>
+            </div>
+          </div>
+        </section>
+
+        <section className="bg-[#FFFFFF] py-24">
+          <div className="mx-auto max-w-[1536px] px-4 sm:px-8">
+            <div className="mb-10">
+              <span className="font-manrope text-xs font-semibold uppercase tracking-[0.18em] text-[#B0004A]">
+                Why E&S Closet
+              </span>
+              <h2 className="mt-2 font-notoSerif text-5xl font-bold text-[#1A1C1C]">Built for a Better Store Experience</h2>
+            </div>
+
+            <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-4">
+              {FUNDAMENTALS.map((item) => (
+                <article key={item.title} className="border border-[#e3bdc7] bg-[#F9F9F9] p-8">
+                  <h3 className="font-notoSerif text-2xl font-bold text-[#1A1C1C]">{item.title}</h3>
+                  <p className="mt-4 font-manrope text-sm leading-relaxed text-[#5E5E5E]">{item.description}</p>
+                </article>
+              ))}
             </div>
           </div>
         </section>
@@ -223,34 +213,17 @@ const Index = () => {
               </Link>
             </div>
 
-            <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-4">
-              {NEW_ARRIVALS.map((product) => (
-                <article key={product.name} className="group">
-                  <div className="relative mb-4 overflow-hidden bg-[#F3F3F4]">
-                    <img
-                      src={product.imageUrl}
-                      alt={product.imageAlt}
-                      className="aspect-[4/5] h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
-                    />
-                    <Link
-                      to="/shop"
-                      className="absolute bottom-4 left-4 right-4 flex translate-y-12 items-center justify-center gap-2 bg-[#D81B60] py-3 font-manrope text-xs font-semibold uppercase tracking-[0.14em] text-white transition-all duration-300 group-hover:translate-y-0 group-hover:-translate-y-1 group-hover:bg-[#B0004A]"
-                    >
-                      <span className="material-symbols-outlined text-sm">add_shopping_cart</span>
-                      Add to Cart
-                    </Link>
-                  </div>
-
-                  <h4 className="font-notoSerif text-lg font-bold text-[#1A1C1C] transition-colors group-hover:text-[#D81B60]">
-                    {product.name}
-                  </h4>
-                  <p className="mt-1 font-manrope text-xs uppercase tracking-[0.1em] text-[#5E5E5E]">{product.category}</p>
-                  <p className="mt-1 font-manrope text-xs font-semibold uppercase tracking-[0.08em] text-[#B0004A]">
-                    {product.price}
-                  </p>
-                </article>
-              ))}
-            </div>
+            {newArrivals.length > 0 ? (
+              <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-4">
+                {newArrivals.map((product) => (
+                  <StorefrontProductCard key={product.id} product={product} />
+                ))}
+              </div>
+            ) : (
+              <div className="border border-[#e3bdc7] bg-[#fff] px-6 py-10 text-center">
+                <p className="font-manrope text-sm text-[#5E5E5E]">No new arrivals available yet.</p>
+              </div>
+            )}
           </div>
         </section>
 
@@ -282,26 +255,6 @@ const Index = () => {
                 <p className="font-manrope text-sm text-[#5E5E5E]">No best sellers available yet.</p>
               </div>
             )}
-          </div>
-        </section>
-
-        <section className="bg-[#FFFFFF] py-24">
-          <div className="mx-auto max-w-[1536px] px-4 sm:px-8">
-            <div className="mb-10">
-              <span className="font-manrope text-xs font-semibold uppercase tracking-[0.18em] text-[#B0004A]">
-                Why E&S Closet
-              </span>
-              <h2 className="mt-2 font-notoSerif text-5xl font-bold text-[#1A1C1C]">Built for a Better Store Experience</h2>
-            </div>
-
-            <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
-              {FUNDAMENTALS.map((item) => (
-                <article key={item.title} className="border border-[#e3bdc7] bg-[#F9F9F9] p-8">
-                  <h3 className="font-notoSerif text-2xl font-bold text-[#1A1C1C]">{item.title}</h3>
-                  <p className="mt-4 font-manrope text-sm leading-relaxed text-[#5E5E5E]">{item.description}</p>
-                </article>
-              ))}
-            </div>
           </div>
         </section>
 
