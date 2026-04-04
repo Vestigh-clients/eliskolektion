@@ -7,6 +7,8 @@ export interface AiDraftBenefit {
 export interface AiDraftCoreFields {
   name: string | null;
   price: number | null;
+  stock_quantity: number | null;
+  stock_per_variant: number | null;
   short_description: string | null;
   full_description: string | null;
   meta_title: string | null;
@@ -54,6 +56,8 @@ export interface AiDraftExtractionResult {
 export interface AiDraftEnrichmentFields {
   name?: string | null;
   price?: number | null;
+  stock_quantity?: number | null;
+  stock_per_variant?: number | null;
   short_description?: string | null;
   full_description?: string | null;
   meta_title?: string | null;
@@ -65,6 +69,16 @@ export interface AiDraftEnrichmentFields {
     description?: string | null;
   }>;
   sku_suggestion?: string | null;
+  option_types?: Array<{
+    name?: string | null;
+    values?: Array<
+      | string
+      | {
+          value?: string | null;
+          color_hex?: string | null;
+        }
+    >;
+  }>;
 }
 
 const COLOR_SWATCHES: Record<string, { label: string; hex: string | null }> = {
@@ -84,6 +98,7 @@ const COLOR_SWATCHES: Record<string, { label: string; hex: string | null }> = {
   grey: { label: "Grey", hex: "#9E9E9E" },
   orange: { label: "Orange", hex: "#F57C00" },
   pink: { label: "Pink", hex: "#EC407A" },
+  wine: { label: "Wine", hex: "#722F37" },
   gold: { label: "Gold", hex: "#C9A227" },
   silver: { label: "Silver", hex: "#B0BEC5" },
   maroon: { label: "Maroon", hex: "#800000" },
@@ -99,6 +114,20 @@ const BENEFIT_ICON_FALLBACK = "star";
 
 const normalizeWhitespace = (value: string) => value.replace(/\s+/g, " ").trim();
 
+const toTitleCase = (value: string) =>
+  value
+    .trim()
+    .toLowerCase()
+    .replace(/\b\w/g, (char) => char.toUpperCase());
+
+const canonicalOptionTypeName = (value: string) => {
+  const key = normalizeWhitespace(value).toLowerCase();
+  if (!key) return "";
+  if (["color", "colors", "colour", "colours"].includes(key)) return "Color";
+  if (["size", "sizes", "sizing"].includes(key)) return "Size";
+  return toTitleCase(key);
+};
+
 const uniqueCaseInsensitive = (values: string[]) => {
   const seen = new Set<string>();
   const deduped: string[] = [];
@@ -113,6 +142,112 @@ const uniqueCaseInsensitive = (values: string[]) => {
   }
 
   return deduped;
+};
+
+const normalizeColorOptionValue = (value: string, colorHex?: string | null): AiDraftOptionValue => {
+  const normalized = normalizeWhitespace(value);
+  const mapped = COLOR_SWATCHES[normalized.toLowerCase()];
+  return {
+    value: mapped?.label ?? toTitleCase(normalized),
+    color_hex: colorHex ?? mapped?.hex ?? null,
+  };
+};
+
+const mergeOptionTypes = (
+  deterministicOptionTypes: AiDraftOptionType[],
+  enrichmentOptionTypes: AiDraftEnrichmentFields["option_types"],
+) => {
+  const mergedByName = new Map<string, AiDraftOptionType>();
+
+  const appendValue = (optionTypeName: string, optionValue: AiDraftOptionValue) => {
+    const canonicalName = canonicalOptionTypeName(optionTypeName);
+    if (!canonicalName) return;
+
+    const existing = mergedByName.get(canonicalName) ?? {
+      name: canonicalName,
+      values: [],
+    };
+
+    const valueKey = normalizeWhitespace(optionValue.value).toLowerCase();
+    if (!valueKey) return;
+
+    const hasExisting = existing.values.some((entry) => normalizeWhitespace(entry.value).toLowerCase() === valueKey);
+    if (!hasExisting) {
+      existing.values.push(optionValue);
+    }
+
+    mergedByName.set(canonicalName, existing);
+  };
+
+  for (const optionType of deterministicOptionTypes) {
+    const canonicalName = canonicalOptionTypeName(optionType.name);
+    if (!canonicalName) continue;
+    for (const optionValue of optionType.values) {
+      const normalizedValue =
+        canonicalName === "Color"
+          ? normalizeColorOptionValue(optionValue.value, optionValue.color_hex)
+          : {
+              value: normalizeWhitespace(optionValue.value).toUpperCase(),
+              color_hex: optionValue.color_hex ?? null,
+            };
+      appendValue(canonicalName, normalizedValue);
+    }
+  }
+
+  if (Array.isArray(enrichmentOptionTypes)) {
+    for (const optionType of enrichmentOptionTypes) {
+      if (!optionType || typeof optionType !== "object") continue;
+      const canonicalName = canonicalOptionTypeName(typeof optionType.name === "string" ? optionType.name : "");
+      if (!canonicalName) continue;
+
+      const rawValues = Array.isArray(optionType.values) ? optionType.values : [];
+      for (const rawValue of rawValues) {
+        if (typeof rawValue === "string") {
+          const normalizedString = normalizeWhitespace(rawValue);
+          if (!normalizedString) continue;
+
+          if (canonicalName === "Size") {
+            const parsedSizes = parseSizeValues(normalizedString, true);
+            for (const sizeValue of parsedSizes.values) {
+              appendValue("Size", { value: sizeValue, color_hex: null });
+            }
+            continue;
+          }
+
+          if (canonicalName === "Color") {
+            appendValue("Color", normalizeColorOptionValue(normalizedString, null));
+            continue;
+          }
+
+          appendValue(canonicalName, { value: toTitleCase(normalizedString), color_hex: null });
+          continue;
+        }
+
+        if (!rawValue || typeof rawValue !== "object") continue;
+
+        const value = normalizeWhitespace(typeof rawValue.value === "string" ? rawValue.value : "");
+        const colorHex = typeof rawValue.color_hex === "string" ? rawValue.color_hex : null;
+        if (!value) continue;
+
+        if (canonicalName === "Size") {
+          const parsedSizes = parseSizeValues(value, true);
+          for (const sizeValue of parsedSizes.values) {
+            appendValue("Size", { value: sizeValue, color_hex: null });
+          }
+          continue;
+        }
+
+        if (canonicalName === "Color") {
+          appendValue("Color", normalizeColorOptionValue(value, colorHex));
+          continue;
+        }
+
+        appendValue(canonicalName, { value: toTitleCase(value), color_hex: colorHex });
+      }
+    }
+  }
+
+  return Array.from(mergedByName.values()).filter((optionType) => optionType.values.length > 0);
 };
 
 const normalizeKey = (key: string) =>
@@ -144,6 +279,42 @@ const parsePriceValue = (rawValue: string): number | null => {
   }
 
   return null;
+};
+
+const parseStockQuantity = (rawValue: string): number | null => {
+  const match = rawValue.match(/\b(\d{1,6})\b/);
+  if (!match?.[1]) return null;
+  const parsed = Number(match[1]);
+  if (!Number.isFinite(parsed)) return null;
+  return Math.max(0, Math.trunc(parsed));
+};
+
+const parseStockDirective = (
+  rawValue: string,
+): { quantity: number | null; forAllVariants: boolean } | null => {
+  const normalized = normalizeWhitespace(rawValue).toLowerCase();
+  if (!normalized) return null;
+
+  const mentionsStock = /\bstock(?:s)?\b|\binventory\b/.test(normalized);
+  const mentionsAllVariants =
+    /\b(all|each|every)\s+variants?\b/.test(normalized) ||
+    /\bfor\s+variants?\b/.test(normalized) ||
+    /\bper\s+variants?\b/.test(normalized) ||
+    /\bfor\s+all\s+variants?\b/.test(normalized) ||
+    /\bfor\s+each\s+variant\b/.test(normalized) ||
+    /\bfor\s*$/.test(normalized);
+
+  if (!mentionsStock && !mentionsAllVariants) {
+    return null;
+  }
+
+  const quantity = parseStockQuantity(normalized);
+  if (quantity === null) return null;
+
+  return {
+    quantity,
+    forAllVariants: mentionsAllVariants,
+  };
 };
 
 const normalizeSizeToken = (value: string) => value.trim().toUpperCase().replace(/\s+/g, "");
@@ -221,15 +392,35 @@ const expandStrictSizeRange = (token: string): { values: string[]; warning: stri
 };
 
 export const parseSizeValues = (value: string, fromSizeField = false): { values: string[]; warnings: string[] } => {
-  const rawTokens = splitListValues(value);
-  const tokens = rawTokens.length > 0 ? rawTokens : [normalizeWhitespace(value)];
+  const normalizedInput = normalizeWhitespace(value);
+  const rawTokens = splitListValues(normalizedInput);
+  const tokens = rawTokens.length > 0 ? rawTokens : [normalizedInput];
   const warnings: string[] = [];
   const values: string[] = [];
 
+  const sentenceRangeMatches = Array.from(
+    normalizedInput.matchAll(/(?:from\s+)?([A-Za-z0-9+]{1,8})\s*(?:-|to)\s*([A-Za-z0-9+]{1,8})/gi),
+  );
+
+  for (const rangeMatch of sentenceRangeMatches) {
+    const start = rangeMatch[1] ?? "";
+    const end = rangeMatch[2] ?? "";
+    const expanded = expandStrictSizeRange(`${start}-${end}`);
+    values.push(...expanded.values);
+    if (expanded.warning) {
+      warnings.push(expanded.warning);
+    }
+  }
+
   for (const token of tokens) {
     if (!token) continue;
-    if (token.includes("-")) {
-      const expanded = expandStrictSizeRange(token);
+    if (token.includes("-") || /\bto\b/i.test(token)) {
+      const inTokenRange = token.match(/([A-Za-z0-9+]{1,8})\s*(?:-|to)\s*([A-Za-z0-9+]{1,8})/i);
+      if (!inTokenRange) {
+        continue;
+      }
+
+      const expanded = expandStrictSizeRange(`${inTokenRange[1]}-${inTokenRange[2]}`);
       values.push(...expanded.values);
       if (expanded.warning) {
         warnings.push(expanded.warning);
@@ -237,7 +428,10 @@ export const parseSizeValues = (value: string, fromSizeField = false): { values:
       continue;
     }
 
-    const normalized = normalizeSizeToken(token);
+    const cleanedToken = token
+      .replace(/\b(from|size|sizes|between|range)\b/gi, " ")
+      .replace(/[():]/g, " ");
+    const normalized = normalizeSizeToken(cleanedToken);
     if (!normalized) continue;
     if (fromSizeField || looksLikeSizeToken(normalized)) {
       values.push(normalized);
@@ -246,7 +440,7 @@ export const parseSizeValues = (value: string, fromSizeField = false): { values:
 
   return {
     values: uniqueCaseInsensitive(values).map((entry) => entry.toUpperCase()),
-    warnings,
+    warnings: uniqueCaseInsensitive(warnings),
   };
 };
 
@@ -338,6 +532,8 @@ export const extractDeterministicDraftInput = (rawInput: string): AiDraftExtract
 
   let name: string | null = null;
   let price: number | null = null;
+  let stockQuantity: number | null = null;
+  let stockPerVariant: number | null = null;
   let shortDescription: string | null = null;
   let fullDescription: string | null = null;
   let metaTitle: string | null = null;
@@ -376,6 +572,23 @@ export const extractDeterministicDraftInput = (rawInput: string): AiDraftExtract
         if (parsed !== null) {
           price = parsed;
           priceExplicit = true;
+        }
+        continue;
+      }
+
+      if (normalizedKey.includes("stock") || normalizedKey.includes("inventory")) {
+        const stockDirective = parseStockDirective(normalizedValue);
+        if (stockDirective && stockDirective.quantity !== null) {
+          if (stockDirective.forAllVariants) {
+            stockPerVariant = stockDirective.quantity;
+          } else {
+            stockQuantity = stockDirective.quantity;
+          }
+        } else {
+          const fallbackStock = parseStockQuantity(normalizedValue);
+          if (fallbackStock !== null) {
+            stockQuantity = fallbackStock;
+          }
         }
         continue;
       }
@@ -436,6 +649,16 @@ export const extractDeterministicDraftInput = (rawInput: string): AiDraftExtract
       }
     }
 
+    const parsedLineStock = parseStockDirective(line);
+    if (parsedLineStock && parsedLineStock.quantity !== null) {
+      if (parsedLineStock.forAllVariants) {
+        stockPerVariant = parsedLineStock.quantity;
+      } else {
+        stockQuantity = parsedLineStock.quantity;
+      }
+      continue;
+    }
+
     const colorsFromLine = extractColors(line);
     if (colorsFromLine.length > 0) {
       colorValues.push(...colorsFromLine);
@@ -479,6 +702,8 @@ export const extractDeterministicDraftInput = (rawInput: string): AiDraftExtract
     core_fields: {
       name,
       price,
+      stock_quantity: stockQuantity,
+      stock_per_variant: stockPerVariant,
       short_description: shortDescription,
       full_description: fullDescription,
       meta_title: metaTitle,
@@ -511,17 +736,37 @@ export const mergeDeterministicWithEnrichment = (
 
   const explicitPrice = deterministic.core_fields.price;
   const enrichedPrice = typeof source.price === "number" && Number.isFinite(source.price) ? source.price : null;
+  const explicitStockQuantity =
+    typeof deterministic.core_fields.stock_quantity === "number" && Number.isFinite(deterministic.core_fields.stock_quantity)
+      ? Math.max(0, Math.trunc(deterministic.core_fields.stock_quantity))
+      : null;
+  const enrichedStockQuantity =
+    typeof source.stock_quantity === "number" && Number.isFinite(source.stock_quantity)
+      ? Math.max(0, Math.trunc(source.stock_quantity))
+      : null;
+  const explicitStockPerVariant =
+    typeof deterministic.core_fields.stock_per_variant === "number" && Number.isFinite(deterministic.core_fields.stock_per_variant)
+      ? Math.max(0, Math.trunc(deterministic.core_fields.stock_per_variant))
+      : null;
+  const enrichedStockPerVariant =
+    typeof source.stock_per_variant === "number" && Number.isFinite(source.stock_per_variant)
+      ? Math.max(0, Math.trunc(source.stock_per_variant))
+      : null;
 
   const mergedTags = uniqueCaseInsensitive([
     ...(deterministic.core_fields.tags ?? []),
     ...(Array.isArray(source.tags) ? source.tags : []),
   ]);
+  const mergedOptionTypes = mergeOptionTypes(deterministic.option_types ?? [], source.option_types);
+  const mergedVariantPreview = buildVariantPreview(mergedOptionTypes);
 
   const mergedName = enrichedName || explicitName || null;
 
   const mergedCoreFields: AiDraftCoreFields = {
     name: mergedName,
     price: explicitPrice ?? enrichedPrice ?? null,
+    stock_quantity: explicitStockQuantity ?? enrichedStockQuantity ?? null,
+    stock_per_variant: explicitStockPerVariant ?? enrichedStockPerVariant ?? null,
     short_description:
       deterministic.core_fields.short_description ||
       (typeof source.short_description === "string" ? normalizeWhitespace(source.short_description) : null) ||
@@ -547,12 +792,16 @@ export const mergeDeterministicWithEnrichment = (
   };
 
   const warnings = [...(deterministic.warnings ?? [])];
+  const hadDeterministicOptions = (deterministic.option_types ?? []).some((optionType) => optionType.values.length > 0);
+  const hasMergedOptions = mergedOptionTypes.some((optionType) => optionType.values.length > 0);
   const nameImproved =
     Boolean(explicitName) &&
     Boolean(enrichedName) &&
     explicitName.toLowerCase() !== enrichedName.toLowerCase();
   const nameInferred = !deterministic.confidence_flags.name_explicit && Boolean(mergedCoreFields.name);
   const priceInferred = !deterministic.confidence_flags.price_explicit && mergedCoreFields.price !== null;
+  const stockInferred = explicitStockQuantity === null && explicitStockPerVariant === null
+    && (mergedCoreFields.stock_quantity !== null || mergedCoreFields.stock_per_variant !== null);
 
   if (nameImproved) {
     warnings.push("Product name was improved by AI for SEO and slug quality.");
@@ -566,9 +815,19 @@ export const mergeDeterministicWithEnrichment = (
     warnings.push("Price was inferred by AI because no explicit price was detected.");
   }
 
+  if (stockInferred) {
+    warnings.push("Stock values were inferred by AI because no explicit stock directive was detected.");
+  }
+
+  if (!hadDeterministicOptions && hasMergedOptions) {
+    warnings.push("Variant options were inferred from conversational input and/or product images.");
+  }
+
   return {
     ...deterministic,
     core_fields: mergedCoreFields,
+    option_types: mergedOptionTypes,
+    variant_preview: mergedVariantPreview,
     warnings: uniqueCaseInsensitive(warnings),
     confidence_flags: {
       ...deterministic.confidence_flags,

@@ -104,11 +104,13 @@ const saveDraftOptionTypesAndVariants = async ({
   optionTypes,
   productPrice,
   skuSuggestion,
+  variantStockQuantity,
 }: {
   productId: string;
   optionTypes: AiDraftOptionType[];
   productPrice: number;
   skuSuggestion: string | null;
+  variantStockQuantity: number;
 }) => {
   const normalizedOptionTypes = normalizeOptionTypes(optionTypes);
   if (normalizedOptionTypes.length === 0) {
@@ -168,7 +170,7 @@ const saveDraftOptionTypesAndVariants = async ({
         label: preview.label,
         price: productPrice,
         compare_at_price: null,
-        stock_quantity: 0,
+        stock_quantity: variantStockQuantity,
         low_stock_threshold: 5,
         sku: variantSku,
         is_available: true,
@@ -344,6 +346,20 @@ const AdminAddWithAIPage = () => {
         typeof extraction.core_fields.price === "number" && Number.isFinite(extraction.core_fields.price)
           ? Math.max(0, extraction.core_fields.price)
           : 0;
+      const extractedStockQuantity =
+        typeof extraction.core_fields.stock_quantity === "number" && Number.isFinite(extraction.core_fields.stock_quantity)
+          ? Math.max(0, Math.trunc(extraction.core_fields.stock_quantity))
+          : null;
+      const extractedStockPerVariant =
+        typeof extraction.core_fields.stock_per_variant === "number" && Number.isFinite(extraction.core_fields.stock_per_variant)
+          ? Math.max(0, Math.trunc(extraction.core_fields.stock_per_variant))
+          : null;
+      const hasVariants = extraction.option_types.length > 0;
+      const variantCount = Math.max(1, extraction.variant_preview.length || 0);
+      const variantStockQuantity = hasVariants ? extractedStockPerVariant ?? extractedStockQuantity ?? 0 : 0;
+      const initialProductStock = hasVariants
+        ? variantStockQuantity * variantCount
+        : extractedStockQuantity ?? extractedStockPerVariant ?? 0;
       const draftSlug = `${slugify(extractedName) || "product"}-${Math.random().toString(36).slice(2, 8)}`;
 
       const created = await createAdminProduct(
@@ -357,9 +373,9 @@ const AdminAddWithAIPage = () => {
           compare_at_price: null,
           cost_price: null,
           sku: extraction.core_fields.sku_suggestion || null,
-          stock_quantity: 0,
+          stock_quantity: initialProductStock,
           low_stock_threshold: 5,
-          has_variants: extraction.option_types.length > 0,
+          has_variants: hasVariants,
           is_available: false,
           is_featured: false,
           images: [],
@@ -371,12 +387,13 @@ const AdminAddWithAIPage = () => {
         } as never,
       );
 
-      if (extraction.option_types.length > 0) {
+      if (hasVariants) {
         await saveDraftOptionTypesAndVariants({
           productId: created.id,
           optionTypes: extraction.option_types,
           productPrice: extractedPrice,
           skuSuggestion: extraction.core_fields.sku_suggestion,
+          variantStockQuantity,
         });
       }
 
@@ -486,8 +503,8 @@ S-L`}
             />
 
             <div className="border-t border-[var(--color-border)] px-4 py-3">
-              <div className="flex flex-wrap items-center justify-between gap-3">
-                <div className="flex flex-wrap items-center gap-2">
+              <div className="overflow-x-auto pb-1">
+                <div className="flex min-w-max items-center gap-2">
                   <button
                     type="button"
                     onClick={() => imageInputRef.current?.click()}
@@ -536,20 +553,21 @@ S-L`}
                   <span className="rounded-full border border-[var(--color-border)] px-2 py-1.5 font-body text-[9px] uppercase tracking-[0.09em] text-[var(--color-muted-soft)] sm:px-3 sm:py-2 sm:text-[10px]">
                     {files.length}/{MAX_IMAGES} images
                   </span>
-                </div>
+                  <span className="w-2 sm:w-5" />
 
-                <button
-                  type="button"
-                  onClick={() => void createDraft()}
-                  disabled={isSubmitting || isLoadingCategories}
-                  className={`rounded-full px-5 py-2.5 font-body text-[11px] uppercase tracking-[0.1em] transition-colors ${
-                    isSubmitting || isLoadingCategories
-                      ? "cursor-not-allowed border border-[var(--color-border)] text-[var(--color-muted-soft)] opacity-65"
-                      : "border border-[var(--color-primary)] bg-[var(--color-primary)] text-[var(--color-secondary)] hover:bg-[var(--color-accent)]"
-                  }`}
-                >
-                  {isSubmitting ? "Creating Draft..." : "Create Draft with AI"}
-                </button>
+                  <button
+                    type="button"
+                    onClick={() => void createDraft()}
+                    disabled={isSubmitting || isLoadingCategories}
+                    className={`ml-auto rounded-full px-5 py-2.5 font-body text-[11px] uppercase tracking-[0.1em] transition-colors ${
+                      isSubmitting || isLoadingCategories
+                        ? "cursor-not-allowed border border-[var(--color-border)] text-[var(--color-muted-soft)] opacity-65"
+                        : "border border-[var(--color-primary)] bg-[var(--color-primary)] text-[var(--color-secondary)] hover:bg-[var(--color-accent)]"
+                    }`}
+                  >
+                    {isSubmitting ? "Creating Draft..." : "Create Draft with AI"}
+                  </button>
+                </div>
               </div>
             </div>
           </div>
@@ -587,7 +605,7 @@ S-L`}
           ) : null}
 
           {previewResult ? (
-            <div className="mt-5 grid gap-3 md:grid-cols-3">
+            <div className="mt-5 grid gap-3 md:grid-cols-4">
               <div className="rounded-[var(--border-radius)] border border-[var(--color-border)] bg-[var(--color-surface)] px-4 py-3">
                 <p className="font-body text-[10px] uppercase tracking-[0.1em] text-[var(--color-muted-soft)]">Name</p>
                 <p className="mt-1 font-body text-[12px] text-[var(--color-primary)]">
@@ -606,6 +624,16 @@ S-L`}
                 <p className="font-body text-[10px] uppercase tracking-[0.1em] text-[var(--color-muted-soft)]">Variants</p>
                 <p className="mt-1 font-body text-[12px] text-[var(--color-primary)]">
                   {previewResult.variant_preview.length} combinations
+                </p>
+              </div>
+              <div className="rounded-[var(--border-radius)] border border-[var(--color-border)] bg-[var(--color-surface)] px-4 py-3">
+                <p className="font-body text-[10px] uppercase tracking-[0.1em] text-[var(--color-muted-soft)]">Stock</p>
+                <p className="mt-1 font-body text-[12px] text-[var(--color-primary)]">
+                  {typeof previewResult.core_fields.stock_per_variant === "number"
+                    ? `${previewResult.core_fields.stock_per_variant} each variant`
+                    : typeof previewResult.core_fields.stock_quantity === "number"
+                      ? `${previewResult.core_fields.stock_quantity} total`
+                      : "Not specified"}
                 </p>
               </div>
             </div>

@@ -41,6 +41,48 @@ describe("extractDeterministicDraftInput", () => {
     const parsed = extractDeterministicDraftInput(input);
     expect(parsed.core_fields.price).toBe(180);
   });
+
+  it("understands conversational range and color phrasing", () => {
+    const input = `
+      140gh
+      From S-L
+      Yellow and wine
+    `;
+
+    const parsed = extractDeterministicDraftInput(input);
+    const sizeType = parsed.option_types.find((entry) => entry.name === "Size");
+    const colorType = parsed.option_types.find((entry) => entry.name === "Color");
+
+    expect(parsed.core_fields.price).toBe(140);
+    expect(sizeType?.values.map((entry) => entry.value)).toEqual(["S", "M", "L"]);
+    expect(colorType?.values.map((entry) => entry.value)).toEqual(["Yellow", "Wine"]);
+  });
+
+  it("parses stock directives for base stock and all variants", () => {
+    const baseStockParsed = extractDeterministicDraftInput(`
+      140gh
+      stock=12
+    `);
+
+    const perVariantParsed = extractDeterministicDraftInput(`
+      stock is 5 for all variants
+      From S-L
+      Yellow and wine
+    `);
+
+    const conversationalPerVariantParsed = extractDeterministicDraftInput(`
+      stocks is 5 for
+      From S-L
+      Yellow and wine
+    `);
+
+    expect(baseStockParsed.core_fields.stock_quantity).toBe(12);
+    expect(baseStockParsed.core_fields.stock_per_variant).toBeNull();
+    expect(perVariantParsed.core_fields.stock_per_variant).toBe(5);
+    expect(perVariantParsed.core_fields.stock_quantity).toBeNull();
+    expect(conversationalPerVariantParsed.core_fields.stock_per_variant).toBe(5);
+    expect(conversationalPerVariantParsed.core_fields.stock_quantity).toBeNull();
+  });
 });
 
 describe("parseSizeValues", () => {
@@ -126,5 +168,47 @@ describe("mergeDeterministicWithEnrichment", () => {
     expect(merged.confidence_flags.name_inferred).toBe(true);
     expect(merged.confidence_flags.price_inferred).toBe(true);
     expect(merged.warnings.some((entry) => entry.includes("inferred by AI"))).toBe(true);
+  });
+
+  it("keeps explicit stock directives over inferred stock", () => {
+    const deterministic = extractDeterministicDraftInput(`
+      stock is 5 for all variants
+      From S-L
+    `);
+
+    const merged = mergeDeterministicWithEnrichment(deterministic, {
+      stock_quantity: 12,
+      stock_per_variant: 2,
+    });
+
+    expect(merged.core_fields.stock_per_variant).toBe(5);
+    expect(merged.core_fields.stock_quantity).toBe(12);
+  });
+
+  it("merges inferred variant options from conversational/image-aware enrichment", () => {
+    const deterministic = extractDeterministicDraftInput(`
+      140gh
+      use dress colors from images
+    `);
+
+    const merged = mergeDeterministicWithEnrichment(deterministic, {
+      option_types: [
+        {
+          name: "Color",
+          values: ["Yellow", "Wine", "Cream"],
+        },
+        {
+          name: "Size",
+          values: ["From S-L"],
+        },
+      ],
+    });
+
+    const colorType = merged.option_types.find((entry) => entry.name === "Color");
+    const sizeType = merged.option_types.find((entry) => entry.name === "Size");
+
+    expect(colorType?.values.map((entry) => entry.value)).toEqual(["Yellow", "Wine", "Cream"]);
+    expect(sizeType?.values.map((entry) => entry.value)).toEqual(["S", "M", "L"]);
+    expect(merged.variant_preview.length).toBe(9);
   });
 });
