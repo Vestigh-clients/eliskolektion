@@ -164,7 +164,13 @@ const AdminProductsPage = () => {
     <div className="admin-page">
       <div className="admin-page-header">
         <h1 className="admin-page-title font-display text-[36px] italic text-[var(--color-primary)]">Products</h1>
-        <div className="admin-page-actions">
+        <div className="admin-page-actions flex flex-wrap items-center gap-2">
+          <Link
+            to="/admin/products/add-with-ai"
+            className="rounded-[var(--border-radius)] border border-[var(--color-accent)] bg-transparent px-6 py-3 text-center font-body text-[11px] uppercase tracking-[0.1em] text-[var(--color-accent)] transition-colors hover:bg-[var(--color-accent)] hover:text-[var(--color-secondary)]"
+          >
+            Add with AI
+          </Link>
           <Link
             to="/admin/products/new"
             className="rounded-[var(--border-radius)] bg-[var(--color-primary)] px-7 py-3 text-center font-body text-[11px] uppercase tracking-[0.1em] text-[var(--color-secondary)] transition-colors hover:bg-[var(--color-accent)] hover:text-[var(--color-secondary)]"

@@ -16,7 +16,7 @@ const PaymentMethodsConfig = () => {
     let isMounted = true;
     const load = async () => {
       try {
-        const data = await getPaymentSettings();
+        const data = await getPaymentSettings({ seedIfMissing: true });
         if (isMounted) {
           setSettings(data);
           setInitialSettings(data);

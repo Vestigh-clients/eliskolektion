@@ -38,6 +38,7 @@ import AdminOrdersPage from "./pages/admin/AdminOrdersPage";
 import AdminOrderDetailPage from "./pages/admin/AdminOrderDetailPage";
 import AdminProductsPage from "./pages/admin/AdminProductsPage";
 import AdminProductEditorPage from "./pages/admin/AdminProductEditorPage";
+import AdminAddWithAIPage from "./pages/admin/AdminAddWithAIPage";
 import AdminCategoriesPage from "./pages/admin/AdminCategoriesPage";
 import AdminInventoryPricingPage from "./pages/admin/AdminInventoryPricingPage";
 import AdminCustomersPage from "./pages/admin/AdminCustomersPage";
@@ -181,6 +182,7 @@ const AppShell = () => {
               <Route path="orders" element={<AdminOrdersPage />} />
               <Route path="orders/:orderNumber" element={<AdminOrderDetailPage />} />
               <Route path="products" element={<AdminProductsPage />} />
+              <Route path="products/add-with-ai" element={<AdminAddWithAIPage />} />
               <Route path="products/new" element={<AdminProductEditorPage />} />
               <Route path="products/:id/edit" element={<AdminProductEditorPage />} />
               <Route path="categories" element={<AdminCategoriesPage />} />
