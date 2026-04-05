@@ -1,4 +1,5 @@
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { Analytics } from "@vercel/analytics/react";
 import { useCallback, useEffect, useMemo } from "react";
 import { BrowserRouter, Navigate, Route, Routes, useLocation, useNavigate } from "react-router-dom";
 import { Toaster as Sonner } from "@/components/ui/sonner";
@@ -252,6 +253,7 @@ const App = () => (
               <BrowserRouter>
                 <AppShell />
               </BrowserRouter>
+              <Analytics />
             </ThemeProvider>
           </StorefrontConfigProvider>
         </CartProvider>

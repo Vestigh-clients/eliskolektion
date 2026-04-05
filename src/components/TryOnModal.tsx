@@ -20,7 +20,6 @@ const TryOnModal = ({ product, isOpen, onClose }: TryOnModalProps) => {
   const [modelPreview, setModelPreview] = useState<string | null>(null);
   const [progress, setProgress] = useState<number>(0);
   const [resultImage, setResultImage] = useState<string | null>(null);
-  const [compositeImage, setCompositeImage] = useState<string | null>(null);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [isRetrying, setIsRetrying] = useState(false);
   const [retryCount, setRetryCount] = useState(0);
@@ -79,7 +78,6 @@ const TryOnModal = ({ product, isOpen, onClose }: TryOnModalProps) => {
     setModelPreview(null);
     setProgress(0);
     setResultImage(null);
-    setCompositeImage(null);
     setErrorMessage(null);
     setIsRetrying(false);
     setRetryCount(0);
@@ -176,9 +174,8 @@ const TryOnModal = ({ product, isOpen, onClose }: TryOnModalProps) => {
           setRetryCount(count);
           setRetryReason(reason);
         },
-        onComplete: (result, composite) => {
+        onComplete: (result) => {
           setResultImage(result);
-          setCompositeImage(composite);
           setIsRetrying(false);
           setTryOnState("result");
         },
@@ -202,20 +199,20 @@ const TryOnModal = ({ product, isOpen, onClose }: TryOnModalProps) => {
 
   return (
     <div
-      className="fixed inset-0 z-[1000] flex items-center justify-center bg-black/70 px-3 py-6"
+      className="fixed inset-0 z-[2100] flex items-start justify-center overflow-y-auto bg-black/70 px-3 pb-6 pt-20 sm:items-center sm:py-6"
       onClick={handleClose}
       role="dialog"
       aria-modal="true"
       aria-label="Virtual Try-On"
     >
       <div
-        className="relative max-h-[90vh] w-full max-w-[520px] overflow-y-auto rounded-[var(--border-radius)] bg-[var(--color-secondary)] p-7 sm:p-10"
+        className="relative max-h-[calc(100dvh-6rem)] w-full max-w-[520px] overflow-y-auto rounded-[var(--border-radius)] bg-[var(--color-secondary)] p-7 sm:max-h-[90vh] sm:p-10"
         onClick={(event) => event.stopPropagation()}
       >
         <button
           type="button"
           onClick={handleClose}
-          className="absolute right-5 top-5 text-[var(--color-muted)] transition-colors duration-200 hover:text-[var(--color-primary)]"
+          className="absolute right-5 top-5 z-10 text-[var(--color-muted)] transition-colors duration-200 hover:text-[var(--color-primary)]"
           aria-label="Close try-on modal"
         >
           <X size={20} strokeWidth={1.4} />
@@ -328,37 +325,32 @@ const TryOnModal = ({ product, isOpen, onClose }: TryOnModalProps) => {
               />
             ) : null}
 
-            {compositeImage ? (
-              <div>
-                <p className="mb-2 mt-4 font-body text-[10px] uppercase tracking-[0.15em] text-[var(--color-muted-soft)]">Outfit Preview</p>
-                <img src={compositeImage} alt="Outfit preview" className="h-[120px] w-full object-contain" />
-              </div>
-            ) : null}
+            <div className="mt-6 flex items-center gap-2">
+              <button
+                type="button"
+                onClick={() => {
+                  if (!resultImage) {
+                    return;
+                  }
+                  const link = document.createElement("a");
+                  link.href = resultImage;
+                  const normalizedStoreName = storefrontConfig.storeName.toLowerCase().replace(/\s+/g, "-");
+                  link.download = `${normalizedStoreName}-tryon-${product.slug}.png`;
+                  link.click();
+                }}
+                className="flex-1 rounded-[var(--border-radius)] bg-[var(--color-primary)] px-4 py-4 font-body text-[11px] uppercase tracking-[0.18em] text-[var(--color-secondary)] transition-colors duration-300 hover:bg-[var(--color-accent)] hover:text-[var(--color-secondary)]"
+              >
+                Download Photo
+              </button>
 
-            <button
-              type="button"
-              onClick={() => {
-                if (!resultImage) {
-                  return;
-                }
-                const link = document.createElement("a");
-                link.href = resultImage;
-                const normalizedStoreName = storefrontConfig.storeName.toLowerCase().replace(/\s+/g, "-");
-                link.download = `${normalizedStoreName}-tryon-${product.slug}.png`;
-                link.click();
-              }}
-              className="mt-6 w-full rounded-[var(--border-radius)] bg-[var(--color-primary)] px-4 py-4 font-body text-[11px] uppercase tracking-[0.18em] text-[var(--color-secondary)] transition-colors duration-300 hover:bg-[var(--color-accent)] hover:text-[var(--color-secondary)]"
-            >
-              Download Photo
-            </button>
-
-            <button
-              type="button"
-              onClick={resetTryOn}
-              className="mt-2 w-full rounded-[var(--border-radius)] border border-[var(--color-primary)] bg-transparent px-4 py-4 font-body text-[11px] uppercase tracking-[0.18em] text-[var(--color-primary)] transition-colors duration-300 hover:bg-[var(--color-primary)] hover:text-[var(--color-secondary)]"
-            >
-              Try Another Photo
-            </button>
+              <button
+                type="button"
+                onClick={resetTryOn}
+                className="flex-1 rounded-[var(--border-radius)] border border-[var(--color-primary)] bg-transparent px-4 py-4 font-body text-[11px] uppercase tracking-[0.18em] text-[var(--color-primary)] transition-colors duration-300 hover:bg-[var(--color-primary)] hover:text-[var(--color-secondary)]"
+              >
+                Try Another Photo
+              </button>
+            </div>
           </div>
         ) : null}
 
