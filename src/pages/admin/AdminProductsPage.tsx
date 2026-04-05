@@ -1,4 +1,4 @@
-import { Plus, Search, Sparkles, SlidersHorizontal, X } from "lucide-react";
+import { ChevronDown, ChevronUp, Plus, Search, Sparkles, SlidersHorizontal, X } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import {
@@ -190,6 +190,7 @@ const AdminProductsPage = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [loadError, setLoadError] = useState<string | null>(null);
   const [deletingId, setDeletingId] = useState<string | null>(null);
+  const [expandedCompactRowId, setExpandedCompactRowId] = useState<string | null>(null);
 
   useEffect(() => {
     const timeout = window.setTimeout(() => {
@@ -434,7 +435,7 @@ const AdminProductsPage = () => {
           </div>
         </section>
 
-        {/* ── Desktop table (md+) ───────────────────────────────────────────────── */}
+        {/* ── Desktop table (lg+) ───────────────────────────────────────────────── */}
         <div
           className="mt-4 hidden overflow-hidden rounded-[24px] border bg-white lg:block"
           style={{ borderColor: "rgba(var(--color-primary-rgb),0.12)" }}
@@ -543,118 +544,166 @@ const AdminProductsPage = () => {
             </table>
         </div>
 
-        {/* ── Mobile cards (< md) — original layout with truncation fixes ───────── */}
-        <div className="mt-4 space-y-3 lg:hidden">
-          {isLoading ? (
-            <p
-              className="rounded-[22px] border bg-white px-4 py-8 text-center font-body text-[12px] text-[var(--color-muted-soft)]"
-              style={{ borderColor: "rgba(var(--color-primary-rgb),0.12)" }}
-            >
-              Loading products...
-            </p>
-          ) : loadError ? (
-            <p
-              className="rounded-[22px] border bg-white px-4 py-8 text-center font-body text-[12px] text-[var(--color-danger)]"
-              style={{ borderColor: "rgba(var(--color-primary-rgb),0.12)" }}
-            >
-              {loadError}
-            </p>
-          ) : rows.length === 0 ? (
-            <p
-              className="rounded-[22px] border bg-white px-4 py-8 text-center font-body text-[12px] text-[var(--color-muted-soft)]"
-              style={{ borderColor: "rgba(var(--color-primary-rgb),0.12)" }}
-            >
-              No products found.
-            </p>
-          ) : (
-            rows.map((product) => {
-              const threshold = product.low_stock_threshold ?? 5;
-              const isLow = product.stock_quantity <= threshold && product.stock_quantity > 0;
-              const isOut = product.stock_quantity === 0;
+        {/* Compact table (mobile/tablet) */}
+        <div
+          className="mt-4 overflow-hidden rounded-[22px] border bg-white lg:hidden"
+          style={{ borderColor: "rgba(var(--color-primary-rgb),0.12)" }}
+        >
+          <table className="w-full table-fixed border-collapse">
+            <colgroup>
+              <col style={{ width: "18%" }} />
+              <col style={{ width: "42%" }} />
+              <col style={{ width: "18%" }} />
+              <col style={{ width: "22%" }} />
+            </colgroup>
+            <thead className="bg-[rgba(var(--color-primary-rgb),0.03)]">
+              <tr>
+                {["Image", "Product", "Price", "Action"].map((heading) => (
+                  <th
+                    key={heading}
+                    className="px-2 py-2 text-left font-body text-[9px] uppercase tracking-[0.1em] text-[var(--color-muted-soft)] first:pl-3 last:pr-3"
+                  >
+                    {heading}
+                  </th>
+                ))}
+              </tr>
+            </thead>
+            <tbody>
+              {isLoading ? (
+                <tr>
+                  <td colSpan={4} className="px-3 py-9 text-center font-body text-[12px] text-[var(--color-muted-soft)]">
+                    Loading products...
+                  </td>
+                </tr>
+              ) : loadError ? (
+                <tr>
+                  <td colSpan={4} className="px-3 py-9 text-center font-body text-[12px] text-[var(--color-danger)]">
+                    {loadError}
+                  </td>
+                </tr>
+              ) : rows.length === 0 ? (
+                <tr>
+                  <td colSpan={4} className="px-3 py-9 text-center font-body text-[12px] text-[var(--color-muted-soft)]">
+                    No products found.
+                  </td>
+                </tr>
+              ) : (
+                rows.flatMap((product) => {
+                  const threshold = product.low_stock_threshold ?? 5;
+                  const isLow = product.stock_quantity <= threshold && product.stock_quantity > 0;
+                  const isOut = product.stock_quantity === 0;
+                  const isExpanded = expandedCompactRowId === product.id;
 
-              return (
-                <div
-                  key={product.id}
-                  role="button"
-                  tabIndex={0}
-                  onClick={() => openEditor(product.id)}
-                  onKeyDown={(e) => {
-                    if (e.target !== e.currentTarget) return;
-                    if (e.key === "Enter" || e.key === " ") { e.preventDefault(); openEditor(product.id); }
-                  }}
-                  className="cursor-pointer rounded-[22px] border bg-white p-4 shadow-[0_8px_30px_rgba(26,28,28,0.06)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-accent)]"
-                  style={{ borderColor: "rgba(var(--color-primary-rgb),0.12)" }}
-                >
-                  {/* Row 1: image + name/SKU (70% width, truncated) */}
-                  <div className="flex gap-3">
-                    <div className="h-[56px] w-[44px] shrink-0 overflow-hidden rounded-[10px] border border-[rgba(var(--color-primary-rgb),0.12)] bg-[var(--color-surface-alt)]">
-                      {product.image_url
-                        ? <img src={product.image_url} alt={product.name} className="h-full w-full object-cover" />
-                        : <div className="h-full w-full bg-[var(--color-surface-strong)]" />}
-                    </div>
-                    {/* Name container: 70% of card width, hard truncate */}
-                    <div className="min-w-0" style={{ width: "70%" }}>
-                      <p
-                        className="font-body text-[13px] text-[var(--color-navbar-solid-foreground)] truncate"
-                        title={product.name}
-                      >
-                        {truncateNameByHalf(product.name)}
-                      </p>
-                      <p
-                        className="mt-1 truncate font-body text-[10px] uppercase tracking-[0.06em] text-[var(--color-muted-soft)]"
-                        title={product.sku || "No SKU"}
-                      >
-                        {truncateSkuByHalf(product.sku)}
-                      </p>
-                    </div>
-                  </div>
-
-                  {/* Row 2: category + price */}
-                  <div className="mt-3 flex items-center justify-between gap-3">
-                    <p className="truncate font-body text-[10px] uppercase tracking-[0.1em] text-[var(--color-accent)]">
-                      {product.category_name || "Uncategorized"}
-                    </p>
-                    <div className="shrink-0 text-right">
-                      <p className="font-body text-[13px] text-[var(--color-navbar-solid-foreground)]">{formatCurrency(product.price)}</p>
-                      {product.compare_at_price && (
-                        <p className="font-body text-[11px] text-[var(--color-muted-soft)] line-through">{formatCurrency(product.compare_at_price)}</p>
-                      )}
-                    </div>
-                  </div>
-
-                  {/* Row 3: stock + status badge */}
-                  <div className="mt-2 flex items-center justify-between gap-3">
-                    <p className={`font-body text-[12px] ${isOut ? "text-[var(--color-danger)]" : isLow ? "text-[var(--color-accent)]" : "text-[var(--color-navbar-solid-foreground)]"}`}>
-                      Stock {product.stock_quantity}
-                      {isLow && (
-                        <span className="ml-1.5 inline-block rounded-full bg-[rgba(var(--color-accent-rgb),0.15)] px-1.5 py-0.5 font-body text-[8px] uppercase tracking-[0.08em] text-[var(--color-accent)]">Low</span>
-                      )}
-                      {isOut && (
-                        <span className="ml-1.5 inline-block rounded-full bg-[rgba(var(--color-danger-rgb),0.15)] px-1.5 py-0.5 font-body text-[8px] uppercase tracking-[0.08em] text-[var(--color-danger)]">Out</span>
-                      )}
-                    </p>
-                    <span className={`inline-block rounded-full px-2.5 py-1 font-body text-[9px] uppercase tracking-[0.12em] ${product.is_available ? "border border-[var(--color-accent)] text-[var(--color-accent)]" : "border border-[var(--color-danger)] text-[var(--color-danger)]"}`}>
-                      {product.is_available ? "Available" : "Unavailable"}
-                    </span>
-                  </div>
-
-                  {/* Row 4: delete */}
-                  <div className="mt-3 flex justify-end gap-3 font-body text-[10px] uppercase tracking-[0.1em]">
-                    <button
-                      type="button"
-                      disabled={deletingId === product.id}
-                      onClick={(e) => { e.stopPropagation(); void onDelete(product); }}
-                      className="rounded-full border border-transparent px-3 py-1 text-[var(--color-muted)] transition-colors hover:border-[rgba(var(--color-danger-rgb),0.25)] hover:text-[var(--color-danger)] disabled:cursor-not-allowed disabled:opacity-50"
+                  return [
+                    <tr
+                      key={`${product.id}-main`}
+                      role="button"
+                      tabIndex={0}
+                      onClick={() => openEditor(product.id)}
+                      onKeyDown={(event) => {
+                        if (event.target !== event.currentTarget) return;
+                        if (event.key === "Enter" || event.key === " ") {
+                          event.preventDefault();
+                          openEditor(product.id);
+                        }
+                      }}
+                      className="cursor-pointer border-t border-[rgba(var(--color-primary-rgb),0.1)] transition-colors hover:bg-[rgba(var(--color-primary-rgb),0.04)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-accent)]"
                     >
-                      {deletingId === product.id ? "Deleting..." : "Delete"}
-                    </button>
-                  </div>
-                </div>
-              );
-            })
-          )}
+                      <td className="px-2 py-2.5 pl-3">
+                        <div className="h-12 w-9 overflow-hidden rounded-[8px] border border-[rgba(var(--color-primary-rgb),0.12)] bg-[var(--color-surface-alt)]">
+                          {product.image_url ? (
+                            <img src={product.image_url} alt={product.name} className="h-full w-full object-cover" />
+                          ) : (
+                            <div className="h-full w-full bg-[var(--color-surface-strong)]" />
+                          )}
+                        </div>
+                      </td>
+                      <td className="px-2 py-2.5">
+                        <p className="truncate font-body text-[12px] text-[var(--color-navbar-solid-foreground)]" title={product.name}>
+                          {truncateNameByHalf(product.name)}
+                        </p>
+                        <p className="mt-0.5 truncate font-body text-[9px] uppercase tracking-[0.05em] text-[var(--color-muted-soft)]" title={product.sku || "No SKU"}>
+                          {truncateSkuByHalf(product.sku)}
+                        </p>
+                      </td>
+                      <td className="px-2 py-2.5 align-top">
+                        <p className="whitespace-nowrap font-body text-[12px] text-[var(--color-navbar-solid-foreground)]">
+                          {formatCurrency(product.price)}
+                        </p>
+                        {product.compare_at_price ? (
+                          <p className="whitespace-nowrap font-body text-[10px] text-[var(--color-muted-soft)] line-through">
+                            {formatCurrency(product.compare_at_price)}
+                          </p>
+                        ) : null}
+                      </td>
+                      <td className="px-2 py-2.5 pr-3">
+                        <div className="flex flex-col items-end gap-1.5">
+                          <button
+                            type="button"
+                            onClick={(event) => {
+                              event.stopPropagation();
+                              setExpandedCompactRowId((current) => (current === product.id ? null : product.id));
+                            }}
+                            className="inline-flex items-center gap-1 rounded-full border px-2 py-1 font-body text-[8px] uppercase tracking-[0.08em] text-[var(--color-primary)] transition-colors hover:bg-[rgba(var(--color-primary-rgb),0.06)]"
+                            style={{ borderColor: "rgba(var(--color-primary-rgb),0.2)" }}
+                          >
+                            {isExpanded ? <ChevronUp className="h-3 w-3" /> : <ChevronDown className="h-3 w-3" />}
+                            Details
+                          </button>
+                          <button
+                            type="button"
+                            disabled={deletingId === product.id}
+                            onClick={(event) => {
+                              event.stopPropagation();
+                              void onDelete(product);
+                            }}
+                            className="rounded-full border border-transparent px-2.5 py-1 font-body text-[8px] uppercase tracking-[0.08em] text-[var(--color-muted)] transition-colors hover:border-[rgba(var(--color-danger-rgb),0.25)] hover:text-[var(--color-danger)] disabled:cursor-not-allowed disabled:opacity-50"
+                          >
+                            {deletingId === product.id ? "Deleting..." : "Delete"}
+                          </button>
+                        </div>
+                      </td>
+                    </tr>,
+                    isExpanded ? (
+                      <tr key={`${product.id}-details`} className="border-t border-[rgba(var(--color-primary-rgb),0.08)] bg-[rgba(var(--color-primary-rgb),0.03)]">
+                        <td colSpan={4} className="px-3 py-2.5">
+                          <div className="grid grid-cols-2 gap-x-3 gap-y-2 font-body text-[10px] text-[var(--color-navbar-solid-foreground)]">
+                            <p className="truncate" title={product.category_name || "Uncategorized"}>
+                              <span className="mr-1 text-[var(--color-muted)]">Category:</span>
+                              {product.category_name || "Uncategorized"}
+                            </p>
+                            <p>
+                              <span className="mr-1 text-[var(--color-muted)]">Status:</span>
+                              <span className={product.is_available ? "text-[var(--color-accent)]" : "text-[var(--color-danger)]"}>
+                                {product.is_available ? "Available" : "Unavailable"}
+                              </span>
+                            </p>
+                            <p>
+                              <span className="mr-1 text-[var(--color-muted)]">Stock:</span>
+                              <span className={isOut ? "text-[var(--color-danger)]" : isLow ? "text-[var(--color-accent)]" : ""}>
+                                {product.stock_quantity}
+                              </span>
+                              {isLow ? <span className="ml-1 text-[var(--color-accent)]">(Low)</span> : null}
+                              {isOut ? <span className="ml-1 text-[var(--color-danger)]">(Out)</span> : null}
+                            </p>
+                            {product.compare_at_price ? (
+                              <p>
+                                <span className="mr-1 text-[var(--color-muted)]">Compare:</span>
+                                {formatCurrency(product.compare_at_price)}
+                              </p>
+                            ) : (
+                              <p />
+                            )}
+                          </div>
+                        </td>
+                      </tr>
+                    ) : null,
+                  ];
+                })
+              )}
+            </tbody>
+          </table>
         </div>
-
         {/* ── Pagination ────────────────────────────────────────────────────────── */}
         <div
           className="mt-5 flex flex-wrap items-center justify-between gap-3 rounded-[22px] border bg-white px-4 py-3"
@@ -715,3 +764,4 @@ const AdminProductsPage = () => {
 };
 
 export default AdminProductsPage;
+
