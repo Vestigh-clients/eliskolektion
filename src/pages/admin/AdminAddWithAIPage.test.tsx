@@ -1,6 +1,6 @@
 import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 import { MemoryRouter } from "react-router-dom";
-import { beforeEach, describe, expect, it, vi } from "vitest";
+import { beforeAll, beforeEach, describe, expect, it, vi } from "vitest";
 import AdminAddWithAIPage from "@/pages/admin/AdminAddWithAIPage";
 
 const {
@@ -43,6 +43,18 @@ vi.mock("@/integrations/supabase/client", () => ({
 }));
 
 describe("AdminAddWithAIPage", () => {
+  beforeAll(() => {
+    if (!HTMLElement.prototype.hasPointerCapture) {
+      HTMLElement.prototype.hasPointerCapture = () => false;
+    }
+    if (!HTMLElement.prototype.setPointerCapture) {
+      HTMLElement.prototype.setPointerCapture = () => {};
+    }
+    if (!HTMLElement.prototype.releasePointerCapture) {
+      HTMLElement.prototype.releasePointerCapture = () => {};
+    }
+  });
+
   beforeEach(() => {
     navigateMock.mockReset();
     fetchAdminCategoriesMock.mockReset();
@@ -70,7 +82,9 @@ describe("AdminAddWithAIPage", () => {
     fireEvent.click(screen.getByRole("button", { name: "Create Draft with AI" }));
     expect(screen.getByText("Select a category before creating with AI.")).toBeInTheDocument();
 
-    fireEvent.change(screen.getByRole("combobox"), { target: { value: "cat-1" } });
+    const categoryTrigger = screen.getByRole("combobox", { name: "Category" });
+    fireEvent.keyDown(categoryTrigger, { key: "ArrowDown" });
+    fireEvent.click(screen.getByRole("option", { name: "Women" }));
     fireEvent.click(screen.getByRole("button", { name: "Create Draft with AI" }));
     expect(screen.getByText("Enter product notes in the prompt field.")).toBeInTheDocument();
   });
@@ -91,7 +105,9 @@ describe("AdminAddWithAIPage", () => {
       expect(fetchAdminCategoriesMock).toHaveBeenCalledTimes(1);
     });
 
-    fireEvent.change(screen.getByRole("combobox"), { target: { value: "cat-1" } });
+    const categoryTrigger = screen.getByRole("combobox", { name: "Category" });
+    fireEvent.keyDown(categoryTrigger, { key: "ArrowDown" });
+    fireEvent.click(screen.getByRole("option", { name: "Women" }));
 
     const promptField = screen.getByRole("textbox");
     fireEvent.change(promptField, { target: { value: "name=Three set\nprice=180gh" } });
