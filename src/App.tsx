@@ -84,6 +84,12 @@ const AppShell = () => {
   const showNavbar = !isAdminRoute;
   const showFooter = !isAdminRoute;
   const showCartDrawer = !isAdminRoute;
+  const mainClassName = useMemo(() => {
+    if (showNavbar && showFooter) return "min-h-screen pt-[var(--navbar-height)]";
+    if (showNavbar) return "pt-[var(--navbar-height)]";
+    if (showFooter) return "min-h-screen";
+    return "";
+  }, [showFooter, showNavbar]);
 
   const closeAuthModal = useCallback(() => {
     const nextSearch = clearAuthModalSearch(location.search);
@@ -136,7 +142,7 @@ const AppShell = () => {
     <>
       <RouteExperienceManager />
       {showNavbar ? <Navbar /> : null}
-      <main className={showFooter ? "min-h-screen" : ""}>
+      <main className={mainClassName}>
         <div key={`${location.pathname}?${routeTransitionSearch}`} className="lux-page-enter">
           <Routes>
             <Route path="/" element={<Index />} />

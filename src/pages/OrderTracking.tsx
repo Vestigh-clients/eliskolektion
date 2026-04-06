@@ -417,13 +417,13 @@ const OrderTracking = () => {
     return (
       <div className="bg-[var(--color-secondary)] px-6 py-[80px] sm:px-6">
         <div className="mx-auto max-w-[640px]">
-          <h1 className="font-display text-[38px] italic font-light text-[var(--color-primary)] sm:text-[48px]">Track Your Order</h1>
+          <h1 className="font-manrope text-[38px]  font-light text-[var(--color-primary)] sm:text-[48px]">Track Your Order</h1>
 
           <form onSubmit={handleGuestLookup} className="mt-8">
             <div className="mb-5">
               <label
                 htmlFor="order-tracking-order-number"
-                className="mb-2 block font-body text-[10px] uppercase tracking-[0.12em] text-[var(--color-muted)]"
+                className="mb-2 block font-inter text-[10px] uppercase tracking-[0.12em] text-[var(--color-muted)]"
               >
                 Order Number
               </label>
@@ -433,7 +433,7 @@ const OrderTracking = () => {
                 value={lookupOrderNumber}
                 onChange={(event) => setLookupOrderNumber(event.target.value)}
                 placeholder="ORD-2026-00001"
-                className="w-full border-0 border-b border-[var(--color-border)] bg-transparent pb-[10px] font-body text-[14px] text-[var(--color-primary)] placeholder:text-[var(--color-muted-soft)] outline-none transition-colors focus:border-[var(--color-primary)]"
+                className="w-full border-0 border-b border-[var(--color-border)] bg-transparent pb-[10px] font-inter text-[14px] text-[var(--color-primary)] placeholder:text-[var(--color-muted-soft)] outline-none transition-colors focus:border-[var(--color-primary)]"
                 autoComplete="off"
               />
             </div>
@@ -441,7 +441,7 @@ const OrderTracking = () => {
             <div>
               <label
                 htmlFor="order-tracking-email"
-                className="mb-2 block font-body text-[10px] uppercase tracking-[0.12em] text-[var(--color-muted)]"
+                className="mb-2 block font-inter text-[10px] uppercase tracking-[0.12em] text-[var(--color-muted)]"
               >
                 Email Address
               </label>
@@ -451,17 +451,17 @@ const OrderTracking = () => {
                 value={lookupEmail}
                 onChange={(event) => setLookupEmail(event.target.value)}
                 placeholder="Email used at checkout"
-                className="w-full border-0 border-b border-[var(--color-border)] bg-transparent pb-[10px] font-body text-[14px] text-[var(--color-primary)] placeholder:text-[var(--color-muted-soft)] outline-none transition-colors focus:border-[var(--color-primary)]"
+                className="w-full border-0 border-b border-[var(--color-border)] bg-transparent pb-[10px] font-inter text-[14px] text-[var(--color-primary)] placeholder:text-[var(--color-muted-soft)] outline-none transition-colors focus:border-[var(--color-primary)]"
                 autoComplete="email"
               />
             </div>
 
-            {lookupError ? <p className="mt-4 font-body text-[12px] text-[var(--color-danger)]">{lookupError}</p> : null}
+            {lookupError ? <p className="mt-4 font-inter text-[12px] text-[var(--color-danger)]">{lookupError}</p> : null}
 
             <button
               type="submit"
               disabled={isSubmittingLookup}
-              className="mt-7 w-full rounded-[var(--border-radius)] bg-[var(--color-primary)] px-6 py-4 font-body text-[11px] uppercase tracking-[0.15em] text-[var(--color-secondary)] transition-colors duration-200 hover:bg-[var(--color-accent)] hover:text-[var(--color-secondary)] disabled:cursor-not-allowed disabled:opacity-60"
+              className="mt-7 w-full rounded-[var(--border-radius)] bg-[var(--color-primary)] px-6 py-4 font-inter text-[11px] uppercase tracking-[0.15em] text-[var(--color-secondary)] transition-colors duration-200 hover:bg-[var(--color-accent)] hover:text-[var(--color-secondary)] disabled:cursor-not-allowed disabled:opacity-60"
             >
               {isSubmittingLookup ? "Finding..." : "Find Order"}
             </button>
@@ -475,14 +475,14 @@ const OrderTracking = () => {
     return (
       <div className="bg-[var(--color-secondary)] px-6 py-[80px] sm:px-6">
         <div className="mx-auto max-w-[640px] text-center">
-          <p className="font-body text-[10px] uppercase tracking-[0.2em] text-[var(--color-accent)]">404</p>
-          <h1 className="mt-3 font-display text-[38px] italic font-light text-[var(--color-primary)] sm:text-[48px]">Order not found</h1>
-          <p className="mt-4 font-body text-[13px] font-light text-[var(--color-muted)]">
+          <p className="font-inter text-[10px] uppercase tracking-[0.2em] text-[var(--color-accent)]">404</p>
+          <h1 className="mt-3 font-manrope text-[38px]  font-light text-[var(--color-primary)] sm:text-[48px]">Order not found</h1>
+          <p className="mt-4 font-inter text-[13px] font-light text-[var(--color-muted)]">
             We could not find this order under your account.
           </p>
           <Link
             to="/shop"
-            className="mt-8 inline-block font-body text-[11px] uppercase tracking-[0.15em] text-[var(--color-primary)] transition-colors duration-200 hover:text-[var(--color-accent)]"
+            className="mt-8 inline-block font-inter text-[11px] uppercase tracking-[0.15em] text-[var(--color-primary)] transition-colors duration-200 hover:text-[var(--color-accent)]"
           >
             Go to Shop
           </Link>
@@ -495,10 +495,10 @@ const OrderTracking = () => {
     return (
       <div className="bg-[var(--color-secondary)] px-6 py-[80px] sm:px-6">
         <div className="mx-auto max-w-[640px] text-center">
-          <p className="font-body text-[13px] text-[var(--color-muted)]">{lookupError || "We couldn't load your order details right now."}</p>
+          <p className="font-inter text-[13px] text-[var(--color-muted)]">{lookupError || "We couldn't load your order details right now."}</p>
           <Link
             to="/shop"
-            className="mt-6 inline-block font-body text-[11px] uppercase tracking-[0.15em] text-[var(--color-primary)] transition-colors duration-200 hover:text-[var(--color-accent)]"
+            className="mt-6 inline-block font-inter text-[11px] uppercase tracking-[0.15em] text-[var(--color-primary)] transition-colors duration-200 hover:text-[var(--color-accent)]"
           >
             Go to Shop
           </Link>
@@ -513,18 +513,18 @@ const OrderTracking = () => {
         <section className="overflow-hidden rounded-[var(--border-radius)] border border-[var(--color-border)] bg-[var(--color-surface)] px-4 py-5 sm:px-7 sm:py-7">
           <div className="flex flex-wrap items-start justify-between gap-4">
             <div className="min-w-0 flex-1">
-              <p className="font-body text-[10px] uppercase tracking-[0.2em] text-[var(--color-accent)]">Order Tracking</p>
-              <h1 className="mt-3 max-w-full font-display text-[clamp(1.65rem,6vw,2.875rem)] italic font-light leading-[1.12] text-[var(--color-primary)] [overflow-wrap:anywhere]">
+              <p className="font-inter text-[10px] uppercase tracking-[0.2em] text-[var(--color-accent)]">Order Tracking</p>
+              <h1 className="mt-3 max-w-full font-manrope text-[clamp(1.65rem,6vw,2.875rem)]  font-light leading-[1.12] text-[var(--color-primary)] [overflow-wrap:anywhere]">
                 Order {order.order_number}
               </h1>
-              <p className="mt-3 font-body text-[13px] font-light text-[var(--color-muted)]">
+              <p className="mt-3 font-inter text-[13px] font-light text-[var(--color-muted)]">
                 Current status: <span className="text-[var(--color-primary)]">{formatStatusLabel(order.status)}</span>
               </p>
             </div>
 
             <div className="w-full rounded-[var(--border-radius)] border border-[var(--color-border)] px-4 py-3 sm:w-auto sm:min-w-[220px]">
-              <p className="font-body text-[10px] uppercase tracking-[0.12em] text-[var(--color-muted-soft)]">Last Updated</p>
-              <p className="mt-1 font-body text-[13px] text-[var(--color-primary)] [overflow-wrap:anywhere]">
+              <p className="font-inter text-[10px] uppercase tracking-[0.12em] text-[var(--color-muted-soft)]">Last Updated</p>
+              <p className="mt-1 font-inter text-[13px] text-[var(--color-primary)] [overflow-wrap:anywhere]">
                 {orderUpdatedLabel || orderDateLabel || "Not available"}
               </p>
             </div>
@@ -532,35 +532,35 @@ const OrderTracking = () => {
 
           <div className="mt-6 grid grid-cols-1 gap-3 sm:grid-cols-2 xl:grid-cols-4">
             <div className="rounded-[var(--border-radius)] border border-[var(--color-border)] px-4 py-3">
-              <p className="font-body text-[10px] uppercase tracking-[0.12em] text-[var(--color-muted-soft)]">Total Paid</p>
-              <p className="mt-1 font-body text-[18px] text-[var(--color-primary)]">{formatPrice(order.total)}</p>
+              <p className="font-inter text-[10px] uppercase tracking-[0.12em] text-[var(--color-muted-soft)]">Total Paid</p>
+              <p className="mt-1 font-inter text-[18px] text-[var(--color-primary)]">{formatPrice(order.total)}</p>
               {paidAtLabel ? (
-                <p className="mt-1 font-body text-[10px] uppercase tracking-[0.08em] text-[var(--color-muted-soft)]">Paid {paidAtLabel}</p>
+                <p className="mt-1 font-inter text-[10px] uppercase tracking-[0.08em] text-[var(--color-muted-soft)]">Paid {paidAtLabel}</p>
               ) : null}
             </div>
 
             <div className="rounded-[var(--border-radius)] border border-[var(--color-border)] px-4 py-3">
-              <p className="font-body text-[10px] uppercase tracking-[0.12em] text-[var(--color-muted-soft)]">Items</p>
-              <p className="mt-1 font-body text-[18px] text-[var(--color-primary)]">
+              <p className="font-inter text-[10px] uppercase tracking-[0.12em] text-[var(--color-muted-soft)]">Items</p>
+              <p className="mt-1 font-inter text-[18px] text-[var(--color-primary)]">
                 {totalItems} {totalItems === 1 ? "product" : "products"}
               </p>
-              <p className="mt-1 font-body text-[10px] uppercase tracking-[0.08em] text-[var(--color-muted-soft)]">
+              <p className="mt-1 font-inter text-[10px] uppercase tracking-[0.08em] text-[var(--color-muted-soft)]">
                 {totalUnits} {totalUnits === 1 ? "unit" : "units"}
               </p>
             </div>
 
             <div className="rounded-[var(--border-radius)] border border-[var(--color-border)] px-4 py-3">
-              <p className="font-body text-[10px] uppercase tracking-[0.12em] text-[var(--color-muted-soft)]">Payment</p>
-              <p className="mt-1 font-body text-[15px] text-[var(--color-primary)]">{paymentMethodLabel}</p>
-              <p className="mt-1 font-body text-[10px] uppercase tracking-[0.08em] text-[var(--color-muted-soft)]">{paymentStatusLabel}</p>
+              <p className="font-inter text-[10px] uppercase tracking-[0.12em] text-[var(--color-muted-soft)]">Payment</p>
+              <p className="mt-1 font-inter text-[15px] text-[var(--color-primary)]">{paymentMethodLabel}</p>
+              <p className="mt-1 font-inter text-[10px] uppercase tracking-[0.08em] text-[var(--color-muted-soft)]">{paymentStatusLabel}</p>
             </div>
 
             <div className="rounded-[var(--border-radius)] border border-[var(--color-border)] px-4 py-3">
-              <p className="font-body text-[10px] uppercase tracking-[0.12em] text-[var(--color-muted-soft)]">Estimated Delivery</p>
-              <p className="mt-1 font-body text-[15px] text-[var(--color-primary)]">
+              <p className="font-inter text-[10px] uppercase tracking-[0.12em] text-[var(--color-muted-soft)]">Estimated Delivery</p>
+              <p className="mt-1 font-inter text-[15px] text-[var(--color-primary)]">
                 {deliveryWindow.minDays}-{deliveryWindow.maxDays} business days
               </p>
-              <p className="mt-1 font-body text-[10px] uppercase tracking-[0.08em] text-[var(--color-muted-soft)]">
+              <p className="mt-1 font-inter text-[10px] uppercase tracking-[0.08em] text-[var(--color-muted-soft)]">
                 Ordered {orderDateLabel || "Recently"}
               </p>
             </div>
@@ -569,8 +569,8 @@ const OrderTracking = () => {
 
         {order.status.trim().toLowerCase() === "cancelled" ? (
           <section className="mt-5 rounded-[var(--border-radius)] border border-[var(--color-danger)] bg-[var(--color-surface-alt)] px-4 py-4 sm:px-6">
-            <p className="font-body text-[10px] uppercase tracking-[0.12em] text-[var(--color-danger)]">Cancelled Order</p>
-            <p className="mt-2 font-body text-[13px] text-[var(--color-muted)]">
+            <p className="font-inter text-[10px] uppercase tracking-[0.12em] text-[var(--color-danger)]">Cancelled Order</p>
+            <p className="mt-2 font-inter text-[13px] text-[var(--color-muted)]">
               {cancellationNote || "This order was cancelled and will no longer be processed."}
             </p>
           </section>
@@ -583,7 +583,7 @@ const OrderTracking = () => {
             </section>
 
             <section className="rounded-[var(--border-radius)] border border-[var(--color-border)] bg-[var(--color-surface)] px-4 py-5 sm:px-7 sm:py-6">
-              <p className="mb-6 font-body text-[10px] uppercase tracking-[0.2em] text-[var(--color-accent)]">Order Status</p>
+              <p className="mb-6 font-inter text-[10px] uppercase tracking-[0.2em] text-[var(--color-accent)]">Order Status</p>
 
               <div>
                 {liveStatusSteps.map((step, index) => {
@@ -599,22 +599,22 @@ const OrderTracking = () => {
                     <div key={step.key}>
                       <div className="flex items-start gap-4">
                         <span
-                          className={`mt-[1px] flex h-[20px] w-[20px] items-center justify-center rounded-full border font-body text-[10px] ${getStepCircleClass(step.state)}`}
+                          className={`mt-[1px] flex h-[20px] w-[20px] items-center justify-center rounded-full border font-inter text-[10px] ${getStepCircleClass(step.state)}`}
                         >
                           {index + 1}
                         </span>
 
                         <div className="min-w-0 pt-[1px]">
-                          <p className={`font-body text-[13px] ${labelColor}`}>{step.label}</p>
+                          <p className={`font-inter text-[13px] ${labelColor}`}>{step.label}</p>
                           <p
-                            className={`mt-1 font-body text-[11px] font-light ${
+                            className={`mt-1 font-inter text-[11px] font-light ${
                               step.state === "upcoming" ? "text-[var(--color-muted-soft)]" : "text-[var(--color-muted)]"
                             }`}
                           >
                             {step.note || step.description}
                           </p>
                           {step.changedAt ? (
-                            <p className="mt-1 font-body text-[10px] uppercase tracking-[0.08em] text-[var(--color-muted-soft)]">
+                            <p className="mt-1 font-inter text-[10px] uppercase tracking-[0.08em] text-[var(--color-muted-soft)]">
                               {formatChangedAt(step.changedAt)}
                             </p>
                           ) : null}
@@ -633,17 +633,17 @@ const OrderTracking = () => {
 
           <aside className="order-1 min-w-0 space-y-4 sm:space-y-5 lg:order-2 lg:sticky lg:top-24 lg:h-fit">
             <section className="rounded-[var(--border-radius)] border border-[var(--color-border)] bg-[var(--color-surface)] px-4 py-4 sm:px-5 sm:py-5">
-              <p className="font-body text-[10px] uppercase tracking-[0.2em] text-[var(--color-accent)]">Quick Actions</p>
+              <p className="font-inter text-[10px] uppercase tracking-[0.2em] text-[var(--color-accent)]">Quick Actions</p>
               <div className="mt-4 flex flex-col gap-3">
                 <Link
                   to="/shop"
-                  className="font-body text-[11px] uppercase tracking-[0.15em] text-[var(--color-primary)] transition-colors duration-200 hover:text-[var(--color-accent)]"
+                  className="font-inter text-[11px] uppercase tracking-[0.15em] text-[var(--color-primary)] transition-colors duration-200 hover:text-[var(--color-accent)]"
                 >
                   &larr; Continue Shopping
                 </Link>
                 <Link
                   to="/checkout/confirmation"
-                  className="font-body text-[11px] uppercase tracking-[0.15em] text-[var(--color-primary)] transition-colors duration-200 hover:text-[var(--color-accent)] [overflow-wrap:anywhere]"
+                  className="font-inter text-[11px] uppercase tracking-[0.15em] text-[var(--color-primary)] transition-colors duration-200 hover:text-[var(--color-accent)] [overflow-wrap:anywhere]"
                 >
                   Back to Confirmation &rarr;
                 </Link>
@@ -651,13 +651,13 @@ const OrderTracking = () => {
             </section>
 
             <section className="rounded-[var(--border-radius)] border border-[var(--color-border)] bg-[var(--color-surface)] px-4 py-4 sm:px-5 sm:py-5">
-              <p className="font-body text-[10px] uppercase tracking-[0.2em] text-[var(--color-accent)]">Need Help?</p>
-              <p className="mt-2 font-body text-[12px] text-[var(--color-muted)]">
+              <p className="font-inter text-[10px] uppercase tracking-[0.2em] text-[var(--color-accent)]">Need Help?</p>
+              <p className="mt-2 font-inter text-[12px] text-[var(--color-muted)]">
                 Questions about this order, delivery updates, or payment?
               </p>
               <a
                 href={`mailto:${storeConfig.contact.email}`}
-                className="mt-4 inline-block font-body text-[11px] uppercase tracking-[0.12em] text-[var(--color-primary)] transition-colors hover:text-[var(--color-accent)]"
+                className="mt-4 inline-block font-inter text-[11px] uppercase tracking-[0.12em] text-[var(--color-primary)] transition-colors hover:text-[var(--color-accent)]"
               >
                 Email Support
               </a>

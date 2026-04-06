@@ -161,13 +161,13 @@ const AdminOrderDetailPage = () => {
   }, [cancelSuccess]);
 
   if (isLoading) {
-    return <div className="admin-page font-body text-[12px] text-[var(--color-muted)]">Loading order...</div>;
+    return <div className="admin-page font-inter text-[12px] text-[var(--color-muted)]">Loading order...</div>;
   }
 
   if (loadError || !order) {
     return (
       <div className="admin-page">
-        <p className="font-body text-[12px] text-[var(--color-danger)]">{loadError || "Order not found."}</p>
+        <p className="font-inter text-[12px] text-[var(--color-danger)]">{loadError || "Order not found."}</p>
       </div>
     );
   }
@@ -236,18 +236,18 @@ const AdminOrderDetailPage = () => {
       <div className="order-detail-layout grid gap-10 lg:grid-cols-[65%_35%]">
         <div className="order-detail-left">
           <header>
-            <h1 className="admin-page-title font-display text-[32px] italic text-[var(--color-primary)]">{order.order_number}</h1>
-            <p className="mt-1 font-body text-[11px] text-[var(--color-muted-soft)]">{formatDateLong(order.created_at)}</p>
+            <h1 className="admin-page-title font-manrope text-[32px]  text-[var(--color-primary)]">{order.order_number}</h1>
+            <p className="mt-1 font-inter text-[11px] text-[var(--color-muted-soft)]">{formatDateLong(order.created_at)}</p>
             <div className="mt-4 flex items-center gap-2">
               <span
-                className={`rounded-[var(--border-radius)] px-2 py-1 font-body text-[9px] uppercase tracking-[0.12em] ${
+                className={`rounded-[var(--border-radius)] px-2 py-1 font-inter text-[9px] uppercase tracking-[0.12em] ${
                   statusBadgeClass[order.status] ?? "border border-[var(--color-border)] text-[var(--color-muted)]"
                 }`}
               >
                 {buildStatusLabel(order.status)}
               </span>
               <span
-                className={`rounded-[var(--border-radius)] px-2 py-1 font-body text-[9px] uppercase tracking-[0.12em] ${
+                className={`rounded-[var(--border-radius)] px-2 py-1 font-inter text-[9px] uppercase tracking-[0.12em] ${
                   paymentBadgeClass[order.payment_status] ?? "border border-[var(--color-border)] text-[var(--color-muted-soft)]"
                 }`}
               >
@@ -259,7 +259,7 @@ const AdminOrderDetailPage = () => {
           <div className="my-8 border-b border-[var(--color-border)]" />
 
           <section>
-            <p className="mb-5 font-body text-[10px] uppercase tracking-[0.2em] text-[var(--color-accent)]">Order Items</p>
+            <p className="mb-5 font-inter text-[10px] uppercase tracking-[0.2em] text-[var(--color-accent)]">Order Items</p>
             <div>
               {order.order_items.map((item) => (
                 <div key={item.id} className="flex gap-4 border-b border-[var(--color-border)] py-4">
@@ -271,39 +271,39 @@ const AdminOrderDetailPage = () => {
                     )}
                   </div>
                   <div className="flex-1">
-                    <p className="font-display text-[16px] italic text-[var(--color-primary)]">{item.product_name}</p>
-                    <p className="font-body text-[10px] text-[var(--color-muted-soft)]">{item.product_sku || "No SKU"}</p>
+                    <p className="font-manrope text-[16px]  text-[var(--color-primary)]">{item.product_name}</p>
+                    <p className="font-inter text-[10px] text-[var(--color-muted-soft)]">{item.product_sku || "No SKU"}</p>
                     {item.variant_label ? (
-                      <p className="mt-[2px] font-body text-[11px] text-[var(--color-muted)]">
+                      <p className="mt-[2px] font-inter text-[11px] text-[var(--color-muted)]">
                         {item.variant_label}
                       </p>
                     ) : null}
-                    <p className="mt-1 font-body text-[12px] text-[var(--color-muted)]">{formatCurrency(item.unit_price)} each</p>
-                    <p className="font-body text-[11px] text-[var(--color-muted)]">Qty: {item.quantity}</p>
+                    <p className="mt-1 font-inter text-[12px] text-[var(--color-muted)]">{formatCurrency(item.unit_price)} each</p>
+                    <p className="font-inter text-[11px] text-[var(--color-muted)]">Qty: {item.quantity}</p>
                   </div>
-                  <p className="font-body text-[13px] text-[var(--color-primary)]">{formatCurrency(item.subtotal)}</p>
+                  <p className="font-inter text-[13px] text-[var(--color-primary)]">{formatCurrency(item.subtotal)}</p>
                 </div>
               ))}
             </div>
           </section>
 
           <div className="ml-auto mt-6 w-full max-w-[280px]">
-            <div className="flex items-center justify-between py-1 font-body text-[12px] text-[var(--color-muted)]">
+            <div className="flex items-center justify-between py-1 font-inter text-[12px] text-[var(--color-muted)]">
               <span>Subtotal</span>
               <span>{formatCurrency(order.subtotal)}</span>
             </div>
-            <div className="flex items-center justify-between py-1 font-body text-[12px] text-[var(--color-muted)]">
+            <div className="flex items-center justify-between py-1 font-inter text-[12px] text-[var(--color-muted)]">
               <span>Shipping</span>
               <span>{formatCurrency(order.shipping_fee)}</span>
             </div>
             {order.discount_amount ? (
-              <div className="flex items-center justify-between py-1 font-body text-[12px] text-[var(--color-accent)]">
+              <div className="flex items-center justify-between py-1 font-inter text-[12px] text-[var(--color-accent)]">
                 <span>Discount</span>
                 <span>- {formatCurrency(order.discount_amount)}</span>
               </div>
             ) : null}
             <div className="my-2 border-b border-[var(--color-border)]" />
-            <div className="flex items-center justify-between py-1 font-body text-[15px] font-medium text-[var(--color-primary)]">
+            <div className="flex items-center justify-between py-1 font-inter text-[15px] font-medium text-[var(--color-primary)]">
               <span>Total</span>
               <span>{formatCurrency(order.total)}</span>
             </div>
@@ -312,18 +312,18 @@ const AdminOrderDetailPage = () => {
           <div className="my-8 border-b border-[var(--color-border)]" />
 
           <section>
-            <p className="mb-3 font-body text-[10px] uppercase tracking-[0.2em] text-[var(--color-accent)]">Delivering To</p>
+            <p className="mb-3 font-inter text-[10px] uppercase tracking-[0.2em] text-[var(--color-accent)]">Delivering To</p>
             {addressLines.length > 0 ? (
-              <div className="space-y-1 font-body text-[13px] text-[var(--color-muted)]">
+              <div className="space-y-1 font-inter text-[13px] text-[var(--color-muted)]">
                 {addressLines.map((line) => (
                   <p key={line}>{line}</p>
                 ))}
               </div>
             ) : (
-              <p className="font-body text-[13px] text-[var(--color-muted)]">No delivery address captured.</p>
+              <p className="font-inter text-[13px] text-[var(--color-muted)]">No delivery address captured.</p>
             )}
             {parseSnapshot(order.shipping_address_snapshot)?.delivery_instructions ? (
-              <p className="mt-2 font-body text-[12px] italic text-[var(--color-muted-soft)]">
+              <p className="mt-2 font-inter text-[12px]  text-[var(--color-muted-soft)]">
                 {String(parseSnapshot(order.shipping_address_snapshot)?.delivery_instructions)}
               </p>
             ) : null}
@@ -332,11 +332,11 @@ const AdminOrderDetailPage = () => {
           <div className="my-8 border-b border-[var(--color-border)]" />
 
           <section>
-            <p className="mb-3 font-body text-[10px] uppercase tracking-[0.2em] text-[var(--color-accent)]">Payment</p>
-            <p className="font-body text-[13px] text-[var(--color-muted)]">{toTitleCase(order.payment_method || "not specified")}</p>
-            {order.payment_reference ? <p className="mt-1 font-body text-[11px] text-[var(--color-muted-soft)]">Ref: {order.payment_reference}</p> : null}
+            <p className="mb-3 font-inter text-[10px] uppercase tracking-[0.2em] text-[var(--color-accent)]">Payment</p>
+            <p className="font-inter text-[13px] text-[var(--color-muted)]">{toTitleCase(order.payment_method || "not specified")}</p>
+            {order.payment_reference ? <p className="mt-1 font-inter text-[11px] text-[var(--color-muted-soft)]">Ref: {order.payment_reference}</p> : null}
             {order.mobile_money_number ? (
-              <p className="mt-1 font-body text-[11px] text-[var(--color-muted-soft)]">Mobile Money: {order.mobile_money_number}</p>
+              <p className="mt-1 font-inter text-[11px] text-[var(--color-muted-soft)]">Mobile Money: {order.mobile_money_number}</p>
             ) : null}
           </section>
 
@@ -344,8 +344,8 @@ const AdminOrderDetailPage = () => {
             <>
               <div className="my-8 border-b border-[var(--color-border)]" />
               <section>
-                <p className="mb-3 font-body text-[10px] uppercase tracking-[0.2em] text-[var(--color-accent)]">Customer Notes</p>
-                <p className="font-body text-[13px] italic text-[var(--color-muted)]">{order.notes}</p>
+                <p className="mb-3 font-inter text-[10px] uppercase tracking-[0.2em] text-[var(--color-accent)]">Customer Notes</p>
+                <p className="font-inter text-[13px]  text-[var(--color-muted)]">{order.notes}</p>
               </section>
             </>
           ) : null}
@@ -353,7 +353,7 @@ const AdminOrderDetailPage = () => {
           <div className="my-8 border-b border-[var(--color-border)]" />
 
           <section>
-            <p className="mb-5 font-body text-[10px] uppercase tracking-[0.2em] text-[var(--color-accent)]">Order History</p>
+            <p className="mb-5 font-inter text-[10px] uppercase tracking-[0.2em] text-[var(--color-accent)]">Order History</p>
             <div>
               {order.order_status_history.map((entry, index) => {
                 const isLatest = index === 0;
@@ -366,11 +366,11 @@ const AdminOrderDetailPage = () => {
                       ) : null}
                     </div>
                     <div>
-                      <p className="font-body text-[12px] uppercase tracking-[0.08em] text-[var(--color-primary)]">
+                      <p className="font-inter text-[12px] uppercase tracking-[0.08em] text-[var(--color-primary)]">
                         {buildStatusLabel(entry.new_status)}
                       </p>
-                      {entry.note ? <p className="mt-0.5 font-body text-[11px] font-light text-[var(--color-muted)]">{entry.note}</p> : null}
-                      <p className="mt-0.5 font-body text-[10px] text-[var(--color-muted-soft)]">
+                      {entry.note ? <p className="mt-0.5 font-inter text-[11px] font-light text-[var(--color-muted)]">{entry.note}</p> : null}
+                      <p className="mt-0.5 font-inter text-[10px] text-[var(--color-muted-soft)]">
                         {entry.changed_by || "System"} {"\u00B7"} {formatRelativeDate(entry.changed_at)}
                       </p>
                     </div>
@@ -383,11 +383,11 @@ const AdminOrderDetailPage = () => {
 
         <aside className="order-detail-right border-l border-[var(--color-border)] pl-0 lg:sticky lg:top-20 lg:h-fit lg:pl-10">
           <section>
-            <p className="mb-4 font-body text-[10px] uppercase tracking-[0.2em] text-[var(--color-accent)]">Update Status</p>
+            <p className="mb-4 font-inter text-[10px] uppercase tracking-[0.2em] text-[var(--color-accent)]">Update Status</p>
             <select
               value={nextStatus}
               onChange={(event) => setNextStatus(event.target.value)}
-              className="w-full border-0 border-b border-[var(--color-border)] bg-transparent pb-2 font-body text-[13px] text-[var(--color-primary)] outline-none focus:border-[var(--color-primary)]"
+              className="w-full border-0 border-b border-[var(--color-border)] bg-transparent pb-2 font-inter text-[13px] text-[var(--color-primary)] outline-none focus:border-[var(--color-primary)]"
             >
               <option value="">Select next status</option>
               {availableNextStatuses.map((status) => (
@@ -401,10 +401,10 @@ const AdminOrderDetailPage = () => {
               value={statusNote}
               onChange={(event) => setStatusNote(event.target.value)}
               placeholder="Note about this status change..."
-              className="mt-4 min-h-20 w-full resize-none border-0 border-b border-[var(--color-border)] bg-transparent pb-2 font-body text-[13px] text-[var(--color-primary)] outline-none placeholder:text-[var(--color-muted-soft)] focus:border-[var(--color-primary)]"
+              className="mt-4 min-h-20 w-full resize-none border-0 border-b border-[var(--color-border)] bg-transparent pb-2 font-inter text-[13px] text-[var(--color-primary)] outline-none placeholder:text-[var(--color-muted-soft)] focus:border-[var(--color-primary)]"
             />
 
-            <label className="mt-4 flex items-center gap-2 font-body text-[12px] text-[var(--color-muted)]">
+            <label className="mt-4 flex items-center gap-2 font-inter text-[12px] text-[var(--color-muted)]">
               <input
                 type="checkbox"
                 checked={notifyCustomer}
@@ -418,21 +418,21 @@ const AdminOrderDetailPage = () => {
               type="button"
               onClick={() => void onUpdateStatus()}
               disabled={!nextStatus || isStatusSubmitting}
-              className="mt-4 w-full rounded-[var(--border-radius)] bg-[var(--color-primary)] px-4 py-3 font-body text-[11px] uppercase tracking-[0.12em] text-[var(--color-secondary)] transition-colors hover:bg-[var(--color-accent)] hover:text-[var(--color-secondary)] disabled:cursor-not-allowed disabled:opacity-50"
+              className="mt-4 w-full rounded-[var(--border-radius)] bg-[var(--color-primary)] px-4 py-3 font-inter text-[11px] uppercase tracking-[0.12em] text-[var(--color-secondary)] transition-colors hover:bg-[var(--color-accent)] hover:text-[var(--color-secondary)] disabled:cursor-not-allowed disabled:opacity-50"
             >
               {isStatusSubmitting ? "Updating..." : "Update Status"}
             </button>
-            {statusSuccess ? <p className="mt-2 font-body text-[12px] text-[var(--color-accent)]">Status updated.</p> : null}
+            {statusSuccess ? <p className="mt-2 font-inter text-[12px] text-[var(--color-accent)]">Status updated.</p> : null}
           </section>
 
           <div className="my-7 border-b border-[var(--color-border)]" />
 
           <section>
-            <p className="mb-4 font-body text-[10px] uppercase tracking-[0.2em] text-[var(--color-accent)]">Payment Status</p>
+            <p className="mb-4 font-inter text-[10px] uppercase tracking-[0.2em] text-[var(--color-accent)]">Payment Status</p>
             <select
               value={paymentStatus}
               onChange={(event) => setPaymentStatus(event.target.value)}
-              className="w-full border-0 border-b border-[var(--color-border)] bg-transparent pb-2 font-body text-[13px] text-[var(--color-primary)] outline-none focus:border-[var(--color-primary)]"
+              className="w-full border-0 border-b border-[var(--color-border)] bg-transparent pb-2 font-inter text-[13px] text-[var(--color-primary)] outline-none focus:border-[var(--color-primary)]"
             >
               {paymentStatuses.map((status) => (
                 <option key={status.value} value={status.value}>
@@ -445,42 +445,42 @@ const AdminOrderDetailPage = () => {
               value={paymentReference}
               onChange={(event) => setPaymentReference(event.target.value)}
               placeholder="Transaction reference (optional)"
-              className="mt-3 w-full border-0 border-b border-[var(--color-border)] bg-transparent pb-2 font-body text-[13px] text-[var(--color-primary)] outline-none placeholder:text-[var(--color-muted-soft)] focus:border-[var(--color-primary)]"
+              className="mt-3 w-full border-0 border-b border-[var(--color-border)] bg-transparent pb-2 font-inter text-[13px] text-[var(--color-primary)] outline-none placeholder:text-[var(--color-muted-soft)] focus:border-[var(--color-primary)]"
             />
 
             <button
               type="button"
               onClick={() => void onUpdatePayment()}
               disabled={isPaymentSubmitting}
-              className="mt-4 w-full rounded-[var(--border-radius)] bg-[var(--color-primary)] px-4 py-3 font-body text-[11px] uppercase tracking-[0.12em] text-[var(--color-secondary)] transition-colors hover:bg-[var(--color-accent)] hover:text-[var(--color-secondary)] disabled:cursor-not-allowed disabled:opacity-50"
+              className="mt-4 w-full rounded-[var(--border-radius)] bg-[var(--color-primary)] px-4 py-3 font-inter text-[11px] uppercase tracking-[0.12em] text-[var(--color-secondary)] transition-colors hover:bg-[var(--color-accent)] hover:text-[var(--color-secondary)] disabled:cursor-not-allowed disabled:opacity-50"
             >
               {isPaymentSubmitting ? "Updating..." : "Update Payment"}
             </button>
-            {paymentSuccess ? <p className="mt-2 font-body text-[12px] text-[var(--color-accent)]">Payment status updated.</p> : null}
+            {paymentSuccess ? <p className="mt-2 font-inter text-[12px] text-[var(--color-accent)]">Payment status updated.</p> : null}
           </section>
 
           <div className="my-7 border-b border-[var(--color-border)]" />
 
           <section>
-            <p className="mb-4 font-body text-[10px] uppercase tracking-[0.2em] text-[var(--color-accent)]">Customer</p>
+            <p className="mb-4 font-inter text-[10px] uppercase tracking-[0.2em] text-[var(--color-accent)]">Customer</p>
             <div className="flex items-center gap-3">
-              <div className="flex h-10 w-10 items-center justify-center rounded-full bg-[var(--color-primary)] font-body text-[16px] text-[var(--color-secondary)]">
+              <div className="flex h-10 w-10 items-center justify-center rounded-full bg-[var(--color-primary)] font-inter text-[16px] text-[var(--color-secondary)]">
                 {(order.customer.first_name.slice(0, 1) || "C").toUpperCase()}
               </div>
               <div>
-                <p className="font-body text-[13px] text-[var(--color-primary)]">{`${order.customer.first_name} ${order.customer.last_name}`.trim()}</p>
-                <p className="font-body text-[11px] text-[var(--color-muted-soft)]">{order.customer.email}</p>
-                {order.customer.phone ? <p className="font-body text-[11px] text-[var(--color-muted-soft)]">{order.customer.phone}</p> : null}
+                <p className="font-inter text-[13px] text-[var(--color-primary)]">{`${order.customer.first_name} ${order.customer.last_name}`.trim()}</p>
+                <p className="font-inter text-[11px] text-[var(--color-muted-soft)]">{order.customer.email}</p>
+                {order.customer.phone ? <p className="font-inter text-[11px] text-[var(--color-muted-soft)]">{order.customer.phone}</p> : null}
               </div>
             </div>
 
             <Link
               to={`/admin/customers/${order.customer.id}`}
-              className="mt-3 inline-block font-body text-[10px] uppercase tracking-[0.1em] text-[var(--color-accent)] transition-colors hover:text-[var(--color-primary)]"
+              className="mt-3 inline-block font-inter text-[10px] uppercase tracking-[0.1em] text-[var(--color-accent)] transition-colors hover:text-[var(--color-primary)]"
             >
               View Customer &rarr;
             </Link>
-            <p className="mt-2 font-body text-[11px] text-[var(--color-muted-soft)]">
+            <p className="mt-2 font-inter text-[11px] text-[var(--color-muted-soft)]">
               {(order.customer.total_orders ?? 0).toLocaleString("en-GH")} orders {"\u00B7"}{" "}
               {formatCurrency(order.customer.total_spent ?? 0)} total spent
             </p>
@@ -494,7 +494,7 @@ const AdminOrderDetailPage = () => {
                   <button
                     type="button"
                     onClick={() => setIsCancelOpen(true)}
-                    className="font-body text-[10px] uppercase tracking-[0.1em] text-[var(--color-muted-soft)] transition-colors hover:text-[var(--color-danger)]"
+                    className="font-inter text-[10px] uppercase tracking-[0.1em] text-[var(--color-muted-soft)] transition-colors hover:text-[var(--color-danger)]"
                   >
                     Cancel Order
                   </button>
@@ -504,13 +504,13 @@ const AdminOrderDetailPage = () => {
                       value={cancelReason}
                       onChange={(event) => setCancelReason(event.target.value)}
                       placeholder="Reason for cancellation"
-                      className="min-h-20 w-full resize-none border-0 border-b border-[var(--color-border)] bg-transparent pb-2 font-body text-[13px] text-[var(--color-primary)] outline-none placeholder:text-[var(--color-muted-soft)] focus:border-[var(--color-primary)]"
+                      className="min-h-20 w-full resize-none border-0 border-b border-[var(--color-border)] bg-transparent pb-2 font-inter text-[13px] text-[var(--color-primary)] outline-none placeholder:text-[var(--color-muted-soft)] focus:border-[var(--color-primary)]"
                     />
                     <button
                       type="button"
                       onClick={() => void onConfirmCancellation()}
                       disabled={cancelReason.trim().length < 10 || isCancelling}
-                      className="mt-3 w-full rounded-[var(--border-radius)] bg-[var(--color-danger)] px-4 py-3 font-body text-[11px] uppercase tracking-[0.12em] text-white disabled:cursor-not-allowed disabled:opacity-60"
+                      className="mt-3 w-full rounded-[var(--border-radius)] bg-[var(--color-danger)] px-4 py-3 font-inter text-[11px] uppercase tracking-[0.12em] text-white disabled:cursor-not-allowed disabled:opacity-60"
                     >
                       {isCancelling ? "Cancelling..." : "Confirm Cancellation"}
                     </button>
@@ -520,13 +520,13 @@ const AdminOrderDetailPage = () => {
                         setIsCancelOpen(false);
                         setCancelReason("");
                       }}
-                      className="mt-2 font-body text-[10px] text-[var(--color-muted-soft)]"
+                      className="mt-2 font-inter text-[10px] text-[var(--color-muted-soft)]"
                     >
                       Never mind
                     </button>
                   </div>
                 )}
-                {cancelSuccess ? <p className="mt-2 font-body text-[12px] text-[var(--color-accent)]">Order cancelled.</p> : null}
+                {cancelSuccess ? <p className="mt-2 font-inter text-[12px] text-[var(--color-accent)]">Order cancelled.</p> : null}
               </section>
             </>
           ) : null}

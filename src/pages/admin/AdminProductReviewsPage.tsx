@@ -113,7 +113,7 @@ const FilterSheet = ({
           <div className="h-1 w-10 rounded-full bg-[rgba(var(--color-primary-rgb),0.15)]" />
         </div>
         <div className="flex items-center justify-between border-b border-[rgba(var(--color-primary-rgb),0.08)] px-5 py-3">
-          <p className="font-body text-[14px] font-semibold text-[var(--color-navbar-solid-foreground)]">Filters</p>
+          <p className="font-inter text-[14px] font-semibold text-[var(--color-navbar-solid-foreground)]">Filters</p>
           <button
             type="button"
             onClick={onClose}
@@ -125,7 +125,7 @@ const FilterSheet = ({
 
         <div className="space-y-5 px-5 py-4">
           <div>
-            <p className="mb-2.5 font-body text-[10px] uppercase tracking-[0.18em] text-[var(--color-primary)]">Status</p>
+            <p className="mb-2.5 font-inter text-[10px] uppercase tracking-[0.18em] text-[var(--color-primary)]">Status</p>
             <div className="flex flex-wrap gap-2">
               {statusTabs.map((tab) => {
                 const active = tab.value === statusFilter;
@@ -137,7 +137,7 @@ const FilterSheet = ({
                       setStatusFilter(tab.value);
                       setPage(1);
                     }}
-                    className={`rounded-full border px-4 py-2 font-body text-[10px] uppercase tracking-[0.12em] transition-colors ${
+                    className={`rounded-full border px-4 py-2 font-inter text-[10px] uppercase tracking-[0.12em] transition-colors ${
                       active
                         ? "text-white"
                         : "text-[var(--color-muted)] hover:border-[var(--color-primary)] hover:text-[var(--color-primary)]"
@@ -160,7 +160,7 @@ const FilterSheet = ({
               onClearFilters();
               onClose();
             }}
-            className="w-full rounded-full border py-3 font-body text-[11px] uppercase tracking-[0.14em] text-[var(--color-primary)]"
+            className="w-full rounded-full border py-3 font-inter text-[11px] uppercase tracking-[0.14em] text-[var(--color-primary)]"
             style={{ borderColor: "rgba(var(--color-primary-rgb),0.2)" }}
           >
             Clear Filters
@@ -169,7 +169,7 @@ const FilterSheet = ({
           <button
             type="button"
             onClick={onClose}
-            className="w-full rounded-full py-3 font-body text-[11px] uppercase tracking-[0.14em] text-white"
+            className="w-full rounded-full py-3 font-inter text-[11px] uppercase tracking-[0.14em] text-white"
             style={{ background: "var(--color-primary)" }}
           >
             Done{activeFilterCount > 0 ? ` (${activeFilterCount} active)` : ""}
@@ -297,18 +297,18 @@ const AdminProductReviewsPage = () => {
       <div className="mx-auto flex w-full max-w-[1120px] flex-1 flex-col text-left">
         <div className="flex flex-wrap items-start justify-between gap-3">
           <div>
-            <p className="font-body text-[11px] uppercase tracking-[0.22em] text-[var(--color-primary)]">Merchandise</p>
-            <h1 className="mt-3 font-display text-[38px] italic leading-[1.04] text-[var(--color-navbar-solid-foreground)] sm:text-[50px]">
+            <p className="font-inter text-[11px] uppercase tracking-[0.22em] text-[var(--color-primary)]">Merchandise</p>
+            <h1 className="mt-3 font-manrope text-[38px]  leading-[1.04] text-[var(--color-navbar-solid-foreground)] sm:text-[50px]">
               Product Reviews
             </h1>
-            <p className="mt-2 max-w-[680px] font-body text-[13px] leading-[1.8] text-[var(--color-muted)] sm:text-[14px]">
+            <p className="mt-2 max-w-[680px] font-inter text-[13px] leading-[1.8] text-[var(--color-muted)] sm:text-[14px]">
               Moderate feedback quickly with the same focused table flow used on the Products page.
             </p>
           </div>
         </div>
 
         {message ? (
-          <p className="mt-4 rounded-full border px-4 py-2 text-center font-body text-[11px] uppercase tracking-[0.08em] text-[var(--color-accent)]" style={{ borderColor: "rgba(var(--color-primary-rgb),0.18)" }}>
+          <p className="mt-4 rounded-full border px-4 py-2 text-center font-inter text-[11px] uppercase tracking-[0.08em] text-[var(--color-accent)]" style={{ borderColor: "rgba(var(--color-primary-rgb),0.18)" }}>
             {message}
           </p>
         ) : null}
@@ -325,7 +325,7 @@ const AdminProductReviewsPage = () => {
                   value={searchInput}
                   onChange={(event) => setSearchInput(event.target.value)}
                   placeholder="Search title, body, or author..."
-                  className="h-11 w-full rounded-full border bg-white pl-10 pr-4 font-body text-[13px] text-[var(--color-navbar-solid-foreground)] outline-none transition-colors placeholder:text-[var(--color-muted-soft)] focus:border-[var(--color-primary)]"
+                  className="h-11 w-full rounded-full border bg-white pl-10 pr-4 font-inter text-[13px] text-[var(--color-navbar-solid-foreground)] outline-none transition-colors placeholder:text-[var(--color-muted-soft)] focus:border-[var(--color-primary)]"
                   style={{ borderColor: "rgba(var(--color-primary-rgb),0.18)" }}
                 />
               </label>
@@ -333,14 +333,14 @@ const AdminProductReviewsPage = () => {
               <button
                 type="button"
                 onClick={() => setFilterSheetOpen(true)}
-                className="relative flex h-11 shrink-0 items-center gap-2 rounded-full border px-4 font-body text-[11px] uppercase tracking-[0.12em] text-[var(--color-primary)] transition-colors hover:bg-[rgba(var(--color-primary-rgb),0.06)] lg:hidden"
+                className="relative flex h-11 shrink-0 items-center gap-2 rounded-full border px-4 font-inter text-[11px] uppercase tracking-[0.12em] text-[var(--color-primary)] transition-colors hover:bg-[rgba(var(--color-primary-rgb),0.06)] lg:hidden"
                 style={{ borderColor: "rgba(var(--color-primary-rgb),0.2)" }}
               >
                 <SlidersHorizontal className="h-3.5 w-3.5" />
                 Filter
                 {activeFilterCount > 0 ? (
                   <span
-                    className="absolute -right-1.5 -top-1.5 flex h-4 w-4 items-center justify-center rounded-full font-body text-[9px] text-white"
+                    className="absolute -right-1.5 -top-1.5 flex h-4 w-4 items-center justify-center rounded-full font-inter text-[9px] text-white"
                     style={{ background: "var(--color-primary)" }}
                   >
                     {activeFilterCount}
@@ -361,7 +361,7 @@ const AdminProductReviewsPage = () => {
                         setStatusFilter(tab.value);
                         setPage(1);
                       }}
-                      className={`rounded-full border px-4 py-2 font-body text-[10px] uppercase tracking-[0.12em] transition-colors ${
+                      className={`rounded-full border px-4 py-2 font-inter text-[10px] uppercase tracking-[0.12em] transition-colors ${
                         active
                           ? "text-white"
                           : "text-[var(--color-muted)] hover:border-[var(--color-primary)] hover:text-[var(--color-primary)]"
@@ -380,7 +380,7 @@ const AdminProductReviewsPage = () => {
                 <button
                   type="button"
                   onClick={clearFilters}
-                  className="rounded-full border px-4 py-2 font-body text-[10px] uppercase tracking-[0.1em] text-[var(--color-primary)] transition-colors hover:bg-[rgba(var(--color-primary-rgb),0.06)]"
+                  className="rounded-full border px-4 py-2 font-inter text-[10px] uppercase tracking-[0.1em] text-[var(--color-primary)] transition-colors hover:bg-[rgba(var(--color-primary-rgb),0.06)]"
                   style={{ borderColor: "rgba(var(--color-primary-rgb),0.18)" }}
                 >
                   Clear
@@ -389,10 +389,10 @@ const AdminProductReviewsPage = () => {
             </div>
 
             <div className="flex flex-wrap items-center justify-between gap-2 border-t border-[rgba(var(--color-primary-rgb),0.1)] pt-3">
-              <p className="font-body text-[11px] uppercase tracking-[0.12em] text-[var(--color-primary)]">
+              <p className="font-inter text-[11px] uppercase tracking-[0.12em] text-[var(--color-primary)]">
                 {totalCount === 0 ? "No reviews found" : `${totalCount} review${totalCount === 1 ? "" : "s"} found`}
               </p>
-              <p className="font-body text-[11px] text-[var(--color-muted)]">
+              <p className="font-inter text-[11px] text-[var(--color-muted)]">
                 Page {Math.min(page, totalPages)} of {totalPages}
               </p>
             </div>
@@ -418,7 +418,7 @@ const AdminProductReviewsPage = () => {
                 {["Product", "Customer", "Rating", "Review", "Status", "Submitted", "Actions"].map((heading) => (
                   <th
                     key={heading}
-                    className="px-2 py-2.5 text-left font-body text-[9px] uppercase tracking-[0.11em] text-[var(--color-muted-soft)] first:pl-3 last:pr-3"
+                    className="px-2 py-2.5 text-left font-inter text-[9px] uppercase tracking-[0.11em] text-[var(--color-muted-soft)] first:pl-3 last:pr-3"
                   >
                     {heading}
                   </th>
@@ -428,19 +428,19 @@ const AdminProductReviewsPage = () => {
             <tbody>
               {isLoading ? (
                 <tr>
-                  <td colSpan={7} className="px-3 py-9 text-center font-body text-[12px] text-[var(--color-muted-soft)]">
+                  <td colSpan={7} className="px-3 py-9 text-center font-inter text-[12px] text-[var(--color-muted-soft)]">
                     Loading reviews...
                   </td>
                 </tr>
               ) : loadError ? (
                 <tr>
-                  <td colSpan={7} className="px-3 py-9 text-center font-body text-[12px] text-[var(--color-danger)]">
+                  <td colSpan={7} className="px-3 py-9 text-center font-inter text-[12px] text-[var(--color-danger)]">
                     {loadError}
                   </td>
                 </tr>
               ) : rows.length === 0 ? (
                 <tr>
-                  <td colSpan={7} className="px-3 py-9 text-center font-body text-[12px] text-[var(--color-muted-soft)]">
+                  <td colSpan={7} className="px-3 py-9 text-center font-inter text-[12px] text-[var(--color-muted-soft)]">
                     No reviews found.
                   </td>
                 </tr>
@@ -455,47 +455,47 @@ const AdminProductReviewsPage = () => {
                             to={`/shop/${row.productSlug}`}
                             target="_blank"
                             rel="noreferrer"
-                            className="block truncate font-body text-[12px] text-[var(--color-primary)] hover:text-[var(--color-accent)]"
+                            className="block truncate font-inter text-[12px] text-[var(--color-primary)] hover:text-[var(--color-accent)]"
                             title={row.productName}
                           >
                             {truncateHalf(row.productName, "Product")}
                           </Link>
                         ) : (
-                          <p className="truncate font-body text-[12px] text-[var(--color-navbar-solid-foreground)]" title={row.productName}>
+                          <p className="truncate font-inter text-[12px] text-[var(--color-navbar-solid-foreground)]" title={row.productName}>
                             {truncateHalf(row.productName, "Product")}
                           </p>
                         )}
                       </td>
                       <td className="px-2 py-3">
-                        <p className="truncate font-body text-[12px] text-[var(--color-navbar-solid-foreground)]" title={customerLabel}>
+                        <p className="truncate font-inter text-[12px] text-[var(--color-navbar-solid-foreground)]" title={customerLabel}>
                           {truncateHalf(customerLabel, "Customer")}
                         </p>
-                        <p className="mt-0.5 truncate font-body text-[9px] text-[var(--color-muted-soft)]" title={row.customerEmail || "-"}>
+                        <p className="mt-0.5 truncate font-inter text-[9px] text-[var(--color-muted-soft)]" title={row.customerEmail || "-"}>
                           {truncateHalf(row.customerEmail || "-", "-")}
                         </p>
                       </td>
                       <td className="px-2 py-3">
                         {renderStars(row.rating, "h-2.5 w-2.5")}
-                        <p className="mt-1 font-body text-[9px] text-[var(--color-muted-soft)]">{row.rating}/5</p>
+                        <p className="mt-1 font-inter text-[9px] text-[var(--color-muted-soft)]">{row.rating}/5</p>
                       </td>
                       <td className="px-2 py-3">
                         {row.title ? (
-                          <p className="truncate font-body text-[11px] text-[var(--color-navbar-solid-foreground)]" title={row.title}>
+                          <p className="truncate font-inter text-[11px] text-[var(--color-navbar-solid-foreground)]" title={row.title}>
                             {truncateHalf(row.title, "-")}
                           </p>
                         ) : (
-                          <p className="font-body text-[10px] text-[var(--color-muted-soft)]">No title</p>
+                          <p className="font-inter text-[10px] text-[var(--color-muted-soft)]">No title</p>
                         )}
-                        <p className="mt-0.5 truncate font-body text-[10px] text-[var(--color-muted)]" title={row.body}>
+                        <p className="mt-0.5 truncate font-inter text-[10px] text-[var(--color-muted)]" title={row.body}>
                           {snippet(row.body, 90)}
                         </p>
                       </td>
                       <td className="px-2 py-3">
-                        <span className={`inline-block whitespace-nowrap rounded-full border px-2 py-1 font-body text-[8px] uppercase tracking-[0.08em] ${statusBadgeClass(row.status)}`}>
+                        <span className={`inline-block whitespace-nowrap rounded-full border px-2 py-1 font-inter text-[8px] uppercase tracking-[0.08em] ${statusBadgeClass(row.status)}`}>
                           {row.status === "rejected" ? "Hidden" : row.status}
                         </span>
                       </td>
-                      <td className="px-2 py-3 font-body text-[10px] text-[var(--color-muted-soft)]">{formatDateShort(row.createdAt)}</td>
+                      <td className="px-2 py-3 font-inter text-[10px] text-[var(--color-muted-soft)]">{formatDateShort(row.createdAt)}</td>
                       <td className="px-2 py-3 pr-3">
                         <div className="flex items-center justify-end gap-1">
                           {row.status !== "approved" ? (
@@ -503,7 +503,7 @@ const AdminProductReviewsPage = () => {
                               type="button"
                               onClick={() => void onUpdateStatus(row, "approved")}
                               disabled={actioningReviewId === row.id}
-                              className="rounded-full border px-2 py-1 font-body text-[8px] uppercase tracking-[0.08em] text-[var(--color-accent)] transition-colors hover:border-[rgba(var(--color-primary-rgb),0.2)] hover:text-[var(--color-primary)] disabled:cursor-not-allowed disabled:opacity-60"
+                              className="rounded-full border px-2 py-1 font-inter text-[8px] uppercase tracking-[0.08em] text-[var(--color-accent)] transition-colors hover:border-[rgba(var(--color-primary-rgb),0.2)] hover:text-[var(--color-primary)] disabled:cursor-not-allowed disabled:opacity-60"
                               style={{ borderColor: "rgba(var(--color-primary-rgb),0.16)" }}
                             >
                               Approve
@@ -514,7 +514,7 @@ const AdminProductReviewsPage = () => {
                               type="button"
                               onClick={() => void onUpdateStatus(row, "rejected")}
                               disabled={actioningReviewId === row.id}
-                              className="rounded-full border px-2 py-1 font-body text-[8px] uppercase tracking-[0.08em] text-[var(--color-muted)] transition-colors hover:border-[rgba(var(--color-danger-rgb),0.24)] hover:text-[var(--color-danger)] disabled:cursor-not-allowed disabled:opacity-60"
+                              className="rounded-full border px-2 py-1 font-inter text-[8px] uppercase tracking-[0.08em] text-[var(--color-muted)] transition-colors hover:border-[rgba(var(--color-danger-rgb),0.24)] hover:text-[var(--color-danger)] disabled:cursor-not-allowed disabled:opacity-60"
                               style={{ borderColor: "rgba(var(--color-primary-rgb),0.16)" }}
                             >
                               Hide
@@ -546,7 +546,7 @@ const AdminProductReviewsPage = () => {
                 {["Product", "Rating", "Status", "Action"].map((heading) => (
                   <th
                     key={heading}
-                    className="px-2 py-2 text-left font-body text-[9px] uppercase tracking-[0.1em] text-[var(--color-muted-soft)] first:pl-3 last:pr-3"
+                    className="px-2 py-2 text-left font-inter text-[9px] uppercase tracking-[0.1em] text-[var(--color-muted-soft)] first:pl-3 last:pr-3"
                   >
                     {heading}
                   </th>
@@ -556,19 +556,19 @@ const AdminProductReviewsPage = () => {
             <tbody>
               {isLoading ? (
                 <tr>
-                  <td colSpan={4} className="px-3 py-9 text-center font-body text-[12px] text-[var(--color-muted-soft)]">
+                  <td colSpan={4} className="px-3 py-9 text-center font-inter text-[12px] text-[var(--color-muted-soft)]">
                     Loading reviews...
                   </td>
                 </tr>
               ) : loadError ? (
                 <tr>
-                  <td colSpan={4} className="px-3 py-9 text-center font-body text-[12px] text-[var(--color-danger)]">
+                  <td colSpan={4} className="px-3 py-9 text-center font-inter text-[12px] text-[var(--color-danger)]">
                     {loadError}
                   </td>
                 </tr>
               ) : rows.length === 0 ? (
                 <tr>
-                  <td colSpan={4} className="px-3 py-9 text-center font-body text-[12px] text-[var(--color-muted-soft)]">
+                  <td colSpan={4} className="px-3 py-9 text-center font-inter text-[12px] text-[var(--color-muted-soft)]">
                     No reviews found.
                   </td>
                 </tr>
@@ -579,16 +579,16 @@ const AdminProductReviewsPage = () => {
                   return [
                     <tr key={`${row.id}-main`} className="border-t border-[rgba(var(--color-primary-rgb),0.1)] hover:bg-[rgba(var(--color-primary-rgb),0.04)]">
                       <td className="px-2 py-2.5 pl-3">
-                        <p className="truncate font-body text-[12px] text-[var(--color-navbar-solid-foreground)]" title={row.productName}>
+                        <p className="truncate font-inter text-[12px] text-[var(--color-navbar-solid-foreground)]" title={row.productName}>
                           {truncateHalf(row.productName, "Product")}
                         </p>
                       </td>
                       <td className="px-2 py-2.5">
                         {renderStars(row.rating, "h-2.5 w-2.5")}
-                        <p className="mt-1 font-body text-[9px] text-[var(--color-muted-soft)]">{row.rating}/5</p>
+                        <p className="mt-1 font-inter text-[9px] text-[var(--color-muted-soft)]">{row.rating}/5</p>
                       </td>
                       <td className="px-2 py-2.5">
-                        <span className={`inline-block whitespace-nowrap rounded-full border px-2 py-1 font-body text-[8px] uppercase tracking-[0.08em] ${statusBadgeClass(row.status)}`}>
+                        <span className={`inline-block whitespace-nowrap rounded-full border px-2 py-1 font-inter text-[8px] uppercase tracking-[0.08em] ${statusBadgeClass(row.status)}`}>
                           {row.status === "rejected" ? "Hidden" : row.status}
                         </span>
                       </td>
@@ -596,7 +596,7 @@ const AdminProductReviewsPage = () => {
                         <button
                           type="button"
                           onClick={() => setExpandedCompactRowId((current) => (current === row.id ? null : row.id))}
-                          className="inline-flex items-center gap-1 rounded-full border px-2 py-1 font-body text-[8px] uppercase tracking-[0.08em] text-[var(--color-primary)] transition-colors hover:bg-[rgba(var(--color-primary-rgb),0.06)]"
+                          className="inline-flex items-center gap-1 rounded-full border px-2 py-1 font-inter text-[8px] uppercase tracking-[0.08em] text-[var(--color-primary)] transition-colors hover:bg-[rgba(var(--color-primary-rgb),0.06)]"
                           style={{ borderColor: "rgba(var(--color-primary-rgb),0.2)" }}
                         >
                           {isExpanded ? <ChevronUp className="h-3 w-3" /> : <ChevronDown className="h-3 w-3" />}
@@ -609,31 +609,31 @@ const AdminProductReviewsPage = () => {
                         <td colSpan={4} className="px-3 py-2.5">
                           <div className="space-y-2">
                             <div>
-                              <p className="font-body text-[9px] uppercase tracking-[0.08em] text-[var(--color-muted)]">Customer</p>
-                              <p className="truncate font-body text-[11px] text-[var(--color-navbar-solid-foreground)]" title={customerLabel}>
+                              <p className="font-inter text-[9px] uppercase tracking-[0.08em] text-[var(--color-muted)]">Customer</p>
+                              <p className="truncate font-inter text-[11px] text-[var(--color-navbar-solid-foreground)]" title={customerLabel}>
                                 {truncateHalf(customerLabel, "Customer")}
                               </p>
-                              <p className="truncate font-body text-[10px] text-[var(--color-muted-soft)]" title={row.customerEmail || "-"}>
+                              <p className="truncate font-inter text-[10px] text-[var(--color-muted-soft)]" title={row.customerEmail || "-"}>
                                 {truncateHalf(row.customerEmail || "-", "-")}
                               </p>
                             </div>
 
                             <div>
-                              <p className="font-body text-[9px] uppercase tracking-[0.08em] text-[var(--color-muted)]">Review</p>
+                              <p className="font-inter text-[9px] uppercase tracking-[0.08em] text-[var(--color-muted)]">Review</p>
                               {row.title ? (
-                                <p className="truncate font-body text-[11px] text-[var(--color-navbar-solid-foreground)]" title={row.title}>
+                                <p className="truncate font-inter text-[11px] text-[var(--color-navbar-solid-foreground)]" title={row.title}>
                                   {truncateHalf(row.title, "-")}
                                 </p>
                               ) : null}
-                              <p className="font-body text-[10px] text-[var(--color-muted)]" title={row.body}>{snippet(row.body, 180)}</p>
+                              <p className="font-inter text-[10px] text-[var(--color-muted)]" title={row.body}>{snippet(row.body, 180)}</p>
                             </div>
 
                             <div className="grid grid-cols-2 gap-2">
-                              <p className="font-body text-[10px] text-[var(--color-navbar-solid-foreground)]">
+                              <p className="font-inter text-[10px] text-[var(--color-navbar-solid-foreground)]">
                                 <span className="mr-1 text-[var(--color-muted)]">Submitted:</span>
                                 {formatDateShort(row.createdAt)}
                               </p>
-                              <p className="font-body text-[10px] text-[var(--color-navbar-solid-foreground)]">
+                              <p className="font-inter text-[10px] text-[var(--color-navbar-solid-foreground)]">
                                 <span className="mr-1 text-[var(--color-muted)]">Status:</span>
                                 {row.status === "rejected" ? "Hidden" : row.status}
                               </p>
@@ -645,14 +645,14 @@ const AdminProductReviewsPage = () => {
                                   to={`/shop/${row.productSlug}`}
                                   target="_blank"
                                   rel="noreferrer"
-                                  className="inline-flex items-center gap-1 rounded-full border px-3 py-1.5 font-body text-[9px] uppercase tracking-[0.08em] text-[var(--color-primary)] transition-colors hover:bg-[rgba(var(--color-primary-rgb),0.06)]"
+                                  className="inline-flex items-center gap-1 rounded-full border px-3 py-1.5 font-inter text-[9px] uppercase tracking-[0.08em] text-[var(--color-primary)] transition-colors hover:bg-[rgba(var(--color-primary-rgb),0.06)]"
                                   style={{ borderColor: "rgba(var(--color-primary-rgb),0.2)" }}
                                 >
                                   Product
                                   <ExternalLink className="h-3 w-3" />
                                 </Link>
                               ) : (
-                                <span className="font-body text-[10px] text-[var(--color-muted-soft)]">Product link unavailable</span>
+                                <span className="font-inter text-[10px] text-[var(--color-muted-soft)]">Product link unavailable</span>
                               )}
 
                               <div className="flex items-center gap-1">
@@ -661,7 +661,7 @@ const AdminProductReviewsPage = () => {
                                     type="button"
                                     onClick={() => void onUpdateStatus(row, "approved")}
                                     disabled={actioningReviewId === row.id}
-                                    className="rounded-full border px-2 py-1 font-body text-[8px] uppercase tracking-[0.08em] text-[var(--color-accent)] transition-colors hover:border-[rgba(var(--color-primary-rgb),0.2)] hover:text-[var(--color-primary)] disabled:cursor-not-allowed disabled:opacity-60"
+                                    className="rounded-full border px-2 py-1 font-inter text-[8px] uppercase tracking-[0.08em] text-[var(--color-accent)] transition-colors hover:border-[rgba(var(--color-primary-rgb),0.2)] hover:text-[var(--color-primary)] disabled:cursor-not-allowed disabled:opacity-60"
                                     style={{ borderColor: "rgba(var(--color-primary-rgb),0.16)" }}
                                   >
                                     Approve
@@ -672,7 +672,7 @@ const AdminProductReviewsPage = () => {
                                     type="button"
                                     onClick={() => void onUpdateStatus(row, "rejected")}
                                     disabled={actioningReviewId === row.id}
-                                    className="rounded-full border px-2 py-1 font-body text-[8px] uppercase tracking-[0.08em] text-[var(--color-muted)] transition-colors hover:border-[rgba(var(--color-danger-rgb),0.24)] hover:text-[var(--color-danger)] disabled:cursor-not-allowed disabled:opacity-60"
+                                    className="rounded-full border px-2 py-1 font-inter text-[8px] uppercase tracking-[0.08em] text-[var(--color-muted)] transition-colors hover:border-[rgba(var(--color-danger-rgb),0.24)] hover:text-[var(--color-danger)] disabled:cursor-not-allowed disabled:opacity-60"
                                     style={{ borderColor: "rgba(var(--color-primary-rgb),0.16)" }}
                                   >
                                     Hide
@@ -699,7 +699,7 @@ const AdminProductReviewsPage = () => {
             type="button"
             onClick={() => setPage((current) => Math.max(1, current - 1))}
             disabled={page <= 1}
-            className="rounded-full border px-4 py-2 font-body text-[10px] uppercase tracking-[0.1em] text-[var(--color-primary)] transition-colors hover:bg-[rgba(var(--color-primary-rgb),0.06)] disabled:cursor-not-allowed disabled:opacity-40"
+            className="rounded-full border px-4 py-2 font-inter text-[10px] uppercase tracking-[0.1em] text-[var(--color-primary)] transition-colors hover:bg-[rgba(var(--color-primary-rgb),0.06)] disabled:cursor-not-allowed disabled:opacity-40"
             style={{ borderColor: "rgba(var(--color-primary-rgb),0.2)" }}
           >
             Previous
@@ -711,7 +711,7 @@ const AdminProductReviewsPage = () => {
                 key={pageNumber}
                 type="button"
                 onClick={() => setPage(pageNumber)}
-                className={`h-8 min-w-8 rounded-full px-3 font-body text-[11px] transition-colors ${
+                className={`h-8 min-w-8 rounded-full px-3 font-inter text-[11px] transition-colors ${
                   pageNumber === page
                     ? "bg-[var(--color-primary)] text-white"
                     : "text-[var(--color-muted)] hover:bg-[rgba(var(--color-primary-rgb),0.08)] hover:text-[var(--color-primary)]"
@@ -726,7 +726,7 @@ const AdminProductReviewsPage = () => {
             type="button"
             onClick={() => setPage((current) => Math.min(totalPages, current + 1))}
             disabled={page >= totalPages}
-            className="rounded-full border px-4 py-2 font-body text-[10px] uppercase tracking-[0.1em] text-[var(--color-primary)] transition-colors hover:bg-[rgba(var(--color-primary-rgb),0.06)] disabled:cursor-not-allowed disabled:opacity-40"
+            className="rounded-full border px-4 py-2 font-inter text-[10px] uppercase tracking-[0.1em] text-[var(--color-primary)] transition-colors hover:bg-[rgba(var(--color-primary-rgb),0.06)] disabled:cursor-not-allowed disabled:opacity-40"
             style={{ borderColor: "rgba(var(--color-primary-rgb),0.2)" }}
           >
             Next

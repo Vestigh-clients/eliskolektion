@@ -303,13 +303,13 @@ const CheckoutConfirmation = () => {
     return (
       <div className="bg-[var(--color-secondary)] px-6 py-[80px] sm:px-6">
         <div className="mx-auto max-w-[640px] text-center">
-          <p className="font-body text-[13px] text-[var(--color-muted)]">
+          <p className="font-inter text-[13px] text-[var(--color-muted)]">
             We couldn&apos;t load your order details. Your order was placed successfully. Check your email for
             confirmation.
           </p>
           <Link
             to="/shop"
-            className="mt-6 inline-block font-body text-[11px] uppercase tracking-[0.15em] text-[var(--color-primary)] transition-colors duration-200 hover:text-[var(--color-accent)]"
+            className="mt-6 inline-block font-inter text-[11px] uppercase tracking-[0.15em] text-[var(--color-primary)] transition-colors duration-200 hover:text-[var(--color-accent)]"
           >
             Go to Shop
           </Link>
@@ -323,14 +323,14 @@ const CheckoutConfirmation = () => {
       <div className="mx-auto max-w-[640px]">
         <section className="text-center">
           <AnimatedCheckmark />
-          <p className="mt-6 font-body text-[10px] uppercase tracking-[0.25em] text-[var(--color-accent)]">Order Confirmed</p>
-          <h1 className="mt-3 font-display text-[40px] italic font-light leading-none text-[var(--color-primary)] sm:text-[52px]">
+          <p className="mt-6 font-inter text-[10px] uppercase tracking-[0.25em] text-[var(--color-accent)]">Order Confirmed</p>
+          <h1 className="mt-3 font-manrope text-[40px]  font-light leading-none text-[var(--color-primary)] sm:text-[52px]">
             Thank you, {order.customer.first_name}.
           </h1>
-          <p className="mt-4 font-body text-[14px] font-light leading-[1.8] text-[var(--color-muted)]">
+          <p className="mt-4 font-inter text-[14px] font-light leading-[1.8] text-[var(--color-muted)]">
             Your order <span className="text-[var(--color-primary)]">{order.order_number}</span> is confirmed.
           </p>
-          <p className="mt-2 font-body text-[13px] font-light text-[var(--color-muted-soft)]">
+          <p className="mt-2 font-inter text-[13px] font-light text-[var(--color-muted-soft)]">
             We&apos;ll send updates to {orderContactEmail || order.customer.email}
           </p>
           <div className="my-12 border-b border-[var(--color-border)]" />
@@ -339,16 +339,16 @@ const CheckoutConfirmation = () => {
         <OrderSummaryDetails order={order} deliveryWindow={deliveryWindow} />
 
         <section>
-          <p className="mb-6 font-body text-[10px] uppercase tracking-[0.2em] text-[var(--color-accent)]">What Happens Next</p>
+          <p className="mb-6 font-inter text-[10px] uppercase tracking-[0.2em] text-[var(--color-accent)]">What Happens Next</p>
 
           <div className="space-y-0">
             <div className="flex items-start gap-4">
-              <span className="flex h-[20px] w-[20px] items-center justify-center rounded-full border border-[var(--color-border)] font-body text-[10px] text-[var(--color-muted)]">
+              <span className="flex h-[20px] w-[20px] items-center justify-center rounded-full border border-[var(--color-border)] font-inter text-[10px] text-[var(--color-muted)]">
                 1
               </span>
               <div className="pt-[1px]">
-                <p className="font-body text-[13px] text-[var(--color-primary)]">Order Confirmed</p>
-                <p className="mt-1 font-body text-[11px] font-light text-[var(--color-muted)]">
+                <p className="font-inter text-[13px] text-[var(--color-primary)]">Order Confirmed</p>
+                <p className="mt-1 font-inter text-[11px] font-light text-[var(--color-muted)]">
                   We&apos;ve received your order and are preparing it for dispatch.
                 </p>
               </div>
@@ -357,12 +357,12 @@ const CheckoutConfirmation = () => {
             <div className="ml-[9px] h-[24px] border-l border-[var(--color-border)]" />
 
             <div className="flex items-start gap-4">
-              <span className="flex h-[20px] w-[20px] items-center justify-center rounded-full border border-[var(--color-border)] font-body text-[10px] text-[var(--color-muted)]">
+              <span className="flex h-[20px] w-[20px] items-center justify-center rounded-full border border-[var(--color-border)] font-inter text-[10px] text-[var(--color-muted)]">
                 2
               </span>
               <div className="pt-[1px]">
-                <p className="font-body text-[13px] text-[var(--color-primary)]">Out for Delivery</p>
-                <p className="mt-1 font-body text-[11px] font-light text-[var(--color-muted)]">
+                <p className="font-inter text-[13px] text-[var(--color-primary)]">Out for Delivery</p>
+                <p className="mt-1 font-inter text-[11px] font-light text-[var(--color-muted)]">
                   You&apos;ll receive an update when your order is on its way.
                 </p>
               </div>
@@ -371,12 +371,12 @@ const CheckoutConfirmation = () => {
             <div className="ml-[9px] h-[24px] border-l border-[var(--color-border)]" />
 
             <div className="flex items-start gap-4">
-              <span className="flex h-[20px] w-[20px] items-center justify-center rounded-full border border-[var(--color-border)] font-body text-[10px] text-[var(--color-muted)]">
+              <span className="flex h-[20px] w-[20px] items-center justify-center rounded-full border border-[var(--color-border)] font-inter text-[10px] text-[var(--color-muted)]">
                 3
               </span>
               <div className="pt-[1px]">
-                <p className="font-body text-[13px] text-[var(--color-primary)]">Delivered</p>
-                <p className="mt-1 font-body text-[11px] font-light text-[var(--color-muted)]">
+                <p className="font-inter text-[13px] text-[var(--color-primary)]">Delivered</p>
+                <p className="mt-1 font-inter text-[11px] font-light text-[var(--color-muted)]">
                   Your order arrives within {deliveryWindow.minDays}-{deliveryWindow.maxDays} business days.
                 </p>
               </div>
@@ -389,7 +389,7 @@ const CheckoutConfirmation = () => {
         <section className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
           <Link
             to="/shop"
-            className="font-body text-[11px] uppercase tracking-[0.15em] text-[var(--color-primary)] transition-colors duration-200 hover:text-[var(--color-accent)]"
+            className="font-inter text-[11px] uppercase tracking-[0.15em] text-[var(--color-primary)] transition-colors duration-200 hover:text-[var(--color-accent)]"
           >
             &larr; Continue Shopping
           </Link>
@@ -397,7 +397,7 @@ const CheckoutConfirmation = () => {
           {storeConfig.features.orderTracking ? (
             <Link
               to={`/orders/${encodeURIComponent(order.order_number)}`}
-              className="font-body text-[11px] uppercase tracking-[0.15em] text-[var(--color-primary)] transition-colors duration-200 hover:text-[var(--color-accent)]"
+              className="font-inter text-[11px] uppercase tracking-[0.15em] text-[var(--color-primary)] transition-colors duration-200 hover:text-[var(--color-accent)]"
             >
               View Order Status &rarr;
             </Link>
@@ -409,21 +409,21 @@ const CheckoutConfirmation = () => {
             {isAccountCreated ? (
               <div>
                 <Check size={32} strokeWidth={1.2} className="text-[var(--color-accent)]" />
-                <h2 className="mt-4 font-display text-[22px] italic text-[var(--color-primary)]">Account created successfully.</h2>
-                <p className="mt-2 max-w-[420px] font-body text-[12px] font-light leading-[1.7] text-[var(--color-muted)]">
+                <h2 className="mt-4 font-manrope text-[22px]  text-[var(--color-primary)]">Account created successfully.</h2>
+                <p className="mt-2 max-w-[420px] font-inter text-[12px] font-light leading-[1.7] text-[var(--color-muted)]">
                   You can now track all your orders and checkout faster next time.
                 </p>
               </div>
             ) : (
               <form onSubmit={handleCreateAccount}>
-                <h2 className="font-display text-[24px] italic text-[var(--color-primary)]">Save your details for next time</h2>
-                <p className="mb-6 mt-2 max-w-[460px] font-body text-[12px] font-light leading-[1.7] text-[var(--color-muted)]">
+                <h2 className="font-manrope text-[24px]  text-[var(--color-primary)]">Save your details for next time</h2>
+                <p className="mb-6 mt-2 max-w-[460px] font-inter text-[12px] font-light leading-[1.7] text-[var(--color-muted)]">
                   Create an account to track orders, save addresses and checkout faster.
                 </p>
 
                 <label
                   htmlFor="guest-create-password"
-                  className="mb-2 block font-body text-[10px] uppercase tracking-[0.12em] text-[var(--color-muted)]"
+                  className="mb-2 block font-inter text-[10px] uppercase tracking-[0.12em] text-[var(--color-muted)]"
                 >
                   Create a Password
                 </label>
@@ -435,7 +435,7 @@ const CheckoutConfirmation = () => {
                     onChange={(event) => setPassword(event.target.value)}
                     placeholder="Min. 8 characters"
                     autoComplete="new-password"
-                    className="w-full bg-transparent pr-10 font-body text-[14px] text-[var(--color-primary)] placeholder:text-[var(--color-muted-soft)] focus:outline-none"
+                    className="w-full bg-transparent pr-10 font-inter text-[14px] text-[var(--color-primary)] placeholder:text-[var(--color-muted-soft)] focus:outline-none"
                   />
                   <button
                     type="button"
@@ -447,7 +447,7 @@ const CheckoutConfirmation = () => {
                   </button>
                 </div>
 
-                <div className="mt-3 space-y-1 font-body text-[10px] text-[var(--color-muted)]">
+                <div className="mt-3 space-y-1 font-inter text-[10px] text-[var(--color-muted)]">
                   <p className={passwordRules.minLength ? "text-[var(--color-success)]" : "text-[var(--color-muted)]"}>
                     {passwordRules.minLength ? "OK" : "X"} 8+ characters
                   </p>
@@ -459,12 +459,12 @@ const CheckoutConfirmation = () => {
                   </p>
                 </div>
 
-                {accountCreateError ? <p className="mt-3 font-body text-[12px] text-[var(--color-danger)]">{accountCreateError}</p> : null}
+                {accountCreateError ? <p className="mt-3 font-inter text-[12px] text-[var(--color-danger)]">{accountCreateError}</p> : null}
 
                 <button
                   type="submit"
                   disabled={!canSubmitPassword || isCreatingAccount}
-                  className="mt-6 w-full rounded-[var(--border-radius)] bg-[var(--color-primary)] px-4 py-4 font-body text-[11px] uppercase tracking-[0.18em] text-[var(--color-secondary)] transition-colors duration-300 hover:bg-[var(--color-accent)] hover:text-[var(--color-secondary)] disabled:cursor-not-allowed disabled:opacity-60"
+                  className="mt-6 w-full rounded-[var(--border-radius)] bg-[var(--color-primary)] px-4 py-4 font-inter text-[11px] uppercase tracking-[0.18em] text-[var(--color-secondary)] transition-colors duration-300 hover:bg-[var(--color-accent)] hover:text-[var(--color-secondary)] disabled:cursor-not-allowed disabled:opacity-60"
                 >
                   {isCreatingAccount ? "Creating..." : "Create Account"}
                 </button>
@@ -472,7 +472,7 @@ const CheckoutConfirmation = () => {
                 <button
                   type="button"
                   onClick={() => setIsPromptDismissed(true)}
-                  className="mt-4 block w-full text-center font-body text-[10px] uppercase tracking-[0.12em] text-[var(--color-muted-soft)] transition-colors hover:text-[var(--color-primary)]"
+                  className="mt-4 block w-full text-center font-inter text-[10px] uppercase tracking-[0.12em] text-[var(--color-muted-soft)] transition-colors hover:text-[var(--color-primary)]"
                 >
                   No thanks, maybe later
                 </button>

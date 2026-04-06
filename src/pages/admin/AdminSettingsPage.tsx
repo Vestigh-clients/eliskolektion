@@ -295,19 +295,19 @@ const AdminSettingsPage = () => {
   }
 
   if (isLoading) {
-    return <div className="admin-page font-body text-[12px] text-[var(--color-muted)]">Loading settings...</div>;
+    return <div className="admin-page font-inter text-[12px] text-[var(--color-muted)]">Loading settings...</div>;
   }
 
   return (
     <div className="admin-page">
-      <h1 className="admin-page-title mb-8 font-display text-[36px] italic text-[var(--color-primary)]">Site Settings</h1>
+      <h1 className="admin-page-title mb-8 font-manrope text-[36px]  text-[var(--color-primary)]">Site Settings</h1>
 
-      {loadError ? <p className="mb-4 font-body text-[12px] text-[var(--color-danger)]">{loadError}</p> : null}
-      {message ? <p className="mb-4 font-body text-[12px] text-[var(--color-accent)]">{message}</p> : null}
+      {loadError ? <p className="mb-4 font-inter text-[12px] text-[var(--color-danger)]">{loadError}</p> : null}
+      {message ? <p className="mb-4 font-inter text-[12px] text-[var(--color-accent)]">{message}</p> : null}
 
       <section className="settings-section-card mb-6 rounded-[var(--border-radius)] border border-[var(--color-border)] bg-transparent px-6 py-7 lg:px-10">
-        <h2 className="admin-section-title font-display text-[22px] italic text-[var(--color-primary)]">General</h2>
-        <p className="mt-1 font-body text-[11px] text-[var(--color-muted-soft)]">Basic store information</p>
+        <h2 className="admin-section-title font-manrope text-[22px]  text-[var(--color-primary)]">General</h2>
+        <p className="mt-1 font-inter text-[11px] text-[var(--color-muted-soft)]">Basic store information</p>
         <div className="my-5 border-b border-[var(--color-border)]" />
 
         <div className="grid gap-5">
@@ -344,14 +344,14 @@ const AdminSettingsPage = () => {
             onChange={(value) => setSetting("whatsapp_number", value)}
           />
           <div>
-            <label className="font-body text-[11px] uppercase tracking-[0.1em] text-[var(--color-muted-soft)]">Review Moderation</label>
-            <p className="mt-1 font-body text-[10px] text-[var(--color-muted-soft)]">
+            <label className="font-inter text-[11px] uppercase tracking-[0.1em] text-[var(--color-muted-soft)]">Review Moderation</label>
+            <p className="mt-1 font-inter text-[10px] text-[var(--color-muted-soft)]">
               When on, new product reviews are queued for approval. Keep off for instant publishing.
             </p>
             <button
               type="button"
               onClick={() => setSetting("review_moderation_required", isReviewModerationRequired ? "false" : "true")}
-              className={`mt-3 rounded-[var(--border-radius)] border px-4 py-2 font-body text-[10px] uppercase tracking-[0.1em] transition-colors ${
+              className={`mt-3 rounded-[var(--border-radius)] border px-4 py-2 font-inter text-[10px] uppercase tracking-[0.1em] transition-colors ${
                 isReviewModerationRequired
                   ? "border-[var(--color-accent)] bg-[rgba(var(--color-navbar-solid-foreground-rgb),0.14)] text-[var(--color-accent)]"
                   : "border-[var(--color-border)] bg-transparent text-[var(--color-muted)] hover:border-[var(--color-primary)] hover:text-[var(--color-primary)]"
@@ -361,11 +361,11 @@ const AdminSettingsPage = () => {
             </button>
           </div>
           <div>
-            <label className="font-body text-[11px] uppercase tracking-[0.1em] text-[var(--color-muted-soft)]">Theme Preset</label>
+            <label className="font-inter text-[11px] uppercase tracking-[0.1em] text-[var(--color-muted-soft)]">Theme Preset</label>
             <select
               value={activeThemePresetOption?.key || ""}
               onChange={(event) => setSetting("site_theme_preset", event.target.value)}
-              className="mt-2 w-full border-0 border-b border-[var(--color-border)] bg-transparent pb-2 font-body text-[14px] text-[var(--color-primary)] outline-none focus:border-[var(--color-primary)]"
+              className="mt-2 w-full border-0 border-b border-[var(--color-border)] bg-transparent pb-2 font-inter text-[14px] text-[var(--color-primary)] outline-none focus:border-[var(--color-primary)]"
             >
               {themePresetOptions.map((option) => (
                 <option key={option.key} value={option.key}>
@@ -374,30 +374,30 @@ const AdminSettingsPage = () => {
               ))}
             </select>
             {activeThemePreset ? (
-              <p className="mt-1 font-body text-[10px] text-[var(--color-muted-soft)]">{activeThemePreset.description}</p>
+              <p className="mt-1 font-inter text-[10px] text-[var(--color-muted-soft)]">{activeThemePreset.description}</p>
             ) : null}
           </div>
         </div>
 
         <div className="mt-6 flex flex-wrap items-center justify-between gap-4">
-          <p className="font-body text-[10px] text-[var(--color-muted-soft)]">
+          <p className="font-inter text-[10px] text-[var(--color-muted-soft)]">
             {generalMeta ? `Last updated ${generalMeta.date} by ${generalMeta.adminName}` : "Last updated -"}
           </p>
           <button
             type="button"
             onClick={() => void saveSection("general")}
             disabled={sectionSaving.general}
-            className="settings-save-button rounded-[var(--border-radius)] bg-[var(--color-primary)] px-8 py-3 font-body text-[11px] uppercase tracking-[0.1em] text-[var(--color-secondary)] transition-colors hover:bg-[var(--color-accent)] hover:text-[var(--color-secondary)] disabled:cursor-not-allowed disabled:opacity-65"
+            className="settings-save-button rounded-[var(--border-radius)] bg-[var(--color-primary)] px-8 py-3 font-inter text-[11px] uppercase tracking-[0.1em] text-[var(--color-secondary)] transition-colors hover:bg-[var(--color-accent)] hover:text-[var(--color-secondary)] disabled:cursor-not-allowed disabled:opacity-65"
           >
             {sectionSaving.general ? "Saving..." : "Save General"}
           </button>
         </div>
-        {sectionSaved.general ? <p className="mt-2 font-body text-[11px] text-[var(--color-accent)]">Settings saved.</p> : null}
+        {sectionSaved.general ? <p className="mt-2 font-inter text-[11px] text-[var(--color-accent)]">Settings saved.</p> : null}
       </section>
 
       <section className="settings-section-card mb-6 rounded-[var(--border-radius)] border border-[var(--color-border)] bg-transparent px-6 py-7 lg:px-10">
-        <h2 className="admin-section-title font-display text-[22px] italic text-[var(--color-primary)]">Orders</h2>
-        <p className="mt-1 font-body text-[11px] text-[var(--color-muted-soft)]">Order processing settings</p>
+        <h2 className="admin-section-title font-manrope text-[22px]  text-[var(--color-primary)]">Orders</h2>
+        <p className="mt-1 font-inter text-[11px] text-[var(--color-muted-soft)]">Order processing settings</p>
         <div className="my-5 border-b border-[var(--color-border)]" />
 
         <div className="grid gap-5">
@@ -417,11 +417,11 @@ const AdminSettingsPage = () => {
             onChange={(value) => setSetting("order_number_prefix", value.toUpperCase().slice(0, 5))}
           />
           <div>
-            <label className="font-body text-[11px] uppercase tracking-[0.1em] text-[var(--color-muted-soft)]">Default Currency</label>
+            <label className="font-inter text-[11px] uppercase tracking-[0.1em] text-[var(--color-muted-soft)]">Default Currency</label>
             <select
               value={settingsMap.default_currency || "GHS"}
               onChange={(event) => setSetting("default_currency", event.target.value)}
-              className="mt-2 w-full border-0 border-b border-[var(--color-border)] bg-transparent pb-2 font-body text-[14px] text-[var(--color-primary)] outline-none focus:border-[var(--color-primary)]"
+              className="mt-2 w-full border-0 border-b border-[var(--color-border)] bg-transparent pb-2 font-inter text-[14px] text-[var(--color-primary)] outline-none focus:border-[var(--color-primary)]"
             >
               <option value="GHS">GHS</option>
               <option value="USD">USD</option>
@@ -431,24 +431,24 @@ const AdminSettingsPage = () => {
         </div>
 
         <div className="mt-6 flex flex-wrap items-center justify-between gap-4">
-          <p className="font-body text-[10px] text-[var(--color-muted-soft)]">
+          <p className="font-inter text-[10px] text-[var(--color-muted-soft)]">
             {orderMeta ? `Last updated ${orderMeta.date} by ${orderMeta.adminName}` : "Last updated -"}
           </p>
           <button
             type="button"
             onClick={() => void saveSection("orders")}
             disabled={sectionSaving.orders}
-            className="settings-save-button rounded-[var(--border-radius)] bg-[var(--color-primary)] px-8 py-3 font-body text-[11px] uppercase tracking-[0.1em] text-[var(--color-secondary)] transition-colors hover:bg-[var(--color-accent)] hover:text-[var(--color-secondary)] disabled:cursor-not-allowed disabled:opacity-65"
+            className="settings-save-button rounded-[var(--border-radius)] bg-[var(--color-primary)] px-8 py-3 font-inter text-[11px] uppercase tracking-[0.1em] text-[var(--color-secondary)] transition-colors hover:bg-[var(--color-accent)] hover:text-[var(--color-secondary)] disabled:cursor-not-allowed disabled:opacity-65"
           >
             {sectionSaving.orders ? "Saving..." : "Save Orders"}
           </button>
         </div>
-        {sectionSaved.orders ? <p className="mt-2 font-body text-[11px] text-[var(--color-accent)]">Settings saved.</p> : null}
+        {sectionSaved.orders ? <p className="mt-2 font-inter text-[11px] text-[var(--color-accent)]">Settings saved.</p> : null}
       </section>
 
       <section className="settings-section-card mb-6 rounded-[var(--border-radius)] border border-[var(--color-border)] bg-transparent px-6 py-7 lg:px-10">
-        <h2 className="admin-section-title font-display text-[22px] italic text-[var(--color-primary)]">Notifications</h2>
-        <p className="mt-1 font-body text-[11px] text-[var(--color-muted-soft)]">Email addresses for admin alerts and summaries</p>
+        <h2 className="admin-section-title font-manrope text-[22px]  text-[var(--color-primary)]">Notifications</h2>
+        <p className="mt-1 font-inter text-[11px] text-[var(--color-muted-soft)]">Email addresses for admin alerts and summaries</p>
         <div className="my-5 border-b border-[var(--color-border)]" />
 
         <div className="grid gap-5">
@@ -479,31 +479,31 @@ const AdminSettingsPage = () => {
         </div>
 
         <div className="mt-6 flex flex-wrap items-center justify-between gap-4">
-          <p className="font-body text-[10px] text-[var(--color-muted-soft)]">
+          <p className="font-inter text-[10px] text-[var(--color-muted-soft)]">
             {notificationMeta ? `Last updated ${notificationMeta.date} by ${notificationMeta.adminName}` : "Last updated -"}
           </p>
           <button
             type="button"
             onClick={() => void saveSection("notifications")}
             disabled={sectionSaving.notifications}
-            className="settings-save-button rounded-[var(--border-radius)] bg-[var(--color-primary)] px-8 py-3 font-body text-[11px] uppercase tracking-[0.1em] text-[var(--color-secondary)] transition-colors hover:bg-[var(--color-accent)] hover:text-[var(--color-secondary)] disabled:cursor-not-allowed disabled:opacity-65"
+            className="settings-save-button rounded-[var(--border-radius)] bg-[var(--color-primary)] px-8 py-3 font-inter text-[11px] uppercase tracking-[0.1em] text-[var(--color-secondary)] transition-colors hover:bg-[var(--color-accent)] hover:text-[var(--color-secondary)] disabled:cursor-not-allowed disabled:opacity-65"
           >
             {sectionSaving.notifications ? "Saving..." : "Save Notifications"}
           </button>
         </div>
-        {sectionSaved.notifications ? <p className="mt-2 font-body text-[11px] text-[var(--color-accent)]">Settings saved.</p> : null}
+        {sectionSaved.notifications ? <p className="mt-2 font-inter text-[11px] text-[var(--color-accent)]">Settings saved.</p> : null}
       </section>
 
       <section className="settings-section-card mb-6 rounded-[var(--border-radius)] border border-[rgba(var(--color-danger-rgb),0.3)] bg-transparent px-6 py-7 lg:px-10">
-        <h2 className="admin-section-title font-display text-[22px] italic text-[var(--color-primary)]">Danger Zone</h2>
-        <p className="mt-1 font-body text-[11px] text-[var(--color-muted-soft)]">Irreversible actions - proceed with caution</p>
+        <h2 className="admin-section-title font-manrope text-[22px]  text-[var(--color-primary)]">Danger Zone</h2>
+        <p className="mt-1 font-inter text-[11px] text-[var(--color-muted-soft)]">Irreversible actions - proceed with caution</p>
         <div className="my-5 border-b border-[var(--color-border)]" />
 
         <button
           type="button"
           onClick={() => void exportAllData()}
           disabled={isExporting}
-          className="rounded-[var(--border-radius)] border border-[var(--color-border)] bg-transparent px-7 py-3 font-body text-[11px] uppercase tracking-[0.1em] text-[var(--color-primary)] transition-colors hover:border-[var(--color-primary)] disabled:opacity-65"
+          className="rounded-[var(--border-radius)] border border-[var(--color-border)] bg-transparent px-7 py-3 font-inter text-[11px] uppercase tracking-[0.1em] text-[var(--color-primary)] transition-colors hover:border-[var(--color-primary)] disabled:opacity-65"
         >
           {isExporting ? "Exporting..." : "Export All Data"}
         </button>
@@ -514,25 +514,25 @@ const AdminSettingsPage = () => {
           <button
             type="button"
             onClick={() => setShowConfirmClear(true)}
-            className="rounded-[var(--border-radius)] border border-[rgba(var(--color-danger-rgb),0.3)] bg-transparent px-7 py-3 font-body text-[11px] uppercase tracking-[0.1em] text-[var(--color-danger)] transition-colors hover:bg-[var(--color-danger)] hover:text-white"
+            className="rounded-[var(--border-radius)] border border-[rgba(var(--color-danger-rgb),0.3)] bg-transparent px-7 py-3 font-inter text-[11px] uppercase tracking-[0.1em] text-[var(--color-danger)] transition-colors hover:bg-[var(--color-danger)] hover:text-white"
           >
             Clear All Test Orders
           </button>
         ) : (
           <div className="w-full max-w-[560px]">
-            <p className="mb-3 font-body text-[11px] text-[var(--color-muted)]">
+            <p className="mb-3 font-inter text-[11px] text-[var(--color-muted)]">
               Type CONFIRM to delete all orders where customer email contains &apos;test&apos; or order total is GH?0.00
             </p>
             <input
               value={confirmValue}
               onChange={(event) => setConfirmValue(event.target.value)}
-              className="w-full border-0 border-b border-[var(--color-border)] bg-transparent pb-2 font-body text-[14px] text-[var(--color-primary)] outline-none focus:border-[var(--color-primary)]"
+              className="w-full border-0 border-b border-[var(--color-border)] bg-transparent pb-2 font-inter text-[14px] text-[var(--color-primary)] outline-none focus:border-[var(--color-primary)]"
             />
             <button
               type="button"
               onClick={() => void clearOrders()}
               disabled={confirmValue !== "CONFIRM" || isClearingOrders}
-              className="mt-4 rounded-[var(--border-radius)] bg-[var(--color-danger)] px-6 py-3 font-body text-[11px] uppercase tracking-[0.1em] text-white disabled:cursor-not-allowed disabled:opacity-50"
+              className="mt-4 rounded-[var(--border-radius)] bg-[var(--color-danger)] px-6 py-3 font-inter text-[11px] uppercase tracking-[0.1em] text-white disabled:cursor-not-allowed disabled:opacity-50"
             >
               {isClearingOrders ? "Deleting..." : "Delete Test Orders"}
             </button>
@@ -561,16 +561,16 @@ const Field = ({
   inputMode?: "text" | "decimal" | "numeric" | "email";
 }) => (
   <div>
-    <label className="font-body text-[11px] uppercase tracking-[0.1em] text-[var(--color-muted-soft)]">{label}</label>
+    <label className="font-inter text-[11px] uppercase tracking-[0.1em] text-[var(--color-muted-soft)]">{label}</label>
     <input
       value={value}
       inputMode={inputMode}
       onBlur={(event) => onBlur?.(event.target.value)}
       onChange={(event) => onChange(event.target.value)}
-      className="mt-2 w-full border-0 border-b border-[var(--color-border)] bg-transparent pb-2 font-body text-[14px] text-[var(--color-primary)] outline-none focus:border-[var(--color-primary)]"
+      className="mt-2 w-full border-0 border-b border-[var(--color-border)] bg-transparent pb-2 font-inter text-[14px] text-[var(--color-primary)] outline-none focus:border-[var(--color-primary)]"
     />
-    {helper ? <p className="mt-1 font-body text-[10px] text-[var(--color-muted-soft)]">{helper}</p> : null}
-    {error ? <p className="mt-1 font-body text-[11px] text-[var(--color-danger)]">{error}</p> : null}
+    {helper ? <p className="mt-1 font-inter text-[10px] text-[var(--color-muted-soft)]">{helper}</p> : null}
+    {error ? <p className="mt-1 font-inter text-[11px] text-[var(--color-danger)]">{error}</p> : null}
   </div>
 );
 

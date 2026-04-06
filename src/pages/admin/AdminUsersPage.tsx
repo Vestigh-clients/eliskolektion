@@ -182,12 +182,12 @@ const AdminUsersPage = () => {
   return (
     <div className="admin-page">
       <div className="admin-page-header">
-        <h1 className="admin-page-title font-display text-[36px] italic text-[var(--color-primary)]">Admin Users</h1>
+        <h1 className="admin-page-title font-manrope text-[36px]  text-[var(--color-primary)]">Admin Users</h1>
         <div className="admin-page-actions">
           <button
             type="button"
             onClick={openPanel}
-            className="rounded-[var(--border-radius)] bg-[var(--color-primary)] px-7 py-3 font-body text-[11px] uppercase tracking-[0.1em] text-[var(--color-secondary)] transition-colors hover:bg-[var(--color-accent)] hover:text-[var(--color-secondary)]"
+            className="rounded-[var(--border-radius)] bg-[var(--color-primary)] px-7 py-3 font-inter text-[11px] uppercase tracking-[0.1em] text-[var(--color-secondary)] transition-colors hover:bg-[var(--color-accent)] hover:text-[var(--color-secondary)]"
           >
             Promote Customer
           </button>
@@ -195,13 +195,13 @@ const AdminUsersPage = () => {
       </div>
 
       <div className="mb-8 rounded-[var(--border-radius)] border border-[var(--color-border)] bg-[rgba(var(--color-navbar-solid-foreground-rgb),0.08)] px-5 py-4">
-        <p className="font-body text-[12px] leading-[1.8] text-[var(--color-muted)]">
+        <p className="font-inter text-[12px] leading-[1.8] text-[var(--color-muted)]">
           Admin users can manage products, orders and customers. Super Admins have full access including this page, site settings and
           role management. Role changes are logged and cannot be undone without super admin access.
         </p>
       </div>
 
-      {message ? <p className="mb-4 font-body text-[12px] text-[var(--color-accent)]">{message}</p> : null}
+      {message ? <p className="mb-4 font-inter text-[12px] text-[var(--color-accent)]">{message}</p> : null}
 
       <div className="hidden overflow-x-auto md:block">
         <table className="min-w-[980px] w-full border-collapse">
@@ -210,7 +210,7 @@ const AdminUsersPage = () => {
               {["User", "Email", "Role", "Promoted By", "Date Promoted", "Actions"].map((heading) => (
                 <th
                   key={heading}
-                  className="px-2 py-3 text-left font-body text-[10px] uppercase tracking-[0.12em] text-[var(--color-muted-soft)] first:pl-0 last:pr-0"
+                  className="px-2 py-3 text-left font-inter text-[10px] uppercase tracking-[0.12em] text-[var(--color-muted-soft)] first:pl-0 last:pr-0"
                 >
                   {heading}
                 </th>
@@ -220,19 +220,19 @@ const AdminUsersPage = () => {
           <tbody>
             {isLoading ? (
               <tr>
-                <td colSpan={6} className="px-0 py-8 text-center font-body text-[12px] text-[var(--color-muted-soft)]">
+                <td colSpan={6} className="px-0 py-8 text-center font-inter text-[12px] text-[var(--color-muted-soft)]">
                   Loading admin users...
                 </td>
               </tr>
             ) : loadError ? (
               <tr>
-                <td colSpan={6} className="px-0 py-8 text-center font-body text-[12px] text-[var(--color-danger)]">
+                <td colSpan={6} className="px-0 py-8 text-center font-inter text-[12px] text-[var(--color-danger)]">
                   {loadError}
                 </td>
               </tr>
             ) : sortedRows.length === 0 ? (
               <tr>
-                <td colSpan={6} className="px-0 py-8 text-center font-body text-[12px] text-[var(--color-muted-soft)]">
+                <td colSpan={6} className="px-0 py-8 text-center font-inter text-[12px] text-[var(--color-muted-soft)]">
                   No admin users found.
                 </td>
               </tr>
@@ -245,56 +245,56 @@ const AdminUsersPage = () => {
                   <tr key={row.customer_id} className="border-b border-[var(--color-surface-strong)] hover:bg-[rgba(var(--color-navbar-solid-foreground-rgb),0.04)]">
                     <td className="px-2 py-4 pl-0">
                       <div className="flex items-center gap-[10px]">
-                        <div className="flex h-8 w-8 items-center justify-center overflow-hidden rounded-full bg-[var(--color-primary)] font-body text-[12px] text-[var(--color-secondary)]">
+                        <div className="flex h-8 w-8 items-center justify-center overflow-hidden rounded-full bg-[var(--color-primary)] font-inter text-[12px] text-[var(--color-secondary)]">
                           {row.customer.avatar_url ? (
                             <img src={row.customer.avatar_url} alt={row.customer.first_name} className="h-full w-full object-cover" />
                           ) : (
                             initials
                           )}
                         </div>
-                        <p className="font-body text-[12px] text-[var(--color-primary)]">{`${row.customer.first_name} ${row.customer.last_name}`.trim()}</p>
+                        <p className="font-inter text-[12px] text-[var(--color-primary)]">{`${row.customer.first_name} ${row.customer.last_name}`.trim()}</p>
                       </div>
                     </td>
-                    <td className="px-2 py-4 font-body text-[11px] text-[var(--color-muted-soft)]">{row.customer.email}</td>
+                    <td className="px-2 py-4 font-inter text-[11px] text-[var(--color-muted-soft)]">{row.customer.email}</td>
                     <td className="px-2 py-4">
-                      <span className={`inline-block rounded-[var(--border-radius)] px-3 py-1 font-body text-[9px] uppercase tracking-[0.12em] ${roleBadgeClass[row.role]}`}>
+                      <span className={`inline-block rounded-[var(--border-radius)] px-3 py-1 font-inter text-[9px] uppercase tracking-[0.12em] ${roleBadgeClass[row.role]}`}>
                         {row.role === "super_admin" ? "Super Admin" : "Admin"}
                       </span>
                     </td>
-                    <td className="px-2 py-4 font-body text-[11px] text-[var(--color-muted-soft)]">{row.promoted_by_name || "System"}</td>
-                    <td className="px-2 py-4 font-body text-[11px] text-[var(--color-muted-soft)]">{formatDateShort(dateValue)}</td>
+                    <td className="px-2 py-4 font-inter text-[11px] text-[var(--color-muted-soft)]">{row.promoted_by_name || "System"}</td>
+                    <td className="px-2 py-4 font-inter text-[11px] text-[var(--color-muted-soft)]">{formatDateShort(dateValue)}</td>
                     <td className="px-0 py-4">
                       {canDemote ? (
                         <button
                           type="button"
                           onClick={() => setDemoteConfirmId(row.customer_id)}
-                          className="font-body text-[10px] uppercase tracking-[0.1em] text-[var(--color-muted-soft)] transition-colors hover:text-[var(--color-danger)]"
+                          className="font-inter text-[10px] uppercase tracking-[0.1em] text-[var(--color-muted-soft)] transition-colors hover:text-[var(--color-danger)]"
                         >
                           Demote to Customer
                         </button>
                       ) : (
-                        <span className="font-body text-[10px] uppercase tracking-[0.1em] text-[var(--color-muted-soft)]">-</span>
+                        <span className="font-inter text-[10px] uppercase tracking-[0.1em] text-[var(--color-muted-soft)]">-</span>
                       )}
                     </td>
                   </tr>,
                   demoteConfirmId === row.customer_id ? (
                     <tr key={`${row.customer_id}-confirm`} className="border-b border-[var(--color-border)] bg-[rgba(var(--color-secondary-rgb),0.24)]">
                       <td colSpan={6} className="px-4 py-4">
-                        <p className="mb-3 font-body text-[11px] text-[var(--color-muted)]">
+                        <p className="mb-3 font-inter text-[11px] text-[var(--color-muted)]">
                           Demote {`${row.customer.first_name} ${row.customer.last_name}`.trim()} to customer? They will lose all admin access.
                         </p>
                         <button
                           type="button"
                           onClick={() => void demote(row)}
                           disabled={isDemoting}
-                          className="w-full rounded-[var(--border-radius)] bg-[var(--color-danger)] px-4 py-3 font-body text-[10px] uppercase tracking-[0.1em] text-white disabled:opacity-65"
+                          className="w-full rounded-[var(--border-radius)] bg-[var(--color-danger)] px-4 py-3 font-inter text-[10px] uppercase tracking-[0.1em] text-white disabled:opacity-65"
                         >
                           {isDemoting ? "Updating..." : "Confirm Demotion"}
                         </button>
                         <button
                           type="button"
                           onClick={() => setDemoteConfirmId(null)}
-                          className="mt-2 font-body text-[10px] text-[var(--color-muted-soft)]"
+                          className="mt-2 font-inter text-[10px] text-[var(--color-muted-soft)]"
                         >
                           Cancel
                         </button>
@@ -310,11 +310,11 @@ const AdminUsersPage = () => {
 
       <div className="border-t border-[var(--color-border)] md:hidden">
         {isLoading ? (
-          <p className="py-8 text-center font-body text-[12px] text-[var(--color-muted-soft)]">Loading admin users...</p>
+          <p className="py-8 text-center font-inter text-[12px] text-[var(--color-muted-soft)]">Loading admin users...</p>
         ) : loadError ? (
-          <p className="py-8 text-center font-body text-[12px] text-[var(--color-danger)]">{loadError}</p>
+          <p className="py-8 text-center font-inter text-[12px] text-[var(--color-danger)]">{loadError}</p>
         ) : sortedRows.length === 0 ? (
-          <p className="py-8 text-center font-body text-[12px] text-[var(--color-muted-soft)]">No admin users found.</p>
+          <p className="py-8 text-center font-inter text-[12px] text-[var(--color-muted-soft)]">No admin users found.</p>
         ) : (
           sortedRows.map((row) => {
             const initials = (row.customer.first_name.slice(0, 1) || row.customer.email.slice(0, 1) || "A").toUpperCase();
@@ -324,26 +324,26 @@ const AdminUsersPage = () => {
               <div key={`mobile-${row.customer_id}`} className="admin-mobile-card">
                 <div className="flex items-center justify-between gap-3">
                   <div className="flex min-w-0 items-center gap-[10px]">
-                    <div className="flex h-8 w-8 items-center justify-center overflow-hidden rounded-full bg-[var(--color-primary)] font-body text-[12px] text-[var(--color-secondary)]">
+                    <div className="flex h-8 w-8 items-center justify-center overflow-hidden rounded-full bg-[var(--color-primary)] font-inter text-[12px] text-[var(--color-secondary)]">
                       {row.customer.avatar_url ? (
                         <img src={row.customer.avatar_url} alt={row.customer.first_name} className="h-full w-full object-cover" />
                       ) : (
                         initials
                       )}
                     </div>
-                    <p className="truncate font-body text-[12px] text-[var(--color-primary)]">{`${row.customer.first_name} ${row.customer.last_name}`.trim()}</p>
+                    <p className="truncate font-inter text-[12px] text-[var(--color-primary)]">{`${row.customer.first_name} ${row.customer.last_name}`.trim()}</p>
                   </div>
-                  <span className={`inline-block rounded-[var(--border-radius)] px-3 py-1 font-body text-[9px] uppercase tracking-[0.12em] ${roleBadgeClass[row.role]}`}>
+                  <span className={`inline-block rounded-[var(--border-radius)] px-3 py-1 font-inter text-[9px] uppercase tracking-[0.12em] ${roleBadgeClass[row.role]}`}>
                     {row.role === "super_admin" ? "Super Admin" : "Admin"}
                   </span>
                 </div>
 
-                <p className="admin-mobile-ellipsis mt-2 font-body text-[11px] text-[var(--color-muted-soft)]">{row.customer.email}</p>
-                <p className="mt-1 font-body text-[11px] text-[var(--color-muted-soft)]">
-                  {row.promoted_by_name || "System"} · {formatDateShort(dateValue)}
+                <p className="admin-mobile-ellipsis mt-2 font-inter text-[11px] text-[var(--color-muted-soft)]">{row.customer.email}</p>
+                <p className="mt-1 font-inter text-[11px] text-[var(--color-muted-soft)]">
+                  {row.promoted_by_name || "System"} ï¿½ {formatDateShort(dateValue)}
                 </p>
 
-                <div className="mt-2 flex justify-end font-body text-[10px] uppercase tracking-[0.1em]">
+                <div className="mt-2 flex justify-end font-inter text-[10px] uppercase tracking-[0.1em]">
                   {canDemote ? (
                     demoteConfirmId === row.customer_id ? (
                       <div className="flex gap-3">
@@ -375,7 +375,7 @@ const AdminUsersPage = () => {
 
       {isPanelOpen ? (
         <div className="mt-6 border border-[var(--color-border)] p-6">
-          <p className="mb-4 font-body text-[10px] uppercase tracking-[0.2em] text-[var(--color-accent)]">Promote Customer</p>
+          <p className="mb-4 font-inter text-[10px] uppercase tracking-[0.2em] text-[var(--color-accent)]">Promote Customer</p>
 
           <div className="grid gap-5">
             <div className="relative">
@@ -386,7 +386,7 @@ const AdminUsersPage = () => {
                   setSelectedCustomer(null);
                 }}
                 placeholder="Search customer by email..."
-                className="w-full border-0 border-b border-[var(--color-border)] bg-transparent pb-2 font-body text-[13px] text-[var(--color-primary)] outline-none placeholder:text-[var(--color-muted-soft)] focus:border-[var(--color-primary)]"
+                className="w-full border-0 border-b border-[var(--color-border)] bg-transparent pb-2 font-inter text-[13px] text-[var(--color-primary)] outline-none placeholder:text-[var(--color-muted-soft)] focus:border-[var(--color-primary)]"
               />
 
               {!selectedCustomer && searchTerm.length >= 2 && searchResults.length > 0 ? (
@@ -401,18 +401,18 @@ const AdminUsersPage = () => {
                       }}
                       className="block w-full border-b border-[var(--color-surface-strong)] px-4 py-3 text-left hover:bg-[rgba(var(--color-navbar-solid-foreground-rgb),0.05)]"
                     >
-                      <p className="font-body text-[12px] text-[var(--color-primary)]">{`${candidate.first_name} ${candidate.last_name}`.trim()}</p>
-                      <p className="font-body text-[11px] text-[var(--color-muted)]">{candidate.email}</p>
+                      <p className="font-inter text-[12px] text-[var(--color-primary)]">{`${candidate.first_name} ${candidate.last_name}`.trim()}</p>
+                      <p className="font-inter text-[11px] text-[var(--color-muted)]">{candidate.email}</p>
                     </button>
                   ))}
                 </div>
               ) : null}
-              {isSearching ? <p className="mt-2 font-body text-[11px] text-[var(--color-muted-soft)]">Searching...</p> : null}
+              {isSearching ? <p className="mt-2 font-inter text-[11px] text-[var(--color-muted-soft)]">Searching...</p> : null}
             </div>
 
             {selectedCustomer ? (
               <div className="flex items-center gap-3 border border-[var(--color-border)] p-4">
-                <div className="flex h-8 w-8 items-center justify-center overflow-hidden rounded-full bg-[var(--color-primary)] font-body text-[12px] text-[var(--color-secondary)]">
+                <div className="flex h-8 w-8 items-center justify-center overflow-hidden rounded-full bg-[var(--color-primary)] font-inter text-[12px] text-[var(--color-secondary)]">
                   {selectedCustomer.avatar_url ? (
                     <img src={selectedCustomer.avatar_url} alt={selectedCustomer.first_name} className="h-full w-full object-cover" />
                   ) : (
@@ -420,8 +420,8 @@ const AdminUsersPage = () => {
                   )}
                 </div>
                 <div>
-                  <p className="font-body text-[12px] text-[var(--color-primary)]">{`${selectedCustomer.first_name} ${selectedCustomer.last_name}`.trim()}</p>
-                  <p className="font-body text-[11px] text-[var(--color-muted)]">{selectedCustomer.email}</p>
+                  <p className="font-inter text-[12px] text-[var(--color-primary)]">{`${selectedCustomer.first_name} ${selectedCustomer.last_name}`.trim()}</p>
+                  <p className="font-inter text-[11px] text-[var(--color-muted)]">{selectedCustomer.email}</p>
                 </div>
               </div>
             ) : null}
@@ -435,7 +435,7 @@ const AdminUsersPage = () => {
                 }`}
                 style={{ backgroundColor: selectedRole === "admin" ? "rgba(var(--color-navbar-solid-foreground-rgb),0.08)" : "transparent" }}
               >
-                <p className="font-display text-[18px] italic text-[var(--color-primary)]">Admin</p>
+                <p className="font-manrope text-[18px]  text-[var(--color-primary)]">Admin</p>
               </button>
 
               <button
@@ -446,13 +446,13 @@ const AdminUsersPage = () => {
                 }`}
                 style={{ backgroundColor: selectedRole === "super_admin" ? "rgba(var(--color-navbar-solid-foreground-rgb),0.08)" : "transparent" }}
               >
-                <p className="font-display text-[18px] italic text-[var(--color-primary)]">Super Admin</p>
+                <p className="font-manrope text-[18px]  text-[var(--color-primary)]">Super Admin</p>
               </button>
             </div>
 
             {selectedRole === "super_admin" ? (
               <div className="rounded-[var(--border-radius)] border border-[rgba(var(--color-danger-rgb),0.2)] bg-[rgba(var(--color-danger-rgb),0.06)] px-4 py-3">
-                <p className="font-body text-[11px] leading-[1.8] text-[var(--color-danger)]">
+                <p className="font-inter text-[11px] leading-[1.8] text-[var(--color-danger)]">
                   Super Admin has full system access including the ability to manage other admins and site settings. Only assign this
                   role to trusted users.
                 </p>
@@ -464,14 +464,14 @@ const AdminUsersPage = () => {
                 type="button"
                 onClick={() => void promote()}
                 disabled={!selectedCustomer || isPromoting}
-                className="w-full rounded-[var(--border-radius)] bg-[var(--color-primary)] px-4 py-4 font-body text-[11px] uppercase tracking-[0.1em] text-[var(--color-secondary)] transition-colors hover:bg-[var(--color-accent)] hover:text-[var(--color-secondary)] disabled:cursor-not-allowed disabled:opacity-65"
+                className="w-full rounded-[var(--border-radius)] bg-[var(--color-primary)] px-4 py-4 font-inter text-[11px] uppercase tracking-[0.1em] text-[var(--color-secondary)] transition-colors hover:bg-[var(--color-accent)] hover:text-[var(--color-secondary)] disabled:cursor-not-allowed disabled:opacity-65"
               >
                 {isPromoting ? "Promoting..." : "Promote User"}
               </button>
               <button
                 type="button"
                 onClick={closePanel}
-                className="mt-3 block w-full font-body text-[11px] uppercase tracking-[0.1em] text-[var(--color-muted-soft)] transition-colors hover:text-[var(--color-primary)]"
+                className="mt-3 block w-full font-inter text-[11px] uppercase tracking-[0.1em] text-[var(--color-muted-soft)] transition-colors hover:text-[var(--color-primary)]"
               >
                 Cancel
               </button>

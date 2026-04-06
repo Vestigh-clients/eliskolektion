@@ -49,8 +49,8 @@ const ForgotPassword = () => {
 
   return (
     <AuthPageLayout>
-      <h1 className="font-display text-[42px] italic leading-none text-[var(--color-primary)]">Forgot password?</h1>
-      <p className="mt-3 font-body text-[13px] font-light leading-[1.8] text-[var(--color-muted)]">
+      <h1 className="font-manrope text-[42px]  leading-none text-[var(--color-primary)]">Forgot password?</h1>
+      <p className="mt-3 font-inter text-[13px] font-light leading-[1.8] text-[var(--color-muted)]">
         Enter your email and we&apos;ll send a link to reset your password.
       </p>
 
@@ -71,15 +71,15 @@ const ForgotPassword = () => {
         <button
           type="submit"
           disabled={isSubmitting}
-          className="mt-8 w-full rounded-[var(--border-radius)] bg-[var(--color-primary)] px-4 py-[18px] font-body text-[11px] uppercase tracking-[0.18em] text-[var(--color-secondary)] transition-colors duration-300 hover:bg-[var(--color-accent)] hover:text-[var(--color-secondary)] disabled:cursor-not-allowed disabled:opacity-65"
+          className="mt-8 w-full rounded-[var(--border-radius)] bg-[var(--color-primary)] px-4 py-[18px] font-inter text-[11px] uppercase tracking-[0.18em] text-[var(--color-secondary)] transition-colors duration-300 hover:bg-[var(--color-accent)] hover:text-[var(--color-secondary)] disabled:cursor-not-allowed disabled:opacity-65"
         >
           {isSubmitting ? "Please wait..." : "Send Reset Link"}
         </button>
       </form>
 
-      {successMessage ? <p className="mt-6 font-body text-[13px] text-[var(--color-muted)]">{successMessage}</p> : null}
+      {successMessage ? <p className="mt-6 font-inter text-[13px] text-[var(--color-muted)]">{successMessage}</p> : null}
 
-      <p className="mt-6 font-body text-[12px] text-[var(--color-muted)]">
+      <p className="mt-6 font-inter text-[12px] text-[var(--color-muted)]">
         Remembered your password?{" "}
         <Link
           to={buildPathWithSearch(

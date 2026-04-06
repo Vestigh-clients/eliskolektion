@@ -93,7 +93,7 @@ const FilterSheet = ({
 
         {/* Header */}
         <div className="flex items-center justify-between px-5 py-3 border-b border-[rgba(var(--color-primary-rgb),0.08)]">
-          <p className="font-body text-[14px] font-semibold text-[var(--color-navbar-solid-foreground)]">Filters</p>
+          <p className="font-inter text-[14px] font-semibold text-[var(--color-navbar-solid-foreground)]">Filters</p>
           <button
             type="button"
             onClick={onClose}
@@ -106,7 +106,7 @@ const FilterSheet = ({
         <div className="px-5 py-4 space-y-5">
           {/* Availability */}
           <div>
-            <p className="font-body text-[10px] uppercase tracking-[0.18em] text-[var(--color-primary)] mb-2.5">Availability</p>
+            <p className="font-inter text-[10px] uppercase tracking-[0.18em] text-[var(--color-primary)] mb-2.5">Availability</p>
             <div className="flex flex-wrap gap-2">
               {availabilityTabs.map((opt) => {
                 const active = availability === opt.value;
@@ -115,7 +115,7 @@ const FilterSheet = ({
                     key={opt.value}
                     type="button"
                     onClick={() => { setAvailability(opt.value); setPage(1); }}
-                    className={`rounded-full border px-4 py-2 font-body text-[10px] uppercase tracking-[0.12em] transition-colors ${
+                    className={`rounded-full border px-4 py-2 font-inter text-[10px] uppercase tracking-[0.12em] transition-colors ${
                       active ? "text-white" : "text-[var(--color-muted)] hover:border-[var(--color-primary)] hover:text-[var(--color-primary)]"
                     }`}
                     style={{
@@ -132,7 +132,7 @@ const FilterSheet = ({
 
           {/* Categories */}
           <div>
-            <p className="font-body text-[10px] uppercase tracking-[0.18em] text-[var(--color-primary)] mb-2.5">Categories</p>
+            <p className="font-inter text-[10px] uppercase tracking-[0.18em] text-[var(--color-primary)] mb-2.5">Categories</p>
             <div className="flex flex-wrap gap-2">
               {categoryTabs.map((tab) => {
                 const active = categorySlug === tab.slug;
@@ -141,7 +141,7 @@ const FilterSheet = ({
                     key={tab.slug || "all"}
                     type="button"
                     onClick={() => { setCategorySlug(tab.slug); setPage(1); }}
-                    className={`rounded-full border px-4 py-2 font-body text-[10px] uppercase tracking-[0.12em] transition-colors ${
+                    className={`rounded-full border px-4 py-2 font-inter text-[10px] uppercase tracking-[0.12em] transition-colors ${
                       active ? "text-white" : "text-[var(--color-muted)] hover:border-[var(--color-primary)] hover:text-[var(--color-primary)]"
                     }`}
                     style={{
@@ -160,7 +160,7 @@ const FilterSheet = ({
           <button
             type="button"
             onClick={onClose}
-            className="w-full rounded-full py-3 font-body text-[11px] uppercase tracking-[0.14em] text-white"
+            className="w-full rounded-full py-3 font-inter text-[11px] uppercase tracking-[0.14em] text-white"
             style={{ background: "var(--color-primary)" }}
           >
             Done{activeFilterCount > 0 ? ` · ${activeFilterCount} active` : ""}
@@ -297,11 +297,11 @@ const AdminProductsPage = () => {
         {/* ── Page header ──────────────────────────────────────────────────────── */}
         <div className="flex flex-wrap items-start justify-between gap-3">
           <div>
-            <p className="font-body text-[11px] uppercase tracking-[0.22em] text-[var(--color-primary)]">Catalog</p>
-            <h1 className="mt-3 font-display text-[38px] italic leading-[1.04] text-[var(--color-navbar-solid-foreground)] sm:text-[50px]">
+            <p className="font-inter text-[11px] uppercase tracking-[0.22em] text-[var(--color-primary)]">Catalog</p>
+            <h1 className="mt-3 font-manrope text-[38px]  leading-[1.04] text-[var(--color-navbar-solid-foreground)] sm:text-[50px]">
               Products
             </h1>
-            <p className="mt-2 max-w-[680px] font-body text-[13px] leading-[1.8] text-[var(--color-muted)] sm:text-[14px]">
+            <p className="mt-2 max-w-[680px] font-inter text-[13px] leading-[1.8] text-[var(--color-muted)] sm:text-[14px]">
               Browse inventory, filter quickly, and jump into editing with the same smooth admin flow as Add with AI.
             </p>
           </div>
@@ -309,7 +309,7 @@ const AdminProductsPage = () => {
           <div className="flex flex-wrap items-center gap-2">
             <Link
               to="/admin/products/add-with-ai"
-              className="inline-flex items-center gap-2 rounded-full border px-5 py-2.5 font-body text-[11px] uppercase tracking-[0.12em] transition-colors hover:bg-[rgba(var(--color-primary-rgb),0.08)]"
+              className="inline-flex items-center gap-2 rounded-full border px-5 py-2.5 font-inter text-[11px] uppercase tracking-[0.12em] transition-colors hover:bg-[rgba(var(--color-primary-rgb),0.08)]"
               style={{
                 borderColor: "rgba(var(--color-primary-rgb),0.2)",
                 color: "var(--color-primary)",
@@ -321,7 +321,7 @@ const AdminProductsPage = () => {
             </Link>
             <Link
               to="/admin/products/new"
-              className="inline-flex items-center gap-2 rounded-full px-5 py-2.5 font-body text-[11px] uppercase tracking-[0.12em] text-white transition-opacity hover:opacity-90"
+              className="inline-flex items-center gap-2 rounded-full px-5 py-2.5 font-inter text-[11px] uppercase tracking-[0.12em] text-white transition-opacity hover:opacity-90"
               style={{ background: "var(--color-primary)" }}
             >
               <Plus className="h-3.5 w-3.5" />
@@ -349,7 +349,7 @@ const AdminProductsPage = () => {
                   value={searchInput}
                   onChange={(e) => setSearchInput(e.target.value)}
                   placeholder="Search by name or SKU..."
-                  className="h-11 w-full rounded-full border bg-white pl-10 pr-4 font-body text-[13px] text-[var(--color-navbar-solid-foreground)] outline-none transition-colors placeholder:text-[var(--color-muted-soft)] focus:border-[var(--color-primary)]"
+                  className="h-11 w-full rounded-full border bg-white pl-10 pr-4 font-inter text-[13px] text-[var(--color-navbar-solid-foreground)] outline-none transition-colors placeholder:text-[var(--color-muted-soft)] focus:border-[var(--color-primary)]"
                   style={{ borderColor: "rgba(var(--color-primary-rgb),0.18)" }}
                 />
               </label>
@@ -358,14 +358,14 @@ const AdminProductsPage = () => {
               <button
                 type="button"
                 onClick={() => setFilterSheetOpen(true)}
-                className="relative flex h-11 shrink-0 items-center gap-2 rounded-full border px-4 font-body text-[11px] uppercase tracking-[0.12em] text-[var(--color-primary)] transition-colors hover:bg-[rgba(var(--color-primary-rgb),0.06)] lg:hidden"
+                className="relative flex h-11 shrink-0 items-center gap-2 rounded-full border px-4 font-inter text-[11px] uppercase tracking-[0.12em] text-[var(--color-primary)] transition-colors hover:bg-[rgba(var(--color-primary-rgb),0.06)] lg:hidden"
                 style={{ borderColor: "rgba(var(--color-primary-rgb),0.2)" }}
               >
                 <SlidersHorizontal className="h-3.5 w-3.5" />
                 Filter
                 {activeFilterCount > 0 && (
                   <span
-                    className="absolute -right-1.5 -top-1.5 flex h-4 w-4 items-center justify-center rounded-full font-body text-[9px] text-white"
+                    className="absolute -right-1.5 -top-1.5 flex h-4 w-4 items-center justify-center rounded-full font-inter text-[9px] text-white"
                     style={{ background: "var(--color-primary)" }}
                   >
                     {activeFilterCount}
@@ -384,7 +384,7 @@ const AdminProductsPage = () => {
                       key={opt.value}
                       type="button"
                       onClick={() => { setAvailability(opt.value); setPage(1); }}
-                      className={`rounded-full border px-4 py-2 font-body text-[10px] uppercase tracking-[0.12em] transition-colors ${
+                      className={`rounded-full border px-4 py-2 font-inter text-[10px] uppercase tracking-[0.12em] transition-colors ${
                         active ? "text-white" : "text-[var(--color-muted)] hover:border-[var(--color-primary)] hover:text-[var(--color-primary)]"
                       }`}
                       style={{
@@ -399,7 +399,7 @@ const AdminProductsPage = () => {
               </div>
 
               <div className="min-w-0 lg:max-w-[56%]">
-                <p className="text-right font-body text-[10px] uppercase tracking-[0.16em] text-[var(--color-primary)]">Categories</p>
+                <p className="text-right font-inter text-[10px] uppercase tracking-[0.16em] text-[var(--color-primary)]">Categories</p>
                 <div className="admin-filter-scroll mt-2 flex justify-end gap-2 overflow-x-auto pb-1">
                   {categoryTabs.map((tab) => {
                     const active = categorySlug === tab.slug;
@@ -408,7 +408,7 @@ const AdminProductsPage = () => {
                         key={tab.slug || "all"}
                         type="button"
                         onClick={() => { setCategorySlug(tab.slug); setPage(1); }}
-                        className={`shrink-0 rounded-full border px-4 py-2 font-body text-[10px] uppercase tracking-[0.12em] transition-colors ${
+                        className={`shrink-0 rounded-full border px-4 py-2 font-inter text-[10px] uppercase tracking-[0.12em] transition-colors ${
                           active ? "text-white" : "text-[var(--color-muted)] hover:border-[var(--color-primary)] hover:text-[var(--color-primary)]"
                         }`}
                         style={{
@@ -426,10 +426,10 @@ const AdminProductsPage = () => {
 
             {/* Count + page */}
             <div className="flex flex-wrap items-center justify-between gap-2 border-t border-[rgba(var(--color-primary-rgb),0.1)] pt-3">
-              <p className="font-body text-[11px] uppercase tracking-[0.12em] text-[var(--color-primary)]">
+              <p className="font-inter text-[11px] uppercase tracking-[0.12em] text-[var(--color-primary)]">
                 {totalCount === 0 ? "No products found" : `${totalCount} product${totalCount === 1 ? "" : "s"} found`}
               </p>
-              <p className="font-body text-[11px] text-[var(--color-muted)]">
+              <p className="font-inter text-[11px] text-[var(--color-muted)]">
                 Page {Math.min(page, totalPages)} of {totalPages}
               </p>
             </div>
@@ -456,7 +456,7 @@ const AdminProductsPage = () => {
                   {["Image", "Name & SKU", "Category", "Price", "Stock", "Status", "Actions"].map((h) => (
                     <th
                       key={h}
-                      className="px-2 py-2.5 text-left font-body text-[9px] uppercase tracking-[0.11em] text-[var(--color-muted-soft)] first:pl-3 last:pr-3"
+                      className="px-2 py-2.5 text-left font-inter text-[9px] uppercase tracking-[0.11em] text-[var(--color-muted-soft)] first:pl-3 last:pr-3"
                     >
                       {h}
                     </th>
@@ -465,11 +465,11 @@ const AdminProductsPage = () => {
               </thead>
               <tbody>
                 {isLoading ? (
-                  <tr><td colSpan={7} className="px-3 py-9 text-center font-body text-[12px] text-[var(--color-muted-soft)]">Loading products...</td></tr>
+                  <tr><td colSpan={7} className="px-3 py-9 text-center font-inter text-[12px] text-[var(--color-muted-soft)]">Loading products...</td></tr>
                 ) : loadError ? (
-                  <tr><td colSpan={7} className="px-3 py-9 text-center font-body text-[12px] text-[var(--color-danger)]">{loadError}</td></tr>
+                  <tr><td colSpan={7} className="px-3 py-9 text-center font-inter text-[12px] text-[var(--color-danger)]">{loadError}</td></tr>
                 ) : rows.length === 0 ? (
-                  <tr><td colSpan={7} className="px-3 py-9 text-center font-body text-[12px] text-[var(--color-muted-soft)]">No products found.</td></tr>
+                  <tr><td colSpan={7} className="px-3 py-9 text-center font-inter text-[12px] text-[var(--color-muted-soft)]">No products found.</td></tr>
                 ) : (
                   rows.map((product) => {
                     const threshold = product.low_stock_threshold ?? 5;
@@ -495,38 +495,38 @@ const AdminProductsPage = () => {
                           </div>
                         </td>
                         <td className="px-2 py-3">
-                          <p className="truncate font-body text-[12px] text-[var(--color-navbar-solid-foreground)]" title={product.name}>
+                          <p className="truncate font-inter text-[12px] text-[var(--color-navbar-solid-foreground)]" title={product.name}>
                             {truncateNameByHalf(product.name)}
                           </p>
-                          <p className="mt-0.5 truncate font-body text-[9px] uppercase tracking-[0.05em] text-[var(--color-muted-soft)]">
+                          <p className="mt-0.5 truncate font-inter text-[9px] uppercase tracking-[0.05em] text-[var(--color-muted-soft)]">
                             {truncateSkuByHalf(product.sku)}
                           </p>
                         </td>
-                        <td className="px-2 py-3 font-body text-[10px] uppercase tracking-[0.06em] text-[var(--color-accent)]">
+                        <td className="px-2 py-3 font-inter text-[10px] uppercase tracking-[0.06em] text-[var(--color-accent)]">
                           <span className="block truncate" title={product.category_name || "Uncategorized"}>
                             {product.category_name || "Uncategorized"}
                           </span>
                         </td>
                         <td className="px-2 py-3">
-                          <p className="whitespace-nowrap font-body text-[12px] text-[var(--color-navbar-solid-foreground)]">{formatCurrency(product.price)}</p>
+                          <p className="whitespace-nowrap font-inter text-[12px] text-[var(--color-navbar-solid-foreground)]">{formatCurrency(product.price)}</p>
                           {product.compare_at_price && (
-                            <p className="whitespace-nowrap font-body text-[10px] text-[var(--color-muted-soft)] line-through">{formatCurrency(product.compare_at_price)}</p>
+                            <p className="whitespace-nowrap font-inter text-[10px] text-[var(--color-muted-soft)] line-through">{formatCurrency(product.compare_at_price)}</p>
                           )}
                         </td>
                         <td className="px-2 py-3">
-                          <p className={`font-body text-[12px] ${isOut ? "text-[var(--color-danger)]" : isLow ? "text-[var(--color-accent)]" : "text-[var(--color-navbar-solid-foreground)]"}`}>
+                          <p className={`font-inter text-[12px] ${isOut ? "text-[var(--color-danger)]" : isLow ? "text-[var(--color-accent)]" : "text-[var(--color-navbar-solid-foreground)]"}`}>
                             {product.stock_quantity}
                           </p>
-                          {isLow && <span className="mt-1 inline-block rounded-full bg-[rgba(var(--color-accent-rgb),0.15)] px-1.5 py-0.5 font-body text-[7px] uppercase tracking-[0.06em] text-[var(--color-accent)]">Low</span>}
-                          {isOut && <span className="mt-1 inline-block rounded-full bg-[rgba(var(--color-danger-rgb),0.15)] px-1.5 py-0.5 font-body text-[7px] uppercase tracking-[0.06em] text-[var(--color-danger)]">Out</span>}
+                          {isLow && <span className="mt-1 inline-block rounded-full bg-[rgba(var(--color-accent-rgb),0.15)] px-1.5 py-0.5 font-inter text-[7px] uppercase tracking-[0.06em] text-[var(--color-accent)]">Low</span>}
+                          {isOut && <span className="mt-1 inline-block rounded-full bg-[rgba(var(--color-danger-rgb),0.15)] px-1.5 py-0.5 font-inter text-[7px] uppercase tracking-[0.06em] text-[var(--color-danger)]">Out</span>}
                         </td>
                         <td className="px-2 py-3">
-                          <span className={`inline-block whitespace-nowrap rounded-full px-2 py-1 font-body text-[8px] uppercase tracking-[0.08em] ${product.is_available ? "border border-[var(--color-accent)] text-[var(--color-accent)]" : "border border-[var(--color-danger)] text-[var(--color-danger)]"}`}>
+                          <span className={`inline-block whitespace-nowrap rounded-full px-2 py-1 font-inter text-[8px] uppercase tracking-[0.08em] ${product.is_available ? "border border-[var(--color-accent)] text-[var(--color-accent)]" : "border border-[var(--color-danger)] text-[var(--color-danger)]"}`}>
                             {product.is_available ? "Available" : "Unavailable"}
                           </span>
                         </td>
                         <td className="px-2 py-3 pr-3">
-                          <div className="flex items-center justify-end gap-1.5 font-body text-[9px] uppercase tracking-[0.08em]">
+                          <div className="flex items-center justify-end gap-1.5 font-inter text-[9px] uppercase tracking-[0.08em]">
                             <button
                               type="button"
                               disabled={deletingId === product.id}
@@ -562,7 +562,7 @@ const AdminProductsPage = () => {
                 {["Image", "Product", "Price", "Action"].map((heading) => (
                   <th
                     key={heading}
-                    className="px-2 py-2 text-left font-body text-[9px] uppercase tracking-[0.1em] text-[var(--color-muted-soft)] first:pl-3 last:pr-3"
+                    className="px-2 py-2 text-left font-inter text-[9px] uppercase tracking-[0.1em] text-[var(--color-muted-soft)] first:pl-3 last:pr-3"
                   >
                     {heading}
                   </th>
@@ -572,19 +572,19 @@ const AdminProductsPage = () => {
             <tbody>
               {isLoading ? (
                 <tr>
-                  <td colSpan={4} className="px-3 py-9 text-center font-body text-[12px] text-[var(--color-muted-soft)]">
+                  <td colSpan={4} className="px-3 py-9 text-center font-inter text-[12px] text-[var(--color-muted-soft)]">
                     Loading products...
                   </td>
                 </tr>
               ) : loadError ? (
                 <tr>
-                  <td colSpan={4} className="px-3 py-9 text-center font-body text-[12px] text-[var(--color-danger)]">
+                  <td colSpan={4} className="px-3 py-9 text-center font-inter text-[12px] text-[var(--color-danger)]">
                     {loadError}
                   </td>
                 </tr>
               ) : rows.length === 0 ? (
                 <tr>
-                  <td colSpan={4} className="px-3 py-9 text-center font-body text-[12px] text-[var(--color-muted-soft)]">
+                  <td colSpan={4} className="px-3 py-9 text-center font-inter text-[12px] text-[var(--color-muted-soft)]">
                     No products found.
                   </td>
                 </tr>
@@ -620,19 +620,19 @@ const AdminProductsPage = () => {
                         </div>
                       </td>
                       <td className="px-2 py-2.5">
-                        <p className="truncate font-body text-[12px] text-[var(--color-navbar-solid-foreground)]" title={product.name}>
+                        <p className="truncate font-inter text-[12px] text-[var(--color-navbar-solid-foreground)]" title={product.name}>
                           {truncateNameByHalf(product.name)}
                         </p>
-                        <p className="mt-0.5 truncate font-body text-[9px] uppercase tracking-[0.05em] text-[var(--color-muted-soft)]" title={product.sku || "No SKU"}>
+                        <p className="mt-0.5 truncate font-inter text-[9px] uppercase tracking-[0.05em] text-[var(--color-muted-soft)]" title={product.sku || "No SKU"}>
                           {truncateSkuByHalf(product.sku)}
                         </p>
                       </td>
                       <td className="px-2 py-2.5 align-top">
-                        <p className="whitespace-nowrap font-body text-[12px] text-[var(--color-navbar-solid-foreground)]">
+                        <p className="whitespace-nowrap font-inter text-[12px] text-[var(--color-navbar-solid-foreground)]">
                           {formatCurrency(product.price)}
                         </p>
                         {product.compare_at_price ? (
-                          <p className="whitespace-nowrap font-body text-[10px] text-[var(--color-muted-soft)] line-through">
+                          <p className="whitespace-nowrap font-inter text-[10px] text-[var(--color-muted-soft)] line-through">
                             {formatCurrency(product.compare_at_price)}
                           </p>
                         ) : null}
@@ -645,7 +645,7 @@ const AdminProductsPage = () => {
                               event.stopPropagation();
                               setExpandedCompactRowId((current) => (current === product.id ? null : product.id));
                             }}
-                            className="inline-flex items-center gap-1 rounded-full border px-2 py-1 font-body text-[8px] uppercase tracking-[0.08em] text-[var(--color-primary)] transition-colors hover:bg-[rgba(var(--color-primary-rgb),0.06)]"
+                            className="inline-flex items-center gap-1 rounded-full border px-2 py-1 font-inter text-[8px] uppercase tracking-[0.08em] text-[var(--color-primary)] transition-colors hover:bg-[rgba(var(--color-primary-rgb),0.06)]"
                             style={{ borderColor: "rgba(var(--color-primary-rgb),0.2)" }}
                           >
                             {isExpanded ? <ChevronUp className="h-3 w-3" /> : <ChevronDown className="h-3 w-3" />}
@@ -658,7 +658,7 @@ const AdminProductsPage = () => {
                               event.stopPropagation();
                               void onDelete(product);
                             }}
-                            className="rounded-full border border-transparent px-2.5 py-1 font-body text-[8px] uppercase tracking-[0.08em] text-[var(--color-muted)] transition-colors hover:border-[rgba(var(--color-danger-rgb),0.25)] hover:text-[var(--color-danger)] disabled:cursor-not-allowed disabled:opacity-50"
+                            className="rounded-full border border-transparent px-2.5 py-1 font-inter text-[8px] uppercase tracking-[0.08em] text-[var(--color-muted)] transition-colors hover:border-[rgba(var(--color-danger-rgb),0.25)] hover:text-[var(--color-danger)] disabled:cursor-not-allowed disabled:opacity-50"
                           >
                             {deletingId === product.id ? "Deleting..." : "Delete"}
                           </button>
@@ -668,7 +668,7 @@ const AdminProductsPage = () => {
                     isExpanded ? (
                       <tr key={`${product.id}-details`} className="border-t border-[rgba(var(--color-primary-rgb),0.08)] bg-[rgba(var(--color-primary-rgb),0.03)]">
                         <td colSpan={4} className="px-3 py-2.5">
-                          <div className="grid grid-cols-2 gap-x-3 gap-y-2 font-body text-[10px] text-[var(--color-navbar-solid-foreground)]">
+                          <div className="grid grid-cols-2 gap-x-3 gap-y-2 font-inter text-[10px] text-[var(--color-navbar-solid-foreground)]">
                             <p className="truncate" title={product.category_name || "Uncategorized"}>
                               <span className="mr-1 text-[var(--color-muted)]">Category:</span>
                               {product.category_name || "Uncategorized"}
@@ -714,7 +714,7 @@ const AdminProductsPage = () => {
             type="button"
             onClick={() => setPage((p) => Math.max(1, p - 1))}
             disabled={page <= 1}
-            className="rounded-full border px-4 py-2 font-body text-[10px] uppercase tracking-[0.1em] text-[var(--color-primary)] transition-colors hover:bg-[rgba(var(--color-primary-rgb),0.06)] disabled:cursor-not-allowed disabled:opacity-40"
+            className="rounded-full border px-4 py-2 font-inter text-[10px] uppercase tracking-[0.1em] text-[var(--color-primary)] transition-colors hover:bg-[rgba(var(--color-primary-rgb),0.06)] disabled:cursor-not-allowed disabled:opacity-40"
             style={{ borderColor: "rgba(var(--color-primary-rgb),0.2)" }}
           >
             Previous
@@ -726,7 +726,7 @@ const AdminProductsPage = () => {
                 key={n}
                 type="button"
                 onClick={() => setPage(n)}
-                className={`h-8 min-w-8 rounded-full px-3 font-body text-[11px] transition-colors ${
+                className={`h-8 min-w-8 rounded-full px-3 font-inter text-[11px] transition-colors ${
                   n === page
                     ? "bg-[var(--color-primary)] text-white"
                     : "text-[var(--color-muted)] hover:bg-[rgba(var(--color-primary-rgb),0.08)] hover:text-[var(--color-primary)]"
@@ -741,7 +741,7 @@ const AdminProductsPage = () => {
             type="button"
             onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
             disabled={page >= totalPages}
-            className="rounded-full border px-4 py-2 font-body text-[10px] uppercase tracking-[0.1em] text-[var(--color-primary)] transition-colors hover:bg-[rgba(var(--color-primary-rgb),0.06)] disabled:cursor-not-allowed disabled:opacity-40"
+            className="rounded-full border px-4 py-2 font-inter text-[10px] uppercase tracking-[0.1em] text-[var(--color-primary)] transition-colors hover:bg-[rgba(var(--color-primary-rgb),0.06)] disabled:cursor-not-allowed disabled:opacity-40"
             style={{ borderColor: "rgba(var(--color-primary-rgb),0.2)" }}
           >
             Next

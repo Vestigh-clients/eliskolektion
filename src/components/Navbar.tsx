@@ -1,4 +1,4 @@
-import { FormEvent, useEffect, useMemo, useState } from "react";
+import { FormEvent, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import { Link, useLocation, useNavigate, useSearchParams } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
 import { useCart } from "@/contexts/CartContext";
@@ -25,6 +25,45 @@ const Navbar = () => {
 
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [searchValue, setSearchValue] = useState("");
+  const navRowRef = useRef<HTMLElement | null>(null);
+
+  useLayoutEffect(() => {
+    const navRow = navRowRef.current;
+    if (!navRow) return;
+
+    const root = document.documentElement;
+    let rafId: number | null = null;
+
+    const updateNavbarHeight = () => {
+      const measuredHeight = Math.ceil(navRow.getBoundingClientRect().height);
+      root.style.setProperty("--navbar-height", `${measuredHeight}px`);
+    };
+
+    const scheduleUpdate = () => {
+      if (rafId !== null) {
+        window.cancelAnimationFrame(rafId);
+      }
+      rafId = window.requestAnimationFrame(() => {
+        rafId = null;
+        updateNavbarHeight();
+      });
+    };
+
+    updateNavbarHeight();
+
+    const resizeObserver =
+      typeof ResizeObserver !== "undefined" ? new ResizeObserver(() => scheduleUpdate()) : null;
+    resizeObserver?.observe(navRow);
+    window.addEventListener("resize", scheduleUpdate);
+
+    return () => {
+      if (rafId !== null) {
+        window.cancelAnimationFrame(rafId);
+      }
+      resizeObserver?.disconnect();
+      window.removeEventListener("resize", scheduleUpdate);
+    };
+  }, []);
 
   useEffect(() => {
     setIsMobileMenuOpen(false);
@@ -93,7 +132,7 @@ const Navbar = () => {
 
   return (
     <header className="fixed top-0 left-0 right-0 z-50 bg-[#f9f9f9] border-b border-zinc-100">
-      <nav className="flex justify-between items-center w-full px-6 py-4 max-w-[1440px] mx-auto md:px-8">
+      <nav ref={navRowRef} className="flex justify-between items-center w-full px-6 py-4 max-w-[1440px] mx-auto md:px-8">
         {/* Left: Logo + Nav */}
         <div className="flex items-center gap-8 lg:gap-12 min-w-0">
           <Link

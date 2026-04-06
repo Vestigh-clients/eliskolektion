@@ -33,7 +33,7 @@ import {
   type ProductOptionValue,
   type ProductVariant,
 } from "@/types/product";
-import { ChevronDown, ChevronLeft, ChevronRight, Star, X } from "lucide-react";
+import { ChevronLeft, ChevronRight, Star, X } from "lucide-react";
 
 const TRYON_CATEGORY_KEYWORDS = ["mens", "womens", "men", "women", "bag", "shoe"];
 const REVIEW_STAR_LEVELS = [5, 4, 3, 2, 1] as const;
@@ -116,26 +116,29 @@ const RelatedProductTile = ({ product }: { product: Product }) => {
   return (
     <article className="group cursor-pointer">
       <Link to={`/shop/${product.slug}`} className="mb-4 block">
-        <div className="relative aspect-[4/5] overflow-hidden rounded-lg bg-white">
+        <div className="relative overflow-hidden bg-surface-container-lowest">
           {imageUrl && !hasImageError ? (
             <img
               src={imageUrl}
               alt={product.name}
-              className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-110"
+              className="w-full h-80 object-cover transition-transform duration-500 group-hover:scale-105"
               loading="lazy"
               onError={() => setHasImageError(true)}
             />
           ) : (
-            <ProductImagePlaceholder className="h-full w-full" />
+            <ProductImagePlaceholder className="h-80 w-full" />
           )}
-          <div className="pointer-events-none absolute right-4 top-4 rounded-full bg-white/80 p-2 opacity-0 backdrop-blur transition-opacity group-hover:opacity-100">
-            <span className="material-symbols-outlined text-xl text-[var(--color-accent)]">favorite</span>
+          <div className="absolute bottom-0 left-0 right-0 bg-white/80 backdrop-blur-md py-3 text-[10px] font-bold uppercase tracking-widest text-center opacity-0 translate-y-full group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-300">
+            Quick Add
           </div>
         </div>
       </Link>
-      <Link to={`/shop/${product.slug}`} className="block space-y-1 transition-transform group-hover:translate-x-1">
-        <h4 className="font-notoSerif text-base font-bold text-on-background">{product.name}</h4>
-        <p className="font-manrope text-xs font-medium text-primary">{formatPrice(product.price)}</p>
+      <Link to={`/shop/${product.slug}`} className="block space-y-1">
+        <h4 className="font-headline font-bold text-sm text-black">{product.name}</h4>
+        {product.categories?.name ? (
+          <p className="text-zinc-500 text-[10px] uppercase font-medium mb-1">{product.categories.name}</p>
+        ) : null}
+        <p className="text-xs font-bold text-[#E8A811]">{formatPrice(product.price)}</p>
       </Link>
     </article>
   );
@@ -1275,27 +1278,27 @@ const ProductPage = () => {
   return (
     <div className="bg-surface font-manrope text-on-surface">
       <main className={`mx-auto max-w-screen-2xl px-4 pt-10 md:px-8 ${showTryOn ? "pb-44 md:pb-14" : "pb-28 md:pb-14"}`}>
-        <nav aria-label="Breadcrumb" className="mb-6 flex flex-wrap items-center gap-1.5 text-[11px] text-on-surface-variant">
-          <Link to="/" className="transition-colors hover:text-primary">
+        <nav aria-label="Breadcrumb" className="py-6 flex flex-wrap items-center gap-2 text-[10px] uppercase tracking-widest text-zinc-400 font-medium">
+          <Link to="/" className="transition-colors hover:text-black">
             Home
           </Link>
-          <span>/</span>
-          <Link to="/shop" className="transition-colors hover:text-primary">
+          <span className="material-symbols-outlined text-[12px]">chevron_right</span>
+          <Link to="/shop" className="transition-colors hover:text-black">
             Shop
           </Link>
-          <span>/</span>
-          <Link to={categoryShopLink} className="transition-colors hover:text-primary">
+          <span className="material-symbols-outlined text-[12px]">chevron_right</span>
+          <Link to={categoryShopLink} className="transition-colors hover:text-black">
             {categoryLabel}
           </Link>
-          <span>/</span>
-          <span className="text-on-surface">{product.name}</span>
+          <span className="material-symbols-outlined text-[12px]">chevron_right</span>
+          <span className="text-black">{product.name}</span>
         </nav>
 
-        <div className="grid grid-cols-1 gap-10 lg:grid-cols-12 lg:items-start lg:gap-14">
+        <div className="grid grid-cols-1 gap-16 lg:grid-cols-12 lg:items-start mb-24">
           <div className="flex flex-col gap-3 lg:col-span-7 lg:gap-4">
             {galleryImages.length > 0 ? (
               <>
-                <div className="overflow-hidden rounded-lg bg-white">
+                <div className="overflow-hidden bg-surface-container-lowest mb-4">
                   <button
                     type="button"
                     onClick={handleOpenLightbox}
@@ -1303,11 +1306,11 @@ const ProductPage = () => {
                     aria-label="Open full image"
                   >
                     {activeImage && !hasActiveImageError ? (
-                      <div className="aspect-[4/5] overflow-hidden">
+                      <div className="overflow-hidden">
                         <img
                           src={activeImage}
                           alt={product.name}
-                          className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
+                          className="w-full h-auto object-cover transition-transform duration-700 group-hover:scale-105"
                           onError={() => setHasActiveImageError(true)}
                         />
                       </div>
@@ -1317,7 +1320,7 @@ const ProductPage = () => {
                   </button>
                 </div>
 
-                <div className="grid grid-cols-4 gap-2 md:gap-3">
+                <div className="flex gap-4">
                   {galleryImages.map((image, index) => {
                     const hasThumbError = thumbnailErrors[image] === true;
                     const isActive = activeImage === image;
@@ -1331,10 +1334,10 @@ const ProductPage = () => {
                           setHasActiveImageError(false);
                           setLightboxIndex(index);
                         }}
-                        className={`aspect-square overflow-hidden rounded-md bg-white transition-all duration-200 ${
+                        className={`w-24 h-24 overflow-hidden bg-surface-container-lowest transition-all duration-200 ${
                           isActive
-                            ? "ring-2 ring-primary ring-offset-2 ring-offset-[var(--color-surface)]"
-                            : "opacity-80 hover:opacity-100"
+                            ? "border border-black"
+                            : "border border-zinc-200 hover:border-black"
                         }`}
                         aria-label={`View image ${index + 1}`}
                       >
@@ -1363,37 +1366,30 @@ const ProductPage = () => {
             )}
           </div>
 
-          <div className="lg:col-span-5 lg:sticky lg:top-28">
+          <div className="lg:col-span-5 lg:sticky lg:top-28 pt-4">
             <div className="flex flex-col gap-6">
               <header className="flex flex-col gap-2">
-                <div className={`flex items-center gap-2 text-xs font-semibold uppercase tracking-widest ${stockStatusToneClass}`}>
-                  <span
-                    className="material-symbols-outlined text-sm"
-                    style={{
-                      fontVariationSettings:
-                        stockStatusIcon === "check_circle" ? "'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 24" : "'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24",
-                    }}
-                  >
-                    {stockStatusIcon}
+                <div className="mb-2">
+                  <span className={`text-[10px] uppercase tracking-widest font-bold ${stockStatusToneClass}`}>
+                    {stockStatus.text}
                   </span>
-                  {stockStatus.text}
                 </div>
-                <h1 className="font-notoSerif text-[clamp(1.85rem,3.4vw,2.7rem)] font-bold leading-tight text-on-background">{product.name}</h1>
-                <div className="mt-2 flex items-baseline gap-4">
-                  <p className="text-[1.7rem] font-light text-primary">{formatPrice(displayPrice)}</p>
+                <h1 className="font-headline font-extrabold text-4xl mb-4 tracking-tighter text-black leading-tight">{product.name}</h1>
+                {(product.short_description || product.description) ? (
+                  <p className="font-headline text-zinc-500 text-sm mb-4 leading-relaxed max-w-md">
+                    {product.short_description || product.description}
+                  </p>
+                ) : null}
+                <div className="flex items-baseline gap-4 mb-8">
+                  <p className="text-2xl font-bold text-black font-headline">{formatPrice(displayPrice)}</p>
                   {displayComparePrice !== null && displayComparePrice > displayPrice ? (
-                    <span className="text-base text-on-surface-variant/60 line-through">{formatPrice(displayComparePrice)}</span>
+                    <span className="text-sm text-zinc-400 line-through">{formatPrice(displayComparePrice)}</span>
                   ) : null}
                 </div>
                 {showPriceVariesByVariantNote ? (
                   <p className="text-xs text-on-surface-variant">Price varies by variant</p>
                 ) : null}
               </header>
-
-              <div className="space-y-4">
-                <h3 className="text-sm font-bold uppercase tracking-widest text-on-surface/70">The Design</h3>
-                <p className="text-[15px] leading-relaxed text-on-surface-variant">{product.short_description || product.description || ""}</p>
-              </div>
 
               {hasVariants ? (
                 <div className="space-y-5">
@@ -1465,7 +1461,7 @@ const ProductPage = () => {
                             })}
                           </div>
                         ) : (
-                          <div className="flex flex-wrap gap-2.5">
+                          <div className="grid grid-cols-4 gap-2">
                             {optionType.product_option_values.map((optionValue) => {
                               const isUnavailable = isOptionValueUnavailable(optionType.id, optionValue.id);
                               const isSelected = selectedValueId === optionValue.id;
@@ -1481,12 +1477,12 @@ const ProductPage = () => {
                                       [optionType.id]: optionValue.id,
                                     }))
                                   }
-                                  className={`flex h-12 w-12 items-center justify-center rounded-md border text-xs font-medium transition-all ${
+                                  className={`py-3 border text-xs font-medium transition-all ${
                                     isSelected
-                                      ? "border-2 border-primary font-bold text-primary"
+                                      ? "border-2 border-black font-bold text-black"
                                       : isUnavailable
-                                        ? "cursor-not-allowed border-[rgba(186,194,201,0.3)] text-on-surface-variant/50 line-through"
-                                        : "border-[rgba(186,194,201,0.35)] text-on-surface hover:border-primary hover:text-primary"
+                                        ? "cursor-not-allowed border-zinc-200 text-zinc-300 line-through"
+                                        : "border-zinc-200 text-black hover:border-black"
                                   }`}
                                 >
                                   {optionValue.value}
@@ -1506,13 +1502,12 @@ const ProductPage = () => {
                   type="button"
                   onClick={handleAddToCart}
                   disabled={isAddToCartDisabled}
-                  className={`flex items-center justify-center gap-3 rounded-md py-4 text-xs font-bold uppercase tracking-widest transition-all ${
+                  className={`w-full py-5 font-bold uppercase tracking-widest text-sm transition-all ${
                     isAddToCartDisabled
-                      ? "cursor-not-allowed bg-[rgba(186,194,201,0.7)] text-on-surface-variant"
-                      : "bg-gradient-to-r from-[#D81B60] to-[#F06292] text-white shadow-[0_12px_30px_rgba(26,28,28,0.16)] hover:opacity-90 active:scale-[0.98]"
+                      ? "cursor-not-allowed bg-zinc-300 text-zinc-500"
+                      : "bg-black text-white hover:bg-zinc-800 shadow-xl active:scale-[0.98]"
                   }`}
                 >
-                  <span className="material-symbols-outlined">shopping_cart</span>
                   {addToCartButtonText}
                 </button>
 
@@ -1520,278 +1515,243 @@ const ProductPage = () => {
                   <button
                     type="button"
                     onClick={() => setTryOnOpen(true)}
-                    className="flex items-center justify-center gap-3 rounded-md border border-[rgba(186,194,201,0.3)] bg-[rgba(232,232,232,0.45)] py-4 text-xs font-bold uppercase tracking-widest text-on-surface transition-all hover:bg-[rgba(232,232,232,0.7)] active:scale-[0.98]"
+                    className="w-full border border-zinc-200 py-5 font-bold uppercase tracking-widest text-sm hover:border-black transition-colors flex items-center justify-center gap-2"
                   >
-                    <span className="material-symbols-outlined">photo_camera</span>
-                    Virtual Try-On
+                    <span className="material-symbols-outlined text-[18px]">favorite</span>
+                    Virtual Try On
                   </button>
                 ) : null}
               </div>
 
-              <div className="flex flex-col gap-3 border-t border-[rgba(186,194,201,0.3)] pt-5">
-                <div className="flex items-start gap-2 text-xs text-on-surface-variant">
-                  <span className="material-symbols-outlined text-sm">local_shipping</span>
-                  <div className="space-y-1">
-                    <p className="text-[11px] font-bold uppercase tracking-widest text-on-surface/80">Shipping</p>
+              <div className="space-y-3 mb-8 border-t border-zinc-100 pt-6">
+                <div className="flex items-center gap-3 text-zinc-600">
+                  <span className="material-symbols-outlined text-[#E8A811] text-[18px]">local_shipping</span>
+                  <div>
                     {isShippingRatesLoading ? (
-                      <p>Loading shipping rates...</p>
+                      <p className="text-[11px] font-medium tracking-wide uppercase">Loading shipping rates...</p>
                     ) : shippingRateHighlights.length > 0 ? (
-                      <div className="space-y-1">
-                        {shippingRateHighlights.map((shippingRate) => (
-                          <p key={shippingRate.id}>
-                            {shippingRate.rateName} ({shippingRate.coverageLabel}): {formatPrice(shippingRate.fee)} {"\u00B7"}{" "}
-                            {shippingRate.deliveryWindow}
-                          </p>
-                        ))}
-                        {hasAdditionalShippingRates ? <p>Additional regional rates are available at checkout.</p> : null}
-                      </div>
+                      <p className="text-[11px] font-medium tracking-wide uppercase">
+                        {shippingRateHighlights[0].rateName} ({shippingRateHighlights[0].coverageLabel}){" "}
+                        <span className="text-zinc-300 mx-1">·</span> {formatPrice(shippingRateHighlights[0].fee)} delivery
+                        {shippingRateHighlights[0].deliveryWindow ? ` · ${shippingRateHighlights[0].deliveryWindow}` : ""}
+                      </p>
                     ) : (
-                      <p>Shipping rates and delivery timelines are calculated from our configured backend rules at checkout.</p>
+                      <p className="text-[11px] font-medium tracking-wide uppercase">Shipping rates calculated at checkout</p>
                     )}
                   </div>
                 </div>
-                <div className="flex items-start gap-2 text-xs text-on-surface-variant">
-                  <span className="material-symbols-outlined text-sm">credit_card</span>
-                  <div className="space-y-1">
-                    <p className="text-[11px] font-bold uppercase tracking-widest text-on-surface/80">Payment</p>
-                    <p>{paymentMethodsSummary}</p>
-                  </div>
+                <div className="flex items-center gap-3 text-zinc-600">
+                  <span className="material-symbols-outlined text-[#E8A811] text-[18px]">assignment_return</span>
+                  <p className="text-[11px] font-medium tracking-wide uppercase">7-day returns <span className="text-zinc-300 mx-1">·</span> Easy exchanges</p>
                 </div>
-                <div className="flex items-start gap-2 text-xs text-on-surface-variant">
-                  <span className="material-symbols-outlined text-sm">info</span>
-                  <div className="space-y-1">
-                    <p className="text-[11px] font-bold uppercase tracking-widest text-on-surface/80">Product Info</p>
-                    <div className="space-y-1">
-                      {productInfoLines.map((line, index) => (
-                        <p key={`${line}-${index}`}>{line}</p>
-                      ))}
-                    </div>
+              </div>
+
+              <div className="border-t border-zinc-200">
+                <details className="group border-b border-zinc-200" open>
+                  <summary className="flex justify-between items-center cursor-pointer py-6 list-none">
+                    <span className="font-headline font-bold text-sm tracking-tight text-black">Product Narrative</span>
+                    <span className="material-symbols-outlined text-[#E8A811] group-open:rotate-180 transition-transform">expand_more</span>
+                  </summary>
+                  <div className="pb-6 text-zinc-500 text-sm leading-relaxed">
+                    {product.description || product.short_description || "No description available."}
                   </div>
-                </div>
+                </details>
+
+                <details className="group border-b border-zinc-200">
+                  <summary className="flex justify-between items-center cursor-pointer py-6 list-none">
+                    <span className="font-headline font-bold text-sm tracking-tight text-black">Technical Specifications</span>
+                    <span className="material-symbols-outlined text-[#E8A811] group-open:rotate-180 transition-transform">expand_more</span>
+                  </summary>
+                  <div className="pb-6 space-y-2 text-zinc-500 text-sm">
+                    {productInfoLines.map((line, index) => (
+                      <p key={`${line}-${index}`}>· {line}</p>
+                    ))}
+                  </div>
+                </details>
+
+                <details className="group border-b border-zinc-200">
+                  <summary className="flex justify-between items-center cursor-pointer py-6 list-none">
+                    <span className="font-headline font-bold text-sm tracking-tight text-black">Shipping &amp; Returns</span>
+                    <span className="material-symbols-outlined text-[#E8A811] group-open:rotate-180 transition-transform">expand_more</span>
+                  </summary>
+                  <div className="pb-6 text-zinc-500 text-sm leading-relaxed">
+                    {paymentMethodsSummary} Returns are accepted within 7 days of delivery in unworn condition with all original tags and packaging intact.
+                  </div>
+                </details>
               </div>
             </div>
           </div>
         </div>
 
         {storeConfig.features.reviews ? (
-          <section className="mt-16 border-t border-[rgba(186,194,201,0.3)] pt-12">
-          <button
-            type="button"
-            onClick={() => setReviewSectionOpen((current) => !current)}
-            className="group flex w-full items-center justify-between rounded-lg border border-[rgba(186,194,201,0.4)] bg-white/70 px-4 py-4 text-left transition-colors hover:border-primary"
-            aria-expanded={isReviewSectionOpen}
-            aria-controls="product-reviews-content"
-          >
-            <div>
-              <span className="mb-1 block text-xs font-bold uppercase tracking-widest text-primary">Customer Voice</span>
-              <h2 className="font-notoSerif text-2xl font-bold text-on-surface md:text-3xl">Ratings &amp; Reviews</h2>
-            </div>
-            <div className="ml-4 flex shrink-0 items-center gap-3">
-              <p className="text-[11px] uppercase tracking-widest text-on-surface-variant">
-                {reviewSummary.totalReviews} review{reviewSummary.totalReviews === 1 ? "" : "s"}
-              </p>
-              <ChevronDown
-                size={18}
-                className={`text-on-surface transition-transform duration-200 ${isReviewSectionOpen ? "rotate-180" : "rotate-0"}`}
-                aria-hidden
-              />
-            </div>
-          </button>
+          <section className="mb-24 border-t border-zinc-100 pt-16">
+            <div className="flex flex-col lg:flex-row gap-16">
+              <div className="lg:w-1/3">
+                <h2 className="font-headline font-extrabold text-2xl tracking-tighter text-black mb-6">Customer Reviews</h2>
+                <div className="flex items-center gap-4 mb-4">
+                  <span className="text-5xl font-extrabold font-headline text-black">{reviewAverageRating.toFixed(1)}</span>
+                  <div>
+                    <StarRating rating={reviewAverageRating} className="h-4 w-4" />
+                    <p className="text-[10px] uppercase tracking-widest font-bold text-zinc-400 mt-1">
+                      Based on {reviewSummary.totalReviews} review{reviewSummary.totalReviews === 1 ? "" : "s"}
+                    </p>
+                  </div>
+                </div>
 
-          {isReviewSectionOpen ? (
-          <div id="product-reviews-content" className="mt-8 grid grid-cols-1 gap-8 lg:grid-cols-12">
-            <aside className="rounded-lg border border-[rgba(186,194,201,0.35)] bg-white/70 p-6 lg:col-span-4">
-              <p className="text-xs font-semibold uppercase tracking-widest text-on-surface-variant">Overall Rating</p>
-              <div className="mt-3 flex items-end gap-3">
-                <p className="font-notoSerif text-5xl font-bold leading-none text-on-surface">{reviewAverageRating.toFixed(1)}</p>
-                <p className="pb-1 text-xs uppercase tracking-widest text-on-surface-variant">out of 5</p>
-              </div>
-              <div className="mt-3">
-                <StarRating rating={reviewAverageRating} className="h-4 w-4" />
-              </div>
-
-              <div className="mt-6 space-y-3">
-                {REVIEW_STAR_LEVELS.map((ratingLevel) => {
-                  const ratingCount = reviewSummary.distribution[ratingLevel];
-                  const widthPercent =
-                    reviewSummary.totalReviews > 0 ? Math.round((ratingCount / reviewSummary.totalReviews) * 100) : 0;
-
-                  return (
-                    <div key={`rating-level-${ratingLevel}`} className="grid grid-cols-[28px_1fr_30px] items-center gap-3">
-                      <span className="text-xs text-on-surface-variant">
-                        {ratingLevel}
-                        &#9733;
-                      </span>
-                      <div className="h-2 overflow-hidden rounded-full bg-[rgba(186,194,201,0.25)]">
-                        <div
-                          className="h-full rounded-full bg-gradient-to-r from-[#D81B60] to-[#F06292]"
-                          style={{ width: `${widthPercent}%` }}
-                        />
+                <div className="space-y-2 mb-8">
+                  {REVIEW_STAR_LEVELS.map((ratingLevel) => {
+                    const ratingCount = reviewSummary.distribution[ratingLevel];
+                    const widthPercent =
+                      reviewSummary.totalReviews > 0 ? Math.round((ratingCount / reviewSummary.totalReviews) * 100) : 0;
+                    return (
+                      <div key={`rating-level-${ratingLevel}`} className="flex items-center gap-3">
+                        <span className="text-[10px] font-bold w-3">{ratingLevel}</span>
+                        <div className="flex-1 h-1.5 bg-zinc-100 rounded-full overflow-hidden">
+                          <div className="h-full bg-[#E8A811]" style={{ width: `${widthPercent}%` }} />
+                        </div>
+                        <span className="text-[10px] text-zinc-400 w-8 text-right">{widthPercent}%</span>
                       </div>
-                      <span className="text-right text-xs text-on-surface-variant">{ratingCount}</span>
-                    </div>
-                  );
-                })}
-              </div>
-            </aside>
-
-            <div className="space-y-6 lg:col-span-8">
-              <div className="rounded-lg border border-[rgba(186,194,201,0.35)] bg-white/70 p-6">
-                <h3 className="text-sm font-bold uppercase tracking-widest text-on-surface/80">Write a Review</h3>
-                <p className="mt-1 text-xs text-on-surface-variant">Share fit, quality, and how the piece looked in person.</p>
-
-                {reviewMessage ? (
-                  <p
-                    className={`mt-3 text-xs ${
-                      reviewMessageTone === "error"
-                        ? "text-[var(--theme-danger)]"
-                        : reviewMessageTone === "success"
-                          ? "text-[var(--theme-success)]"
-                          : "text-on-surface-variant"
-                    }`}
-                  >
-                    {reviewMessage}
-                  </p>
-                ) : null}
+                    );
+                  })}
+                </div>
 
                 {!isAuthenticated ? (
-                  <div className="mt-4 flex flex-wrap items-center gap-3">
-                    <p className="text-xs text-on-surface-variant">Sign in to leave your review.</p>
-                    <Link
-                      to={loginRedirectLink}
-                      className="rounded-md border border-[rgba(186,194,201,0.4)] px-4 py-2 text-[11px] font-semibold uppercase tracking-widest text-on-surface transition-colors hover:border-primary hover:text-primary"
-                    >
-                      Sign In
-                    </Link>
-                  </div>
-                ) : isExistingReviewLoading ? (
-                  <p className="mt-4 text-xs text-on-surface-variant">Checking your previous review...</p>
+                  <Link
+                    to={loginRedirectLink}
+                    className="block w-full border-2 border-black py-4 text-[10px] font-bold uppercase tracking-widest hover:bg-black hover:text-white transition-all text-center"
+                  >
+                    Sign In to Write a Review
+                  </Link>
                 ) : existingReview ? (
-                  <div className="mt-4 rounded-md border border-[rgba(186,194,201,0.35)] bg-[rgba(232,232,232,0.38)] p-4">
-                    <p className="text-xs uppercase tracking-widest text-on-surface-variant">{existingReviewMessage}</p>
+                  <div className="border border-zinc-200 p-4">
+                    <p className="text-xs uppercase tracking-widest text-zinc-500">{existingReviewMessage}</p>
                     <div className="mt-2">
                       <StarRating rating={existingReview.rating} className="h-4 w-4" />
                     </div>
-                    <p className="mt-2 text-xs text-on-surface-variant">Submitted on {formatReviewDate(existingReview.createdAt)}</p>
+                    <p className="mt-2 text-xs text-zinc-400">Submitted on {formatReviewDate(existingReview.createdAt)}</p>
                   </div>
                 ) : (
-                  <div className="mt-5 space-y-4">
-                    <div>
-                      <p className="mb-2 text-xs uppercase tracking-widest text-on-surface-variant">Rating</p>
-                      <div className="flex flex-wrap items-center gap-1.5">
-                        {Array.from({ length: 5 }, (_, index) => {
-                          const value = index + 1;
-                          const isSelected = reviewRating >= value;
-                          return (
+                  <div className="space-y-3">
+                    <button
+                      type="button"
+                      onClick={() => setReviewSectionOpen((current) => !current)}
+                      className="w-full border-2 border-black py-4 text-[10px] font-bold uppercase tracking-widest hover:bg-black hover:text-white transition-all"
+                    >
+                      {isReviewSectionOpen ? "Cancel Review" : "Write a Review"}
+                    </button>
+                    {isReviewSectionOpen ? (
+                      <div className="space-y-3 border border-zinc-200 p-4">
+                        {reviewMessage ? (
+                          <p className={`text-xs ${reviewMessageTone === "error" ? "text-[var(--theme-danger)]" : reviewMessageTone === "success" ? "text-[var(--theme-success)]" : "text-zinc-500"}`}>
+                            {reviewMessage}
+                          </p>
+                        ) : null}
+                        {isExistingReviewLoading ? (
+                          <p className="text-xs text-zinc-400">Checking your previous review...</p>
+                        ) : (
+                          <>
+                            <div>
+                              <p className="mb-2 text-[10px] uppercase tracking-widest text-zinc-400">Rating</p>
+                              <div className="flex items-center gap-1">
+                                {Array.from({ length: 5 }, (_, index) => {
+                                  const value = index + 1;
+                                  const isSelected = reviewRating >= value;
+                                  return (
+                                    <button
+                                      key={`review-select-star-${value}`}
+                                      type="button"
+                                      onClick={() => setReviewRating(value)}
+                                      className="p-0.5 transition-transform hover:scale-110"
+                                      aria-label={`Rate ${value} star${value === 1 ? "" : "s"}`}
+                                    >
+                                      <Star
+                                        className={`h-5 w-5 ${isSelected ? "text-[#E8A811]" : "text-zinc-300"}`}
+                                        fill={isSelected ? "currentColor" : "none"}
+                                        strokeWidth={1.7}
+                                      />
+                                    </button>
+                                  );
+                                })}
+                              </div>
+                            </div>
+                            <input
+                              value={reviewTitle}
+                              onChange={(event) => setReviewTitle(event.target.value)}
+                              placeholder="Review title (optional)"
+                              maxLength={80}
+                              className="w-full h-10 border border-zinc-200 px-3 text-sm text-black outline-none focus:border-black"
+                            />
+                            <textarea
+                              value={reviewBody}
+                              onChange={(event) => setReviewBody(event.target.value)}
+                              rows={3}
+                              placeholder="Tell shoppers what stood out about this product."
+                              className="w-full border border-zinc-200 px-3 py-2 text-sm leading-relaxed text-black outline-none focus:border-black"
+                            />
                             <button
-                              key={`review-select-star-${value}`}
                               type="button"
-                              onClick={() => setReviewRating(value)}
-                              className="rounded-sm p-0.5 transition-transform hover:scale-110"
-                              aria-label={`Rate ${value} star${value === 1 ? "" : "s"}`}
+                              onClick={() => void handleSubmitReview()}
+                              disabled={!canSubmitReview}
+                              className={`w-full py-3 text-[10px] font-bold uppercase tracking-widest transition-all ${
+                                canSubmitReview
+                                  ? "bg-black text-white hover:bg-zinc-800"
+                                  : "cursor-not-allowed bg-zinc-200 text-zinc-400"
+                              }`}
                             >
-                              <Star
-                                className={`h-5 w-5 ${isSelected ? "text-primary" : "text-on-surface-variant/35"}`}
-                                fill={isSelected ? "currentColor" : "none"}
-                                strokeWidth={1.7}
-                              />
+                              {isSubmittingReview ? "Submitting..." : "Submit Review"}
                             </button>
-                          );
-                        })}
-                        <span className="ml-2 text-xs text-on-surface-variant">
-                          {reviewRating > 0 ? `${reviewRating} / 5` : "Select a rating"}
-                        </span>
+                          </>
+                        )}
                       </div>
-                    </div>
-
-                    <div className="grid gap-3 md:grid-cols-2">
-                      <input
-                        value={reviewTitle}
-                        onChange={(event) => setReviewTitle(event.target.value)}
-                        placeholder="Review title (optional)"
-                        maxLength={80}
-                        className="h-11 rounded-md border border-[rgba(186,194,201,0.35)] bg-white px-3 text-sm text-on-surface outline-none transition-colors placeholder:text-on-surface-variant/60 focus:border-primary"
-                      />
-                      <button
-                        type="button"
-                        onClick={() => void handleSubmitReview()}
-                        disabled={!canSubmitReview}
-                        className={`h-11 rounded-md text-[11px] font-bold uppercase tracking-widest transition-all ${
-                          canSubmitReview
-                            ? "bg-gradient-to-r from-[#D81B60] to-[#F06292] text-white hover:opacity-90 active:scale-[0.98]"
-                            : "cursor-not-allowed bg-[rgba(186,194,201,0.7)] text-on-surface-variant"
-                        }`}
-                      >
-                        {isSubmittingReview ? "Submitting..." : "Submit Review"}
-                      </button>
-                    </div>
-
-                    <div>
-                      <textarea
-                        value={reviewBody}
-                        onChange={(event) => setReviewBody(event.target.value)}
-                        rows={4}
-                        placeholder="Tell shoppers what stood out about this product."
-                        className="w-full rounded-md border border-[rgba(186,194,201,0.35)] bg-white px-3 py-2 text-sm leading-relaxed text-on-surface outline-none transition-colors placeholder:text-on-surface-variant/60 focus:border-primary"
-                      />
-                      <p className="mt-2 text-right text-[11px] text-on-surface-variant">
-                        {reviewBodyLength < 12 ? `${12 - reviewBodyLength} more characters required` : "Looks good"}
-                      </p>
-                    </div>
+                    ) : null}
                   </div>
                 )}
               </div>
 
-              {isReviewsLoading ? (
-                <div className="rounded-lg border border-[rgba(186,194,201,0.35)] bg-white/70 p-6">
-                  <p className="text-sm text-on-surface-variant">Loading reviews...</p>
-                </div>
-              ) : reviewsError ? (
-                <div className="rounded-lg border border-[rgba(186,194,201,0.35)] bg-white/70 p-6">
+              <div className="lg:w-2/3 space-y-10">
+                {isReviewsLoading ? (
+                  <p className="text-sm text-zinc-400">Loading reviews...</p>
+                ) : reviewsError ? (
                   <p className="text-sm text-[var(--theme-danger)]">{reviewsError}</p>
-                </div>
-              ) : reviews.length === 0 ? (
-                <div className="rounded-lg border border-[rgba(186,194,201,0.35)] bg-white/70 p-6">
-                  <p className="text-sm text-on-surface-variant">No reviews yet. Be the first to share your experience.</p>
-                </div>
-              ) : (
-                <div className="space-y-4">
-                  {reviews.map((review) => (
-                    <article key={review.id} className="rounded-lg border border-[rgba(186,194,201,0.35)] bg-white/70 p-5">
-                      <div className="flex flex-wrap items-center justify-between gap-2">
-                        <p className="text-sm font-semibold text-on-surface">{review.authorDisplayName}</p>
-                        <p className="text-[11px] uppercase tracking-widest text-on-surface-variant">
-                          {formatReviewDate(review.createdAt)}
-                        </p>
+                ) : reviews.length === 0 ? (
+                  <p className="text-sm text-zinc-400">No reviews yet. Be the first to share your experience.</p>
+                ) : (
+                  <>
+                    {reviews.map((review) => (
+                      <div key={review.id} className="border-b border-zinc-100 pb-10 last:border-0">
+                        <div className="flex justify-between items-start mb-4">
+                          <div>
+                            <div className="mb-2">
+                              <StarRating rating={review.rating} className="h-4 w-4" />
+                            </div>
+                            {review.title ? (
+                              <h4 className="font-headline font-bold text-sm text-black">{review.title}</h4>
+                            ) : null}
+                          </div>
+                          <div className="text-right">
+                            <p className="text-[10px] font-bold text-black">{review.authorDisplayName}</p>
+                            <p className="text-[10px] text-zinc-400 uppercase tracking-tighter">{formatReviewDate(review.createdAt)}</p>
+                          </div>
+                        </div>
+                        <p className="text-zinc-500 text-sm leading-relaxed max-w-2xl">{review.body}</p>
                       </div>
-                      <div className="mt-2">
-                        <StarRating rating={review.rating} className="h-4 w-4" />
-                      </div>
-                      {review.title ? <h4 className="mt-3 text-sm font-semibold text-on-surface">{review.title}</h4> : null}
-                      <p className="mt-2 text-sm leading-relaxed text-on-surface-variant">{review.body}</p>
-                    </article>
-                  ))}
-                </div>
-              )}
+                    ))}
+                  </>
+                )}
+              </div>
             </div>
-          </div>
-          ) : null}
           </section>
         ) : null}
 
         {relatedProducts.length > 0 ? (
-          <section className="mt-20">
-            <div className="mb-10 flex items-end justify-between gap-4">
-              <div>
-                <span className="mb-2 block text-xs font-bold uppercase tracking-widest text-primary">Curated for You</span>
-                <h2 className="font-notoSerif text-3xl font-bold text-on-surface">You May Also Like</h2>
-              </div>
-              <Link to="/shop" className="flex items-center gap-2 text-xs font-semibold text-on-surface transition-colors hover:text-primary">
-                Explore All Pieces
-                <span className="material-symbols-outlined">arrow_forward</span>
+          <section className="mb-24">
+            <div className="flex items-center justify-between mb-10">
+              <h2 className="font-headline font-extrabold text-2xl tracking-tighter text-black">The Curator's Choice</h2>
+              <Link to="/shop" className="text-[10px] font-bold uppercase tracking-widest text-[#E8A811] hover:text-black transition-colors">
+                View All
               </Link>
             </div>
-            <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-4">
+            <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
               {relatedProducts.slice(0, 4).map((item) => (
                 <RelatedProductTile key={item.id} product={item} />
               ))}
@@ -1801,19 +1761,18 @@ const ProductPage = () => {
       </main>
 
       {!isCartOpen ? (
-        <div className="fixed inset-x-0 bottom-0 z-[900] border-t border-[rgba(186,194,201,0.45)] bg-surface/95 backdrop-blur md:hidden">
+        <div className="fixed inset-x-0 bottom-0 z-[900] border-t border-zinc-200 bg-white/95 backdrop-blur md:hidden">
           <div className="mx-auto flex max-w-screen-2xl flex-col gap-2 px-4 pb-4 pt-3">
             <button
               type="button"
               onClick={handleAddToCart}
               disabled={isAddToCartDisabled}
-              className={`flex items-center justify-center gap-2 rounded-md py-3 text-[11px] font-bold uppercase tracking-widest transition-all ${
+              className={`flex items-center justify-center gap-2 py-4 text-[11px] font-bold uppercase tracking-widest transition-all ${
                 isAddToCartDisabled
-                  ? "cursor-not-allowed bg-[rgba(186,194,201,0.7)] text-on-surface-variant"
-                  : "bg-gradient-to-r from-[#D81B60] to-[#F06292] text-white shadow-[0_8px_22px_rgba(26,28,28,0.16)] active:scale-[0.98]"
+                  ? "cursor-not-allowed bg-zinc-300 text-zinc-500"
+                  : "bg-black text-white shadow-xl active:scale-[0.98]"
               }`}
             >
-              <span className="material-symbols-outlined text-base">shopping_cart</span>
               {addToCartButtonText}
             </button>
 
@@ -1821,10 +1780,10 @@ const ProductPage = () => {
               <button
                 type="button"
                 onClick={() => setTryOnOpen(true)}
-                className="flex items-center justify-center gap-2 rounded-md border border-[rgba(186,194,201,0.4)] bg-[rgba(232,232,232,0.45)] py-3 text-[11px] font-bold uppercase tracking-widest text-on-surface transition-all active:scale-[0.98]"
+                className="flex items-center justify-center gap-2 border border-zinc-200 py-4 text-[11px] font-bold uppercase tracking-widest text-black transition-all active:scale-[0.98]"
               >
-                <span className="material-symbols-outlined text-base">photo_camera</span>
-                Virtual Try-On
+                <span className="material-symbols-outlined text-base">favorite</span>
+                Virtual Try On
               </button>
             ) : null}
           </div>
@@ -1900,7 +1859,7 @@ const ProductPage = () => {
             )}
           </div>
 
-          <p className="pointer-events-none fixed bottom-20 left-1/2 z-[2001] -translate-x-1/2 font-body text-[11px] tracking-[0.1em] text-white/50">
+          <p className="pointer-events-none fixed bottom-20 left-1/2 z-[2001] -translate-x-1/2 font-manrope text-[11px] tracking-[0.1em] text-white/50">
             {`${lightboxIndex + 1} / ${galleryImages.length}`}
           </p>
 
@@ -1946,17 +1905,17 @@ const ProductPage = () => {
               <X size={20} strokeWidth={1.4} />
             </button>
 
-            <h3 className="font-display text-[28px] italic text-[var(--color-primary)]">Size Guide</h3>
-            <p className="mb-8 font-body text-[11px] text-[var(--color-muted-soft)]">{categoryLabel}</p>
+            <h3 className="font-manrope text-[28px]  text-[var(--color-primary)]">Size Guide</h3>
+            <p className="mb-8 font-manrope text-[11px] text-[var(--color-muted-soft)]">{categoryLabel}</p>
 
             {isBagCategory ? (
-              <p className="font-body text-[12px] leading-[1.8] text-[var(--color-muted)]">
+              <p className="font-manrope text-[12px] leading-[1.8] text-[var(--color-muted)]">
                 One size - see product dimensions in the description.
               </p>
             ) : isShoeCategory ? (
               <table className="w-full border-collapse">
                 <thead>
-                  <tr className="bg-[var(--color-primary)] font-body text-[10px] uppercase tracking-[0.08em] text-[var(--color-secondary)]">
+                  <tr className="bg-[var(--color-primary)] font-manrope text-[10px] uppercase tracking-[0.08em] text-[var(--color-secondary)]">
                     <th className="px-4 py-3 text-left">UK</th>
                     <th className="px-4 py-3 text-left">EU</th>
                     <th className="px-4 py-3 text-left">US</th>
@@ -1966,10 +1925,10 @@ const ProductPage = () => {
                 <tbody>
                   {shoeSizeGuideRows.map((row, index) => (
                     <tr key={row.uk} className={index % 2 === 0 ? "bg-[var(--color-secondary)]" : "bg-[rgba(var(--color-navbar-solid-foreground-rgb),0.03)]"}>
-                      <td className="px-4 py-2.5 font-body text-[12px] text-[var(--color-muted)]">{row.uk}</td>
-                      <td className="px-4 py-2.5 font-body text-[12px] text-[var(--color-muted)]">{row.eu}</td>
-                      <td className="px-4 py-2.5 font-body text-[12px] text-[var(--color-muted)]">{row.us}</td>
-                      <td className="px-4 py-2.5 font-body text-[12px] text-[var(--color-muted)]">{row.foot}</td>
+                      <td className="px-4 py-2.5 font-manrope text-[12px] text-[var(--color-muted)]">{row.uk}</td>
+                      <td className="px-4 py-2.5 font-manrope text-[12px] text-[var(--color-muted)]">{row.eu}</td>
+                      <td className="px-4 py-2.5 font-manrope text-[12px] text-[var(--color-muted)]">{row.us}</td>
+                      <td className="px-4 py-2.5 font-manrope text-[12px] text-[var(--color-muted)]">{row.foot}</td>
                     </tr>
                   ))}
                 </tbody>
@@ -1977,7 +1936,7 @@ const ProductPage = () => {
             ) : (
               <table className="w-full border-collapse">
                 <thead>
-                  <tr className="bg-[var(--color-primary)] font-body text-[10px] uppercase tracking-[0.08em] text-[var(--color-secondary)]">
+                  <tr className="bg-[var(--color-primary)] font-manrope text-[10px] uppercase tracking-[0.08em] text-[var(--color-secondary)]">
                     <th className="px-4 py-3 text-left">Size</th>
                     <th className="px-4 py-3 text-left">Chest (cm)</th>
                     <th className="px-4 py-3 text-left">Waist (cm)</th>
@@ -1987,17 +1946,17 @@ const ProductPage = () => {
                 <tbody>
                   {clothingSizeGuideRows.map((row, index) => (
                     <tr key={row.size} className={index % 2 === 0 ? "bg-[var(--color-secondary)]" : "bg-[rgba(var(--color-navbar-solid-foreground-rgb),0.03)]"}>
-                      <td className="px-4 py-2.5 font-body text-[12px] text-[var(--color-muted)]">{row.size}</td>
-                      <td className="px-4 py-2.5 font-body text-[12px] text-[var(--color-muted)]">{row.chest}</td>
-                      <td className="px-4 py-2.5 font-body text-[12px] text-[var(--color-muted)]">{row.waist}</td>
-                      <td className="px-4 py-2.5 font-body text-[12px] text-[var(--color-muted)]">{row.hips}</td>
+                      <td className="px-4 py-2.5 font-manrope text-[12px] text-[var(--color-muted)]">{row.size}</td>
+                      <td className="px-4 py-2.5 font-manrope text-[12px] text-[var(--color-muted)]">{row.chest}</td>
+                      <td className="px-4 py-2.5 font-manrope text-[12px] text-[var(--color-muted)]">{row.waist}</td>
+                      <td className="px-4 py-2.5 font-manrope text-[12px] text-[var(--color-muted)]">{row.hips}</td>
                     </tr>
                   ))}
                 </tbody>
               </table>
             )}
 
-            <p className="mt-4 font-body text-[11px] leading-[1.8] text-[var(--color-muted-soft)]">
+            <p className="mt-4 font-manrope text-[11px] leading-[1.8] text-[var(--color-muted-soft)]">
               Measurements are approximate. If you are between sizes we recommend sizing up.
             </p>
           </div>

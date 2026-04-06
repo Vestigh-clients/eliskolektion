@@ -1,4 +1,4 @@
-@import url("https://fonts.googleapis.com/css2?family=Noto+Serif:ital,wght@0,400;0,700;1,400;1,700&family=Manrope:wght@200;300;400;500;600;700;800&family=Inter:wght@400;500;600;700&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Manrope:wght@200;300;400;500;600;700;800&family=Inter:wght@400;500;600;700&display=swap");
 @import url("https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap");
 
 @tailwind base;
@@ -9,7 +9,7 @@
   :root {
     --theme-canvas: #f9f9f9;
     --theme-surface: #f9f9f9;
-    --theme-surface-alt: #f3f3f4;
+    --theme-surface-alt: #e8e8e8;
     --theme-surface-strong: #ffffff;
     --theme-text-primary: #1a1c1c;
     --theme-text-muted: #5e5e5e;
@@ -28,7 +28,7 @@
     --theme-nav-solid-fg: #1a1c1c;
     --theme-nav-solid-interactive: #E8A811;
     --theme-focus-ring: #E8A811;
-    --theme-shadow-soft: 0 32px 32px rgba(26, 28, 28, 0.04);
+    --theme-shadow-soft: 0 20px 40px rgba(0, 0, 0, 0.04);
     --theme-button-primary-bg: #E8A811;
     --theme-button-primary-fg: #000000;
     --theme-button-primary-hover-bg: #c8910e;
@@ -59,7 +59,7 @@
     --color-muted-soft: #8c7a4a;
     --color-border: #e5e5e5;
     --color-surface: #f9f9f9;
-    --color-surface-alt: #f3f3f4;
+    --color-surface-alt: #e8e8e8;
     --color-surface-strong: #ffffff;
     --color-danger: #ba1a1a;
     --color-success: #006630;
@@ -72,11 +72,12 @@
     --color-navbar-solid-interactive-rgb: 232, 168, 17;
     --color-danger-rgb: 186, 26, 26;
     --color-success-rgb: 0, 102, 48;
+    --navbar-height: 0px;
 
     --font-heading: "Manrope", sans-serif;
     --font-body: "Inter", sans-serif;
     --font-display: var(--font-heading);
-    --border-radius: 0px;
+    --border-radius: 0.25rem;
     --radius: var(--border-radius);
 
     --background: 0 0% 98%;
@@ -87,9 +88,9 @@
     --popover-foreground: 180 3% 10%;
     --primary: 42 82% 49%;
     --primary-foreground: 0 0% 0%;
-    --secondary: 0 0% 96%;
+    --secondary: 0 0% 91%;
     --secondary-foreground: 180 3% 10%;
-    --muted: 0 0% 96%;
+    --muted: 0 0% 91%;
     --muted-foreground: 0 0% 37%;
     --accent: 42 82% 49%;
     --accent-foreground: 0 0% 0%;
@@ -204,7 +205,7 @@
   }
 
   .font-notoSerif {
-    font-family: "Noto Serif", serif;
+    font-family: var(--font-heading);
   }
 
   .font-manrope {

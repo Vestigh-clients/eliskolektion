@@ -45,7 +45,7 @@ const StoreLogo = ({ className, textClassName, alt }: StoreLogoProps) => {
   }
 
   return (
-    <span className={cn("font-display text-[24px] italic text-foreground", textClassName)}>
+    <span className={cn("font-display text-[24px] text-foreground", textClassName)}>
       {storefrontConfig.storeName}
     </span>
   );

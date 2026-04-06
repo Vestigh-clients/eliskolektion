@@ -7,7 +7,7 @@ export const commerceConfig: CommerceConfig = {
     discountCodes: true,
     orderTracking: true,
     reviews: true,
-    wishlist: false,
+    wishlist: true,
   },
   payments: {
     // "subaccount" = Tier 1 (Vestigh-managed split), "own_account" = Tier 2 (client keeps 100%)

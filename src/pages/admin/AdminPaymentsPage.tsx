@@ -9,8 +9,8 @@ const AdminPaymentsPage = () => {
     <div className="admin-page">
       <div className="admin-page-header">
         <div>
-          <h1 className="admin-page-title font-display text-[36px] italic text-[var(--color-primary)]">Payments</h1>
-          <p className="mt-1 font-body text-[11px] text-[var(--color-muted-soft)]">
+          <h1 className="admin-page-title font-manrope text-[36px]  text-[var(--color-primary)]">Payments</h1>
+          <p className="mt-1 font-inter text-[11px] text-[var(--color-muted-soft)]">
             Manage your store&apos;s payment configuration
           </p>
         </div>

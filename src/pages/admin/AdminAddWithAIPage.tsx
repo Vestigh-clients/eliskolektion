@@ -397,25 +397,25 @@ const AdminAddWithAIPage = () => {
         <div className="flex items-center justify-between gap-3">
           <Link
             to="/admin/products"
-            className="inline-flex items-center gap-2 rounded-full px-2 py-1 font-body text-[11px] text-[var(--color-navbar-solid-foreground)] transition-colors hover:text-[var(--color-primary)]"
+            className="inline-flex items-center gap-2 rounded-full px-2 py-1 font-inter text-[11px] text-[var(--color-navbar-solid-foreground)] transition-colors hover:text-[var(--color-primary)]"
           >
             <ArrowLeft className="h-4 w-4" />
             Back to products
           </Link>
 
           <details className="group relative">
-            <summary className="flex h-10 w-10 cursor-pointer list-none items-center justify-center rounded-full border border-[rgba(var(--color-primary-rgb),0.18)] bg-white font-body text-[15px] text-[var(--color-primary)] transition-colors hover:bg-[rgba(var(--color-primary-rgb),0.06)] [&::-webkit-details-marker]:hidden">
+            <summary className="flex h-10 w-10 cursor-pointer list-none items-center justify-center rounded-full border border-[rgba(var(--color-primary-rgb),0.18)] bg-white font-inter text-[15px] text-[var(--color-primary)] transition-colors hover:bg-[rgba(var(--color-primary-rgb),0.06)] [&::-webkit-details-marker]:hidden">
               ?
             </summary>
             <div className="absolute right-0 top-12 z-20 w-[min(92vw,320px)] rounded-[24px] border border-[rgba(var(--color-primary-rgb),0.12)] bg-white p-4 shadow-[0_24px_80px_rgba(26,28,28,0.10)]">
-              <p className="font-body text-[10px] uppercase tracking-[0.16em] text-[var(--color-primary)]">Help</p>
+              <p className="font-inter text-[10px] uppercase tracking-[0.16em] text-[var(--color-primary)]">Help</p>
               <div className="mt-3 space-y-3">
                 {helpItems.map((item) => (
                   <div key={item.title}>
-                    <p className="font-body text-[11px] uppercase tracking-[0.12em] text-[var(--color-navbar-solid-foreground)]">
+                    <p className="font-inter text-[11px] uppercase tracking-[0.12em] text-[var(--color-navbar-solid-foreground)]">
                       {item.title}
                     </p>
-                    <p className="mt-1 font-body text-[12px] leading-[1.75] text-[var(--color-muted)]">
+                    <p className="mt-1 font-inter text-[12px] leading-[1.75] text-[var(--color-muted)]">
                       {item.description}
                     </p>
                   </div>
@@ -427,11 +427,11 @@ const AdminAddWithAIPage = () => {
 
         {/* ── Hero ── */}
         <div className="mx-auto mt-12 max-w-[760px] text-center md:mt-14">
-          <p className="font-body text-[11px] uppercase tracking-[0.22em] text-[var(--color-primary)]">Add with AI</p>
-          <h1 className="mt-4 font-display text-[40px] italic leading-[1.04] text-[var(--color-navbar-solid-foreground)] sm:text-[56px]">
+          <p className="font-inter text-[11px] uppercase tracking-[0.22em] text-[var(--color-primary)]">Add with AI</p>
+          <h1 className="mt-4 font-manrope text-[40px]  leading-[1.04] text-[var(--color-navbar-solid-foreground)] sm:text-[56px]">
             Start with a prompt.
           </h1>
-          <p className="mx-auto mt-4 max-w-[560px] font-body text-[13px] leading-[1.85] text-[var(--color-muted)] sm:text-[14px]">
+          <p className="mx-auto mt-4 max-w-[560px] font-inter text-[13px] leading-[1.85] text-[var(--color-muted)] sm:text-[14px]">
             Paste the product notes, attach images if needed, choose a category, and send.
           </p>
         </div>
@@ -440,7 +440,7 @@ const AdminAddWithAIPage = () => {
         <section className="mx-auto mt-auto w-full max-w-[860px] pt-8 md:pt-10">
 
           {errorMessage ? (
-            <div className="mb-4 rounded-[22px] border border-[rgba(var(--color-danger-rgb),0.28)] bg-[rgba(var(--color-danger-rgb),0.07)] px-4 py-3 font-body text-[12px] text-[var(--color-danger)]">
+            <div className="mb-4 rounded-[22px] border border-[rgba(var(--color-danger-rgb),0.28)] bg-[rgba(var(--color-danger-rgb),0.07)] px-4 py-3 font-inter text-[12px] text-[var(--color-danger)]">
               {errorMessage}
             </div>
           ) : null}
@@ -488,7 +488,7 @@ const AdminAddWithAIPage = () => {
                 disabled={isSubmitting}
                
                 placeholder={`Describe the product naturally.\nExample: Three-piece set, GH180, cream/yellow/violet, sizes S-L, soft stretch fabric, stock 12.`}
-                className="w-full resize-none border-0 bg-transparent font-body text-[15px] leading-[1.6] outline-none disabled:opacity-60 sm:text-[16px]"
+                className="w-full resize-none border-0 bg-transparent font-inter text-[15px] leading-[1.6] outline-none disabled:opacity-60 sm:text-[16px]"
                 style={{ color: "var(--color-navbar-solid-foreground)" }}
               />
             </div>
@@ -543,7 +543,7 @@ const AdminAddWithAIPage = () => {
                       borderColor: "rgba(var(--color-primary-rgb),0.20)",
                       color: "var(--color-primary)",
                     }}
-                    className="h-10 max-w-[58vw] rounded-full border bg-white pl-4 pr-3 font-body text-[12px] outline-none transition-colors focus:border-[var(--color-primary)] data-[placeholder]:text-[var(--color-primary)] disabled:cursor-not-allowed disabled:opacity-50 sm:max-w-none [&>svg]:text-[var(--color-primary)] [&>svg]:opacity-100"
+                    className="h-10 max-w-[58vw] rounded-full border bg-white pl-4 pr-3 font-inter text-[12px] outline-none transition-colors focus:border-[var(--color-primary)] data-[placeholder]:text-[var(--color-primary)] disabled:cursor-not-allowed disabled:opacity-50 sm:max-w-none [&>svg]:text-[var(--color-primary)] [&>svg]:opacity-100"
                   >
                     <SelectValue placeholder={isLoadingCategories ? "Loading..." : "Category"} />
                   </SelectTrigger>
@@ -555,7 +555,7 @@ const AdminAddWithAIPage = () => {
                       <SelectItem
                         key={category.id}
                         value={category.id}
-                        className="rounded-[12px] py-2 pl-8 pr-3 font-body text-[12px] text-[var(--color-navbar-solid-foreground)] focus:bg-[rgba(var(--color-primary-rgb),0.08)] focus:text-[var(--color-primary)]"
+                        className="rounded-[12px] py-2 pl-8 pr-3 font-inter text-[12px] text-[var(--color-navbar-solid-foreground)] focus:bg-[rgba(var(--color-primary-rgb),0.08)] focus:text-[var(--color-primary)]"
                       >
                         {category.name}
                       </SelectItem>
@@ -566,7 +566,7 @@ const AdminAddWithAIPage = () => {
 
               {/* File count */}
               {files.length > 0 && (
-                <p className="min-w-0 flex-1 font-body text-[11px]" style={{ color: "var(--color-primary)" }}>
+                <p className="min-w-0 flex-1 font-inter text-[11px]" style={{ color: "var(--color-primary)" }}>
                   {files.length}/{MAX_IMAGES} images attached
                 </p>
               )}
@@ -599,14 +599,14 @@ const AdminAddWithAIPage = () => {
               style={{ borderColor: "rgba(var(--color-primary-rgb),0.12)", background: "rgba(var(--color-primary-rgb),0.03)" }}
             >
               <summary
-                className="cursor-pointer list-none font-body text-[11px] uppercase tracking-[0.14em] [&::-webkit-details-marker]:hidden"
+                className="cursor-pointer list-none font-inter text-[11px] uppercase tracking-[0.14em] [&::-webkit-details-marker]:hidden"
                 style={{ color: "var(--color-primary)" }}
               >
                 AI notes ({warnings.length})
               </summary>
               <ul className="mt-3 space-y-2">
                 {warnings.map((warning) => (
-                  <li key={warning} className="font-body text-[12px] leading-[1.75] text-[var(--color-muted)]">
+                  <li key={warning} className="font-inter text-[12px] leading-[1.75] text-[var(--color-muted)]">
                     {warning}
                   </li>
                 ))}

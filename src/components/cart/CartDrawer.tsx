@@ -105,7 +105,7 @@ const CartDrawer = () => {
         <div className="flex h-full flex-col">
           <div className="mb-6 border-b border-[var(--color-border)] pb-4 pr-8">
             <div className="flex items-end justify-between gap-3">
-              <h2 className="font-display text-[28px] italic text-[var(--color-primary)]">Your Cart</h2>
+              <h2 className="font-display text-[28px] text-[var(--color-primary)]">Your Cart</h2>
               <p className="font-body text-[11px] uppercase tracking-[0.14em] text-[var(--color-muted)]">
                 {totalItems} {totalItems === 1 ? "ITEM" : "ITEMS"}
               </p>
@@ -115,7 +115,7 @@ const CartDrawer = () => {
           {items.length === 0 ? (
             <div className="flex flex-1 flex-col items-center justify-center px-4 text-center">
               <ShoppingBag size={40} strokeWidth={1.35} className="mb-4 text-[var(--color-border)]" />
-              <p className="mb-2 font-display text-[24px] italic text-[var(--color-muted)]">Your cart is empty</p>
+              <p className="mb-2 font-display text-[24px] text-[var(--color-muted)]">Your cart is empty</p>
               <p className="mb-6 font-body text-[13px] font-light text-[var(--color-muted-soft)]">
                 Looks like you haven&apos;t added anything yet.
               </p>
@@ -139,7 +139,7 @@ const CartDrawer = () => {
 
                       <div className="min-w-0 flex-1">
                         <Link to={`/shop/${item.slug}`} onClick={closeCart}>
-                          <p className="font-display text-[15px] italic leading-snug text-[var(--color-primary)]">{item.name}</p>
+                          <p className="font-display text-[15px] leading-snug text-[var(--color-primary)]">{item.name}</p>
                         </Link>
 
                         <p className="mt-1 font-body text-[10px] uppercase tracking-[0.1em] text-[var(--color-accent)]">{item.category}</p>

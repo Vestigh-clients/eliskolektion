@@ -1,4 +1,4 @@
-﻿import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { Link, Outlet, useLocation, useOutletContext } from "react-router-dom";
 import SignOutConfirmModal from "@/components/auth/SignOutConfirmModal";
 import { useAuth } from "@/contexts/AuthContext";
@@ -93,12 +93,12 @@ const AccountLayout = () => {
       <div className="mx-auto w-full max-w-[1240px] lg:grid lg:grid-cols-[260px_minmax(0,1fr)]">
         <div className="border-b border-[var(--color-border)] px-6 py-6 sm:px-8 lg:hidden">
           <div className="flex items-center gap-3">
-            <div className="flex h-12 w-12 items-center justify-center rounded-full bg-[var(--color-primary)] font-body text-[18px] text-[var(--color-secondary)]">
+            <div className="flex h-12 w-12 items-center justify-center rounded-full bg-[var(--color-primary)] font-inter text-[18px] text-[var(--color-secondary)]">
               {avatarInitial}
             </div>
             <div>
-              <p className="font-display text-[20px] italic text-[var(--color-primary)]">{fullName || "My Account"}</p>
-              <p className="font-body text-[11px] text-[var(--color-muted)]">{email}</p>
+              <p className="font-manrope text-[20px]  text-[var(--color-primary)]">{fullName || "My Account"}</p>
+              <p className="font-inter text-[11px] text-[var(--color-muted)]">{email}</p>
             </div>
           </div>
 
@@ -111,7 +111,7 @@ const AccountLayout = () => {
                   <Link
                     key={link.to}
                     to={link.to}
-                    className={`whitespace-nowrap border-b-2 pb-[6px] font-body text-[11px] uppercase tracking-[0.12em] transition-colors ${
+                    className={`whitespace-nowrap border-b-2 pb-[6px] font-inter text-[11px] uppercase tracking-[0.12em] transition-colors ${
                       isActive
                         ? "border-[var(--color-accent)] text-[var(--color-primary)]"
                         : "border-transparent text-[var(--color-muted)] hover:text-[var(--color-primary)]"
@@ -125,7 +125,7 @@ const AccountLayout = () => {
               <button
                 type="button"
                 onClick={requestSignOut}
-                className="whitespace-nowrap border-b-2 border-transparent pb-[6px] font-body text-[11px] uppercase tracking-[0.12em] text-[var(--color-muted-soft)] transition-colors hover:text-[var(--color-danger)]"
+                className="whitespace-nowrap border-b-2 border-transparent pb-[6px] font-inter text-[11px] uppercase tracking-[0.12em] text-[var(--color-muted-soft)] transition-colors hover:text-[var(--color-danger)]"
               >
                 Sign Out
               </button>
@@ -135,12 +135,12 @@ const AccountLayout = () => {
 
         <aside className="hidden border-r border-[var(--color-border)] px-8 py-[48px] lg:block">
           <div className="flex items-center gap-3">
-            <div className="flex h-12 w-12 items-center justify-center rounded-full bg-[var(--color-primary)] font-body text-[18px] text-[var(--color-secondary)]">
+            <div className="flex h-12 w-12 items-center justify-center rounded-full bg-[var(--color-primary)] font-inter text-[18px] text-[var(--color-secondary)]">
               {avatarInitial}
             </div>
             <div>
-              <p className="font-display text-[20px] italic text-[var(--color-primary)]">{fullName || "My Account"}</p>
-              <p className="font-body text-[11px] text-[var(--color-muted)]">{email}</p>
+              <p className="font-manrope text-[20px]  text-[var(--color-primary)]">{fullName || "My Account"}</p>
+              <p className="font-inter text-[11px] text-[var(--color-muted)]">{email}</p>
             </div>
           </div>
 
@@ -152,7 +152,7 @@ const AccountLayout = () => {
                 <Link
                   key={link.to}
                   to={link.to}
-                  className={`block border-l-2 py-[10px] pl-4 font-body text-[11px] uppercase tracking-[0.12em] transition-colors ${
+                  className={`block border-l-2 py-[10px] pl-4 font-inter text-[11px] uppercase tracking-[0.12em] transition-colors ${
                     isActive
                       ? "border-[var(--color-accent)] text-[var(--color-primary)]"
                       : "border-transparent text-[var(--color-muted)] hover:text-[var(--color-primary)]"
@@ -166,16 +166,16 @@ const AccountLayout = () => {
             <button
               type="button"
               onClick={requestSignOut}
-              className="mt-4 block w-full border-l-2 border-transparent py-[10px] pl-4 text-left font-body text-[11px] uppercase tracking-[0.12em] text-[var(--color-muted-soft)] transition-colors hover:text-[var(--color-danger)]"
+              className="mt-4 block w-full border-l-2 border-transparent py-[10px] pl-4 text-left font-inter text-[11px] uppercase tracking-[0.12em] text-[var(--color-muted-soft)] transition-colors hover:text-[var(--color-danger)]"
             >
               Sign Out
             </button>
           </nav>
 
           {isProfileLoading ? (
-            <p className="mt-10 font-body text-[11px] uppercase tracking-[0.12em] text-[var(--color-muted-soft)]">Loading profile...</p>
+            <p className="mt-10 font-inter text-[11px] uppercase tracking-[0.12em] text-[var(--color-muted-soft)]">Loading profile...</p>
           ) : null}
-          {profileError ? <p className="mt-4 font-body text-[11px] text-[var(--color-danger)]">{profileError}</p> : null}
+          {profileError ? <p className="mt-4 font-inter text-[11px] text-[var(--color-danger)]">{profileError}</p> : null}
         </aside>
 
         <section className="px-6 py-10 sm:px-8 lg:px-[60px] lg:py-[48px]">

@@ -24,7 +24,7 @@ const AuthPageLayout = ({ children, contentClassName, showPanelImage = false }: 
 
         <section className="relative mx-auto flex w-full max-w-[560px] items-start justify-center md:min-h-[calc(100vh-5rem)] md:items-center">
           <div className="w-full rounded-[16px] border border-[var(--color-border)] bg-[var(--color-surface-strong)] px-5 py-7 shadow-[0_24px_60px_rgba(26,28,28,0.14)] sm:px-8 sm:py-10">
-            <Link to="/" className="mb-8 block text-center font-display text-[30px] italic text-[var(--color-primary)]">
+            <Link to="/" className="mb-8 block text-center font-display text-[30px] text-[var(--color-primary)]">
               <StoreLogo className="mx-auto h-11 w-auto" textClassName="text-[30px] text-[var(--color-primary)]" />
             </Link>
 
@@ -56,7 +56,7 @@ const AuthPageLayout = ({ children, contentClassName, showPanelImage = false }: 
           <Link
             to="/"
             className={cn(
-              "mb-10 text-center font-display text-[30px] italic text-[var(--color-primary)]",
+              "mb-10 text-center font-display text-[30px] text-[var(--color-primary)]",
               showPanelImage ? "md:hidden" : "",
             )}
           >

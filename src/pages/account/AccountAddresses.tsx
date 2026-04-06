@@ -325,9 +325,9 @@ const AccountAddresses = () => {
 
   return (
     <div>
-      <h1 className="font-display text-[42px] italic text-[var(--color-primary)]">Saved Addresses</h1>
+      <h1 className="font-manrope text-[42px]  text-[var(--color-primary)]">Saved Addresses</h1>
 
-      {loadError ? <p className="mt-5 font-body text-[11px] text-[var(--color-danger)]">{loadError}</p> : null}
+      {loadError ? <p className="mt-5 font-inter text-[11px] text-[var(--color-danger)]">{loadError}</p> : null}
 
       {isLoading ? (
         <div className="mt-8 grid gap-4 md:grid-cols-2">
@@ -345,23 +345,23 @@ const AccountAddresses = () => {
             >
               <div>
                 <div className="flex flex-wrap items-center gap-2">
-                  <span className="inline-flex rounded-[var(--border-radius)] border border-[var(--color-border)] px-[10px] py-[3px] font-body text-[9px] uppercase tracking-[0.1em] text-[var(--color-muted)]">
+                  <span className="inline-flex rounded-[var(--border-radius)] border border-[var(--color-border)] px-[10px] py-[3px] font-inter text-[9px] uppercase tracking-[0.1em] text-[var(--color-muted)]">
                     {(address.label || "Other").toUpperCase()}
                   </span>
 
                   {address.is_default ? (
-                    <span className="inline-flex rounded-[var(--border-radius)] border border-[var(--color-accent)] px-[10px] py-[3px] font-body text-[9px] uppercase tracking-[0.1em] text-[var(--color-accent)]">
+                    <span className="inline-flex rounded-[var(--border-radius)] border border-[var(--color-accent)] px-[10px] py-[3px] font-inter text-[9px] uppercase tracking-[0.1em] text-[var(--color-accent)]">
                       Default
                     </span>
                   ) : null}
                 </div>
 
-                <p className="mt-5 font-body text-[13px] font-medium text-[var(--color-primary)]">{address.recipient_name}</p>
+                <p className="mt-5 font-inter text-[13px] font-medium text-[var(--color-primary)]">{address.recipient_name}</p>
                 {address.recipient_phone ? (
-                  <p className="mt-1 font-body text-[12px] text-[var(--color-muted)]">{address.recipient_phone}</p>
+                  <p className="mt-1 font-inter text-[12px] text-[var(--color-muted)]">{address.recipient_phone}</p>
                 ) : null}
 
-                <div className="mt-2 space-y-[2px] font-body text-[12px] leading-[1.8] text-[var(--color-muted)]">
+                <div className="mt-2 space-y-[2px] font-inter text-[12px] leading-[1.8] text-[var(--color-muted)]">
                   {getAddressLines(address).map((line) => (
                     <p key={line}>{line}</p>
                   ))}
@@ -371,8 +371,8 @@ const AccountAddresses = () => {
               <div className="mt-6 min-h-[28px]">
                 {deleteConfirmId === address.id ? (
                   <div>
-                    <p className="font-body text-[11px] text-[var(--color-danger)]">Are you sure? This cannot be undone.</p>
-                    <div className="mt-2 flex items-center gap-3 font-body text-[10px] uppercase tracking-[0.12em]">
+                    <p className="font-inter text-[11px] text-[var(--color-danger)]">Are you sure? This cannot be undone.</p>
+                    <div className="mt-2 flex items-center gap-3 font-inter text-[10px] uppercase tracking-[0.12em]">
                       <button
                         type="button"
                         onClick={() => void handleDeleteAddress(address.id)}
@@ -392,7 +392,7 @@ const AccountAddresses = () => {
                     </div>
                   </div>
                 ) : (
-                  <div className="flex flex-wrap items-center gap-3 font-body text-[10px] uppercase tracking-[0.12em] text-[var(--color-muted-soft)]">
+                  <div className="flex flex-wrap items-center gap-3 font-inter text-[10px] uppercase tracking-[0.12em] text-[var(--color-muted-soft)]">
                     <button
                       type="button"
                       onClick={() => openEditForm(address)}
@@ -436,7 +436,7 @@ const AccountAddresses = () => {
             className="group flex min-h-[248px] flex-col items-center justify-center gap-3 border border-dashed border-[var(--color-border)] p-5 transition-colors duration-200 hover:border-[var(--color-primary)]"
           >
             <Plus className="h-6 w-6 text-[var(--color-border)] transition-colors group-hover:text-[var(--color-primary)]" strokeWidth={1.2} />
-            <p className="font-body text-[11px] uppercase tracking-[0.12em] text-[var(--color-muted-soft)] transition-colors group-hover:text-[var(--color-primary)]">
+            <p className="font-inter text-[11px] uppercase tracking-[0.12em] text-[var(--color-muted-soft)] transition-colors group-hover:text-[var(--color-primary)]">
               Add New Address
             </p>
           </button>
@@ -444,7 +444,7 @@ const AccountAddresses = () => {
       )}
 
       {!hasAddresses && !isLoading ? (
-        <p className="mt-5 font-body text-[12px] text-[var(--color-muted)]">You don't have any saved addresses yet.</p>
+        <p className="mt-5 font-inter text-[12px] text-[var(--color-muted)]">You don't have any saved addresses yet.</p>
       ) : null}
 
       <div
@@ -453,7 +453,7 @@ const AccountAddresses = () => {
         }`}
       >
         <div className="border border-[var(--color-border)] p-5 sm:p-7">
-          <h2 className="font-display text-[30px] italic text-[var(--color-primary)]">
+          <h2 className="font-manrope text-[30px]  text-[var(--color-primary)]">
             {formMode === "edit" ? "Edit Address" : "Add New Address"}
           </h2>
 
@@ -571,13 +571,13 @@ const AccountAddresses = () => {
               onBlur={() => markTouched("deliveryInstructions")}
             />
 
-            {formErrorMessage ? <p className="mt-4 font-body text-[11px] text-[var(--color-danger)]">{formErrorMessage}</p> : null}
+            {formErrorMessage ? <p className="mt-4 font-inter text-[11px] text-[var(--color-danger)]">{formErrorMessage}</p> : null}
 
             <div className="mt-8 flex flex-wrap items-center gap-5">
               <button
                 type="submit"
                 disabled={isSaving}
-                className="rounded-[var(--border-radius)] bg-[var(--color-primary)] px-8 py-3 font-body text-[11px] uppercase tracking-[0.14em] text-[var(--color-secondary)] transition-colors hover:bg-[var(--color-accent)] hover:text-[var(--color-secondary)] disabled:cursor-not-allowed disabled:opacity-65"
+                className="rounded-[var(--border-radius)] bg-[var(--color-primary)] px-8 py-3 font-inter text-[11px] uppercase tracking-[0.14em] text-[var(--color-secondary)] transition-colors hover:bg-[var(--color-accent)] hover:text-[var(--color-secondary)] disabled:cursor-not-allowed disabled:opacity-65"
               >
                 {isSaving ? "Saving..." : "Save Address"}
               </button>
@@ -585,7 +585,7 @@ const AccountAddresses = () => {
               <button
                 type="button"
                 onClick={closeForm}
-                className="font-body text-[11px] uppercase tracking-[0.12em] text-[var(--color-muted)] transition-colors hover:text-[var(--color-primary)]"
+                className="font-inter text-[11px] uppercase tracking-[0.12em] text-[var(--color-muted)] transition-colors hover:text-[var(--color-primary)]"
               >
                 Cancel
               </button>

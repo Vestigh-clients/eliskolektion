@@ -112,7 +112,7 @@ const AccountPassword = () => {
 
   return (
     <div>
-      <h1 className="font-display text-[42px] italic text-[var(--color-primary)]">Change Password</h1>
+      <h1 className="font-manrope text-[42px]  text-[var(--color-primary)]">Change Password</h1>
 
       <form onSubmit={handleSubmit} className="mt-8 max-w-[400px]">
         <AccountInputField
@@ -185,13 +185,13 @@ const AccountPassword = () => {
           }
         />
 
-        {submitError ? <p className="mt-4 font-body text-[11px] text-[var(--color-danger)]">{submitError}</p> : null}
-        {successMessage ? <p className="mt-4 font-body text-[12px] text-[var(--color-accent)]">{successMessage}</p> : null}
+        {submitError ? <p className="mt-4 font-inter text-[11px] text-[var(--color-danger)]">{submitError}</p> : null}
+        {successMessage ? <p className="mt-4 font-inter text-[12px] text-[var(--color-accent)]">{successMessage}</p> : null}
 
         <button
           type="submit"
           disabled={isSubmitting}
-          className="mt-8 rounded-[var(--border-radius)] bg-[var(--color-primary)] px-8 py-3 font-body text-[11px] uppercase tracking-[0.14em] text-[var(--color-secondary)] transition-colors hover:bg-[var(--color-accent)] hover:text-[var(--color-secondary)] disabled:cursor-not-allowed disabled:opacity-65"
+          className="mt-8 rounded-[var(--border-radius)] bg-[var(--color-primary)] px-8 py-3 font-inter text-[11px] uppercase tracking-[0.14em] text-[var(--color-secondary)] transition-colors hover:bg-[var(--color-accent)] hover:text-[var(--color-secondary)] disabled:cursor-not-allowed disabled:opacity-65"
         >
           {isSubmitting ? "Updating..." : "Update Password"}
         </button>

@@ -165,13 +165,13 @@ const Login = () => {
 
   return (
     <AuthPageLayout showPanelImage={false}>
-      <h1 className="font-display text-[42px] italic leading-none text-[var(--color-primary)]">Welcome back</h1>
-      <p className="mt-3 font-body text-[13px] font-light leading-[1.8] text-[var(--color-muted)]">
+      <h1 className="font-manrope text-[42px]  leading-none text-[var(--color-primary)]">Welcome back</h1>
+      <p className="mt-3 font-inter text-[13px] font-light leading-[1.8] text-[var(--color-muted)]">
         Sign in to continue checkout, manage your account, and track orders.
       </p>
 
       {locationState?.justRegistered || searchParams.get(AUTH_MODAL_REGISTERED_QUERY_PARAM) === "1" ? (
-        <p className="mt-4 font-body text-[11px] text-[var(--color-success)]">
+        <p className="mt-4 font-inter text-[11px] text-[var(--color-success)]">
           Account created successfully
           {locationState?.email || searchParams.get(AUTH_MODAL_EMAIL_QUERY_PARAM)
             ? ` for ${locationState?.email ?? searchParams.get(AUTH_MODAL_EMAIL_QUERY_PARAM) ?? ""}`
@@ -226,14 +226,14 @@ const Login = () => {
               }),
               location.hash,
             )}
-            className="font-body text-[11px] text-[var(--color-muted)] transition-colors hover:text-[var(--color-primary)]"
+            className="font-inter text-[11px] text-[var(--color-muted)] transition-colors hover:text-[var(--color-primary)]"
           >
             Forgot your password?
           </Link>
         </div>
 
         {generalError ? (
-          <p className="mt-4 font-body text-[11px] text-[var(--color-danger)]">
+          <p className="mt-4 font-inter text-[11px] text-[var(--color-danger)]">
             {generalError}{" "}
             {isEmailNotVerified ? (
               <button
@@ -248,18 +248,18 @@ const Login = () => {
           </p>
         ) : null}
 
-        {resendMessage ? <p className="mt-3 font-body text-[11px] text-[var(--color-muted)]">{resendMessage}</p> : null}
+        {resendMessage ? <p className="mt-3 font-inter text-[11px] text-[var(--color-muted)]">{resendMessage}</p> : null}
 
         <button
           type="submit"
           disabled={isSubmitting}
-          className="mt-8 w-full rounded-[var(--border-radius)] bg-[var(--color-primary)] px-4 py-[18px] font-body text-[11px] uppercase tracking-[0.18em] text-[var(--color-secondary)] transition-colors duration-300 hover:bg-[var(--color-accent)] hover:text-[var(--color-secondary)] disabled:cursor-not-allowed disabled:opacity-65"
+          className="mt-8 w-full rounded-[var(--border-radius)] bg-[var(--color-primary)] px-4 py-[18px] font-inter text-[11px] uppercase tracking-[0.18em] text-[var(--color-secondary)] transition-colors duration-300 hover:bg-[var(--color-accent)] hover:text-[var(--color-secondary)] disabled:cursor-not-allowed disabled:opacity-65"
         >
           {isSubmitting ? "Please wait..." : "Sign In"}
         </button>
       </form>
 
-      <p className="mt-6 font-body text-[12px] text-[var(--color-muted)]">
+      <p className="mt-6 font-inter text-[12px] text-[var(--color-muted)]">
         Don&apos;t have an account?{" "}
         <Link
           to={buildPathWithSearch(

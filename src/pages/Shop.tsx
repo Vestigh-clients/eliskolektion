@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
+import { getBrandLabelFromSlug, getBrandSlugFromTags, storeBrandOptions } from "@/config/brands.config";
 import {
   Drawer,
   DrawerContent,
@@ -28,6 +29,11 @@ interface CategoryFilterItem {
   label: string;
 }
 
+interface BrandFilterItem {
+  slug: string;
+  label: string;
+}
+
 interface VariationFilterOption {
   id: string;
   label: string;
@@ -46,13 +52,17 @@ interface VariationFilterType {
 
 interface FilterPanelProps {
   activeFilter: ShopFilter;
+  activeBrandFilter: ShopFilter;
   activeFilterCount: number;
+  brandCounts: Record<string, number>;
+  brandFilterItems: BrandFilterItem[];
   categoryCounts: Record<string, number>;
   categoryFilterItems: CategoryFilterItem[];
   clearAllFilters: () => void;
   priceCeiling: number;
   priceLimit: number;
   selectedVariationOptionIdsByType: Record<string, string[]>;
+  setActiveBrandFilter: (nextFilter: ShopFilter) => void;
   setActiveFilter: (nextFilter: ShopFilter) => void;
   setPriceLimit: (value: number) => void;
   toggleVariationFilterOption: (typeId: string, optionId: string) => void;
@@ -248,13 +258,17 @@ const productMatchesVariationFilters = (
 
 const FilterPanel = ({
   activeFilter,
+  activeBrandFilter,
   activeFilterCount,
+  brandCounts,
+  brandFilterItems,
   categoryCounts,
   categoryFilterItems,
   clearAllFilters,
   priceCeiling,
   priceLimit,
   selectedVariationOptionIdsByType,
+  setActiveBrandFilter,
   setActiveFilter,
   setPriceLimit,
   toggleVariationFilterOption,
@@ -342,6 +356,45 @@ const FilterPanel = ({
         </div>
       ) : null}
 
+      {/* Brands */}
+      {brandFilterItems.length > 0 ? (
+        <div>
+          <h3 className={heading}>Brands</h3>
+          <div className="flex flex-wrap gap-2">
+            <button
+              type="button"
+              onClick={() => setActiveBrandFilter("all")}
+              className={[
+                "rounded-none border px-3 py-2 text-xs font-black uppercase tracking-[0.08em] font-manrope transition-colors",
+                activeBrandFilter === "all"
+                  ? "border-black bg-black text-white"
+                  : "border-zinc-300 bg-white text-zinc-500 hover:border-black hover:text-black",
+              ].join(" ")}
+            >
+              All Brands ({Object.values(brandCounts).reduce((a, b) => a + b, 0)})
+            </button>
+            {brandFilterItems.map((brand) => {
+              const isActive = activeBrandFilter === brand.slug;
+              return (
+                <button
+                  key={brand.slug}
+                  type="button"
+                  onClick={() => setActiveBrandFilter(isActive ? "all" : brand.slug)}
+                  className={[
+                    "rounded-none border px-3 py-2 text-xs font-black uppercase tracking-[0.08em] font-manrope transition-colors",
+                    isActive
+                      ? "border-black bg-black text-white"
+                      : "border-zinc-300 bg-white text-zinc-500 hover:border-black hover:text-black",
+                  ].join(" ")}
+                >
+                  {brand.label} ({brandCounts[brand.slug] ?? 0})
+                </button>
+              );
+            })}
+          </div>
+        </div>
+      ) : null}
+
       {/* Variation filters */}
       {variationFilterTypes.map((variationType) => {
         const selectedIds = selectedVariationOptionIdsByType[variationType.id] ?? [];
@@ -360,22 +413,20 @@ const FilterPanel = ({
                       key={option.id}
                       type="button"
                       onClick={() => toggleVariationFilterOption(variationType.id, option.id)}
-                      title={`${option.label} (${option.count})`}
+                      aria-label={`${option.label} (${option.count})`}
                       className={[
-                        "flex items-center gap-1.5 px-3 py-1.5 text-xs font-manrope font-bold border transition-all",
+                        "flex h-8 w-8 items-center justify-center rounded-full border transition-all",
                         isSelected
-                          ? "bg-black text-white border-black"
-                          : "bg-white border-zinc-200 text-zinc-600 hover:border-black",
+                          ? "border-black ring-2 ring-black/20"
+                          : "border-zinc-300 hover:border-black",
                       ].join(" ")}
                     >
-                      {option.colorHex ? (
-                        <span
-                          className="w-3 h-3 rounded-full border border-zinc-200 shrink-0"
-                          style={{ backgroundColor: option.colorHex }}
-                          aria-hidden="true"
-                        />
-                      ) : null}
-                      {option.label}
+                      <span
+                        className="h-5 w-5 rounded-full border border-zinc-200"
+                        style={{ backgroundColor: option.colorHex ?? "#d4d4d8" }}
+                        aria-hidden="true"
+                      />
+                      <span className="sr-only">{option.label}</span>
                     </button>
                   );
                 })}
@@ -488,9 +539,40 @@ const Shop = () => {
       .map((c) => ({ slug: c.slug, label: c.label || "Category" }));
   }, [products, storefrontCategories]);
 
+  const brandFilterItems = useMemo(() => {
+    const seen = new Set<string>();
+    const discovered = products
+      .map((product) => getBrandSlugFromTags(product.tags))
+      .filter((brandSlug): brandSlug is string => Boolean(brandSlug))
+      .filter((brandSlug) => {
+        if (seen.has(brandSlug)) return false;
+        seen.add(brandSlug);
+        return true;
+      })
+      .map((brandSlug) => ({
+        slug: brandSlug,
+        label: getBrandLabelFromSlug(brandSlug),
+      }));
+
+    const displayOrder = new Map(storeBrandOptions.map((brand, index) => [brand.slug, index]));
+    return discovered.sort((left, right) => {
+      const leftOrder = displayOrder.get(left.slug);
+      const rightOrder = displayOrder.get(right.slug);
+      if (leftOrder !== undefined && rightOrder !== undefined && leftOrder !== rightOrder) {
+        return leftOrder - rightOrder;
+      }
+      if (leftOrder !== undefined && rightOrder === undefined) return -1;
+      if (leftOrder === undefined && rightOrder !== undefined) return 1;
+      return left.label.localeCompare(right.label);
+    });
+  }, [products]);
+
   const categoryLookup = useMemo(() => new Set(categoryFilterItems.map((i) => i.slug)), [categoryFilterItems]);
+  const brandLookup = useMemo(() => new Set(brandFilterItems.map((i) => i.slug)), [brandFilterItems]);
   const requestedCategory = (searchParams.get("category") ?? "").trim().toLowerCase();
+  const requestedBrand = (searchParams.get("brand") ?? "").trim().toLowerCase();
   const activeFilter: ShopFilter = requestedCategory && categoryLookup.has(requestedCategory) ? requestedCategory : "all";
+  const activeBrandFilter: ShopFilter = requestedBrand && brandLookup.has(requestedBrand) ? requestedBrand : "all";
   const normalizedSearchTerm = (searchParams.get("q") ?? "").trim().toLowerCase();
 
   const setActiveFilter = (nextFilter: ShopFilter) => {
@@ -504,10 +586,23 @@ const Shop = () => {
     navigate(query ? `/shop?${query}` : "/shop");
   };
 
+  const setActiveBrandFilter = (nextFilter: ShopFilter) => {
+    const nextParams = new URLSearchParams(searchParams);
+    if (nextFilter === "all") {
+      nextParams.delete("brand");
+    } else {
+      nextParams.set("brand", nextFilter);
+    }
+    const query = nextParams.toString();
+    navigate(query ? `/shop?${query}` : "/shop");
+  };
+
   const searchedProducts = useMemo(() => {
     if (!normalizedSearchTerm) return products;
     return products.filter((p) => {
-      const fields = [p.name, p.short_description ?? "", p.description ?? "", p.categories?.name ?? ""];
+      const brandSlug = getBrandSlugFromTags(p.tags);
+      const brandLabel = brandSlug ? getBrandLabelFromSlug(brandSlug) : "";
+      const fields = [p.name, p.short_description ?? "", p.description ?? "", p.categories?.name ?? "", brandLabel];
       return fields.some((f) => f.toLowerCase().includes(normalizedSearchTerm));
     });
   }, [normalizedSearchTerm, products]);
@@ -522,14 +617,30 @@ const Shop = () => {
     return counts;
   }, [searchedProducts]);
 
-  const productsByCategoryAndSearch = useMemo(() => {
-    if (activeFilter === "all") return searchedProducts;
-    return searchedProducts.filter((p) => (p.categories?.slug ?? "").trim().toLowerCase() === activeFilter);
-  }, [activeFilter, searchedProducts]);
+  const brandCounts = useMemo(() => {
+    const counts: Record<string, number> = {};
+    for (const product of searchedProducts) {
+      const brandSlug = getBrandSlugFromTags(product.tags);
+      if (!brandSlug) continue;
+      counts[brandSlug] = (counts[brandSlug] ?? 0) + 1;
+    }
+    return counts;
+  }, [searchedProducts]);
+
+  const productsByCategoryBrandAndSearch = useMemo(() => {
+    return searchedProducts.filter((product) => {
+      const productCategorySlug = (product.categories?.slug ?? "").trim().toLowerCase();
+      const productBrandSlug = getBrandSlugFromTags(product.tags);
+
+      if (activeFilter !== "all" && productCategorySlug !== activeFilter) return false;
+      if (activeBrandFilter !== "all" && productBrandSlug !== activeBrandFilter) return false;
+      return true;
+    });
+  }, [activeBrandFilter, activeFilter, searchedProducts]);
 
   const variationFilterTypes = useMemo(
-    () => collectVariationFilterTypes(productsByCategoryAndSearch),
-    [productsByCategoryAndSearch],
+    () => collectVariationFilterTypes(productsByCategoryBrandAndSearch),
+    [productsByCategoryBrandAndSearch],
   );
 
   useEffect(() => {
@@ -550,7 +661,7 @@ const Shop = () => {
   }, [priceCeiling]);
 
   const filteredProducts = useMemo(() => {
-    const afterVariation = productsByCategoryAndSearch.filter((p) =>
+    const afterVariation = productsByCategoryBrandAndSearch.filter((p) =>
       productMatchesVariationFilters(p, selectedVariationOptionIdsByType),
     );
     const afterPrice = afterVariation.filter((p) => Number(p.price) <= priceLimit);
@@ -569,7 +680,7 @@ const Shop = () => {
     }
 
     return next;
-  }, [priceLimit, productsByCategoryAndSearch, selectedVariationOptionIdsByType, sortBy]);
+  }, [priceLimit, productsByCategoryBrandAndSearch, selectedVariationOptionIdsByType, sortBy]);
 
   const shopPageSize = isMobile ? SHOP_PAGE_SIZE_MOBILE : SHOP_PAGE_SIZE_DESKTOP;
   const visibleProducts = useMemo(() => filteredProducts.slice(0, visibleCount), [filteredProducts, visibleCount]);
@@ -612,12 +723,19 @@ const Shop = () => {
   const clearAllFilters = () => {
     setSelectedVariationOptionIdsByType({});
     setPriceLimit(priceCeiling);
-    setActiveFilter("all");
+    const nextParams = new URLSearchParams(searchParams);
+    nextParams.delete("category");
+    nextParams.delete("brand");
+    const query = nextParams.toString();
+    navigate(query ? `/shop?${query}` : "/shop");
   };
 
   const selectedVariationCount = Object.values(selectedVariationOptionIdsByType).reduce((sum, v) => sum + v.length, 0);
   const activeFilterCount =
-    (activeFilter === "all" ? 0 : 1) + selectedVariationCount + (priceLimit < priceCeiling ? 1 : 0);
+    (activeFilter === "all" ? 0 : 1) +
+    (activeBrandFilter === "all" ? 0 : 1) +
+    selectedVariationCount +
+    (priceLimit < priceCeiling ? 1 : 0);
 
   const handleAddToCart = (product: Product) => {
     const basePayload = {
@@ -675,13 +793,17 @@ const Shop = () => {
 
   const filterPanelProps = {
     activeFilter,
+    activeBrandFilter,
     activeFilterCount,
+    brandCounts,
+    brandFilterItems,
     categoryCounts,
     categoryFilterItems,
     clearAllFilters,
     priceCeiling,
     priceLimit,
     selectedVariationOptionIdsByType,
+    setActiveBrandFilter,
     setActiveFilter,
     setPriceLimit,
     toggleVariationFilterOption,

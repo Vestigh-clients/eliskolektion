@@ -14,7 +14,7 @@ const SignOutConfirmModal = ({ isOpen, isSubmitting, onConfirm, onCancel }: Sign
     <div className="fixed inset-0 z-[120] bg-black/35 px-4">
       <div className="mx-auto flex min-h-screen max-w-[360px] items-center">
         <div className="w-full rounded-[var(--border-radius)] bg-[var(--color-secondary)] p-10">
-          <p className="font-display text-[30px] italic leading-none text-[var(--color-primary)]">Sign out?</p>
+          <p className="font-display text-[30px] leading-none text-[var(--color-primary)]">Sign out?</p>
           <p className="mt-4 font-body text-[12px] font-light leading-[1.8] text-[var(--color-muted)]">
             You have items in your cart. They will be lost if you sign out.
           </p>

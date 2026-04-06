@@ -233,12 +233,12 @@ const AdminShippingRatesPage = () => {
   return (
     <div className="admin-page">
       <div className="admin-page-header">
-        <h1 className="admin-page-title font-display text-[36px] italic text-[var(--color-primary)]">Shipping Rates</h1>
+        <h1 className="admin-page-title font-manrope text-[36px]  text-[var(--color-primary)]">Shipping Rates</h1>
         <div className="admin-page-actions">
           <button
             type="button"
             onClick={openCreateForm}
-            className="rounded-[var(--border-radius)] bg-[var(--color-primary)] px-7 py-3 font-body text-[11px] uppercase tracking-[0.1em] text-[var(--color-secondary)] transition-colors hover:bg-[var(--color-accent)] hover:text-[var(--color-secondary)]"
+            className="rounded-[var(--border-radius)] bg-[var(--color-primary)] px-7 py-3 font-inter text-[11px] uppercase tracking-[0.1em] text-[var(--color-secondary)] transition-colors hover:bg-[var(--color-accent)] hover:text-[var(--color-secondary)]"
           >
             Add Rate
           </button>
@@ -246,13 +246,13 @@ const AdminShippingRatesPage = () => {
       </div>
 
       <div className="mb-8 rounded-[var(--border-radius)] border border-[var(--color-border)] bg-[rgba(var(--color-navbar-solid-foreground-rgb),0.08)] px-5 py-4">
-        <p className="font-body text-[12px] leading-[1.8] text-[var(--color-muted)]">
+        <p className="font-inter text-[12px] leading-[1.8] text-[var(--color-muted)]">
           Rates are matched by state. If no state-specific rate is found for a customer&apos;s delivery address, the default nationwide
           rate is used. You must always have one active default rate with no states selected.
         </p>
       </div>
 
-      {message ? <p className="mb-4 font-body text-[12px] text-[var(--color-accent)]">{message}</p> : null}
+      {message ? <p className="mb-4 font-inter text-[12px] text-[var(--color-accent)]">{message}</p> : null}
 
       <div className="hidden overflow-x-auto md:block">
         <table className="min-w-[1020px] w-full border-collapse">
@@ -261,7 +261,7 @@ const AdminShippingRatesPage = () => {
               {["Name", "States Covered", "Rate", "Est. Delivery", "Status", "Actions"].map((heading) => (
                 <th
                   key={heading}
-                  className="px-2 py-3 text-left font-body text-[10px] uppercase tracking-[0.12em] text-[var(--color-muted-soft)] first:pl-0 last:pr-0"
+                  className="px-2 py-3 text-left font-inter text-[10px] uppercase tracking-[0.12em] text-[var(--color-muted-soft)] first:pl-0 last:pr-0"
                 >
                   {heading}
                 </th>
@@ -271,19 +271,19 @@ const AdminShippingRatesPage = () => {
           <tbody>
             {isLoading ? (
               <tr>
-                <td colSpan={6} className="px-0 py-8 text-center font-body text-[12px] text-[var(--color-muted-soft)]">
+                <td colSpan={6} className="px-0 py-8 text-center font-inter text-[12px] text-[var(--color-muted-soft)]">
                   Loading shipping rates...
                 </td>
               </tr>
             ) : loadError ? (
               <tr>
-                <td colSpan={6} className="px-0 py-8 text-center font-body text-[12px] text-[var(--color-danger)]">
+                <td colSpan={6} className="px-0 py-8 text-center font-inter text-[12px] text-[var(--color-danger)]">
                   {loadError}
                 </td>
               </tr>
             ) : rows.length === 0 ? (
               <tr>
-                <td colSpan={6} className="px-0 py-8 text-center font-body text-[12px] text-[var(--color-muted-soft)]">
+                <td colSpan={6} className="px-0 py-8 text-center font-inter text-[12px] text-[var(--color-muted-soft)]">
                   No shipping rates found.
                 </td>
               </tr>
@@ -294,23 +294,23 @@ const AdminShippingRatesPage = () => {
                   row.states.length <= 2 ? row.states.join(", ") : `${row.states.slice(0, 2).join(", ")} [${row.states.length - 2}] more`;
                 return (
                   <tr key={row.id} className="border-b border-[var(--color-surface-strong)] hover:bg-[rgba(var(--color-navbar-solid-foreground-rgb),0.04)]">
-                    <td className="px-2 py-4 pl-0 font-body text-[13px] text-[var(--color-primary)]">{row.name}</td>
+                    <td className="px-2 py-4 pl-0 font-inter text-[13px] text-[var(--color-primary)]">{row.name}</td>
                     <td className="px-2 py-4">
                       {isDefault ? (
-                        <p className="font-body text-[11px] text-[var(--color-accent)]">All States (Default)</p>
+                        <p className="font-inter text-[11px] text-[var(--color-accent)]">All States (Default)</p>
                       ) : (
-                        <p title={row.states.join(", ")} className="font-body text-[11px] text-[var(--color-muted)]">
+                        <p title={row.states.join(", ")} className="font-inter text-[11px] text-[var(--color-muted)]">
                           {statesText}
                         </p>
                       )}
                     </td>
-                    <td className="px-2 py-4 font-body text-[13px] text-[var(--color-primary)]">{formatCurrency(row.base_rate)}</td>
-                    <td className="px-2 py-4 font-body text-[11px] text-[var(--color-muted)]">
+                    <td className="px-2 py-4 font-inter text-[13px] text-[var(--color-primary)]">{formatCurrency(row.base_rate)}</td>
+                    <td className="px-2 py-4 font-inter text-[11px] text-[var(--color-muted)]">
                       {row.estimated_days_min ?? 1}-{row.estimated_days_max ?? row.estimated_days_min ?? 1} business days
                     </td>
                     <td className="px-2 py-4">
                       <span
-                        className={`inline-block rounded-[var(--border-radius)] border px-[10px] py-[4px] font-body text-[9px] uppercase tracking-[0.12em] ${
+                        className={`inline-block rounded-[var(--border-radius)] border px-[10px] py-[4px] font-inter text-[9px] uppercase tracking-[0.12em] ${
                           row.is_active ? "border-[var(--color-accent)] text-[var(--color-accent)]" : "border-[var(--color-border)] text-[var(--color-muted-soft)]"
                         }`}
                       >
@@ -319,9 +319,9 @@ const AdminShippingRatesPage = () => {
                     </td>
                     <td className="px-0 py-4">
                       {deleteConfirmId === row.id ? (
-                        <div className="font-body text-[11px] text-[var(--color-danger)]">
+                        <div className="font-inter text-[11px] text-[var(--color-danger)]">
                           Delete {row.name}? This cannot be undone.
-                          <div className="mt-2 flex items-center gap-3 font-body text-[10px] uppercase tracking-[0.1em]">
+                          <div className="mt-2 flex items-center gap-3 font-inter text-[10px] uppercase tracking-[0.1em]">
                             <button type="button" onClick={() => void confirmDelete(row)} className="text-[var(--color-danger)]">
                               Yes, Delete
                             </button>
@@ -331,7 +331,7 @@ const AdminShippingRatesPage = () => {
                           </div>
                         </div>
                       ) : (
-                        <div className="flex items-center gap-3 font-body text-[10px] uppercase tracking-[0.1em]">
+                        <div className="flex items-center gap-3 font-inter text-[10px] uppercase tracking-[0.1em]">
                           <button type="button" onClick={() => openEditForm(row)} className="text-[var(--color-muted)] transition-colors hover:text-[var(--color-primary)]">
                             Edit
                           </button>
@@ -357,11 +357,11 @@ const AdminShippingRatesPage = () => {
 
       <div className="border-t border-[var(--color-border)] md:hidden">
         {isLoading ? (
-          <p className="py-8 text-center font-body text-[12px] text-[var(--color-muted-soft)]">Loading shipping rates...</p>
+          <p className="py-8 text-center font-inter text-[12px] text-[var(--color-muted-soft)]">Loading shipping rates...</p>
         ) : loadError ? (
-          <p className="py-8 text-center font-body text-[12px] text-[var(--color-danger)]">{loadError}</p>
+          <p className="py-8 text-center font-inter text-[12px] text-[var(--color-danger)]">{loadError}</p>
         ) : rows.length === 0 ? (
-          <p className="py-8 text-center font-body text-[12px] text-[var(--color-muted-soft)]">No shipping rates found.</p>
+          <p className="py-8 text-center font-inter text-[12px] text-[var(--color-muted-soft)]">No shipping rates found.</p>
         ) : (
           rows.map((row) => {
             const isDefault = row.states.length === 0;
@@ -370,9 +370,9 @@ const AdminShippingRatesPage = () => {
             return (
               <div key={`mobile-${row.id}`} className="admin-mobile-card">
                 <div className="flex items-center justify-between gap-3">
-                  <p className="font-body text-[12px] text-[var(--color-primary)]">{row.name}</p>
+                  <p className="font-inter text-[12px] text-[var(--color-primary)]">{row.name}</p>
                   <span
-                    className={`inline-block rounded-[var(--border-radius)] border px-[10px] py-[4px] font-body text-[9px] uppercase tracking-[0.12em] ${
+                    className={`inline-block rounded-[var(--border-radius)] border px-[10px] py-[4px] font-inter text-[9px] uppercase tracking-[0.12em] ${
                       row.is_active ? "border-[var(--color-accent)] text-[var(--color-accent)]" : "border-[var(--color-border)] text-[var(--color-muted-soft)]"
                     }`}
                   >
@@ -380,18 +380,18 @@ const AdminShippingRatesPage = () => {
                   </span>
                 </div>
 
-                <p className="mt-2 font-body text-[11px] text-[var(--color-muted-soft)]">
+                <p className="mt-2 font-inter text-[11px] text-[var(--color-muted-soft)]">
                   {isDefault ? "All States (Default)" : statesText || "No states"}
                 </p>
 
                 <div className="mt-2 flex items-center justify-between gap-3">
-                  <p className="font-body text-[12px] text-[var(--color-primary)]">{formatCurrency(row.base_rate)}</p>
-                  <p className="font-body text-[11px] text-[var(--color-muted-soft)]">
+                  <p className="font-inter text-[12px] text-[var(--color-primary)]">{formatCurrency(row.base_rate)}</p>
+                  <p className="font-inter text-[11px] text-[var(--color-muted-soft)]">
                     {row.estimated_days_min ?? 1}-{row.estimated_days_max ?? row.estimated_days_min ?? 1} business days
                   </p>
                 </div>
 
-                <div className="mt-2 flex justify-end gap-3 font-body text-[10px] uppercase tracking-[0.1em]">
+                <div className="mt-2 flex justify-end gap-3 font-inter text-[10px] uppercase tracking-[0.1em]">
                   {deleteConfirmId === row.id ? (
                     <>
                       <button type="button" onClick={() => void confirmDelete(row)} className="text-[var(--color-danger)]">
@@ -424,27 +424,27 @@ const AdminShippingRatesPage = () => {
 
       {isFormOpen ? (
         <div className="mt-6 border border-[var(--color-border)] p-6">
-          <p className="mb-4 font-body text-[10px] uppercase tracking-[0.2em] text-[var(--color-accent)]">{form.id ? "Edit Rate" : "Add Shipping Rate"}</p>
+          <p className="mb-4 font-inter text-[10px] uppercase tracking-[0.2em] text-[var(--color-accent)]">{form.id ? "Edit Rate" : "Add Shipping Rate"}</p>
 
           <div className="grid gap-5">
             <div>
-              <label className="font-body text-[11px] uppercase tracking-[0.1em] text-[var(--color-muted-soft)]">Rate Name *</label>
+              <label className="font-inter text-[11px] uppercase tracking-[0.1em] text-[var(--color-muted-soft)]">Rate Name *</label>
               <input
                 value={form.name}
                 onChange={(event) => setForm((current) => ({ ...current, name: event.target.value }))}
-                className="mt-2 w-full border-0 border-b border-[var(--color-border)] bg-transparent pb-2 font-body text-[13px] text-[var(--color-primary)] outline-none focus:border-[var(--color-primary)]"
+                className="mt-2 w-full border-0 border-b border-[var(--color-border)] bg-transparent pb-2 font-inter text-[13px] text-[var(--color-primary)] outline-none focus:border-[var(--color-primary)]"
                 placeholder="e.g. Greater Accra Standard"
               />
             </div>
 
             <div>
-              <label className="font-body text-[11px] uppercase tracking-[0.1em] text-[var(--color-muted-soft)]">States</label>
+              <label className="font-inter text-[11px] uppercase tracking-[0.1em] text-[var(--color-muted-soft)]">States</label>
               <input
                 value={stateSearchInput}
                 onChange={(event) => setStateSearchInput(event.target.value)}
                 disabled={form.isDefault}
                 placeholder="Search states..."
-                className="mt-2 w-full border-0 border-b border-[var(--color-border)] bg-transparent pb-2 font-body text-[13px] text-[var(--color-primary)] outline-none focus:border-[var(--color-primary)] disabled:opacity-50"
+                className="mt-2 w-full border-0 border-b border-[var(--color-border)] bg-transparent pb-2 font-inter text-[13px] text-[var(--color-primary)] outline-none focus:border-[var(--color-primary)] disabled:opacity-50"
               />
 
               {!form.isDefault && availableStates.length > 0 ? (
@@ -454,7 +454,7 @@ const AdminShippingRatesPage = () => {
                       key={state}
                       type="button"
                       onClick={() => addState(state)}
-                      className="block w-full border-b border-[var(--color-surface-strong)] px-4 py-2 text-left font-body text-[12px] text-[var(--color-primary)] hover:bg-[rgba(var(--color-navbar-solid-foreground-rgb),0.05)]"
+                      className="block w-full border-b border-[var(--color-surface-strong)] px-4 py-2 text-left font-inter text-[12px] text-[var(--color-primary)] hover:bg-[rgba(var(--color-navbar-solid-foreground-rgb),0.05)]"
                     >
                       {state}
                     </button>
@@ -466,17 +466,17 @@ const AdminShippingRatesPage = () => {
                 {form.states.map((state) => (
                   <span
                     key={state}
-                    className="inline-flex items-center gap-2 rounded-[var(--border-radius)] border border-[var(--color-border)] bg-[rgba(var(--color-navbar-solid-foreground-rgb),0.06)] px-[10px] py-1 font-body text-[11px] text-[var(--color-primary)]"
+                    className="inline-flex items-center gap-2 rounded-[var(--border-radius)] border border-[var(--color-border)] bg-[rgba(var(--color-navbar-solid-foreground-rgb),0.06)] px-[10px] py-1 font-inter text-[11px] text-[var(--color-primary)]"
                   >
                     {state}
                     <button type="button" onClick={() => removeState(state)} className="text-[var(--color-muted)] hover:text-[var(--color-danger)]">
-                      ×
+                      ï¿½
                     </button>
                   </span>
                 ))}
               </div>
 
-              <label className="mt-3 inline-flex items-center gap-2 font-body text-[11px] text-[var(--color-muted)]">
+              <label className="mt-3 inline-flex items-center gap-2 font-inter text-[11px] text-[var(--color-muted)]">
                 <input
                   type="checkbox"
                   checked={form.isDefault}
@@ -493,47 +493,47 @@ const AdminShippingRatesPage = () => {
               </label>
 
               {form.isDefault && existingDefaultRate ? (
-                <p className="mt-2 font-body text-[11px] text-[var(--color-accent)]">A default rate already exists. Saving this will replace it.</p>
+                <p className="mt-2 font-inter text-[11px] text-[var(--color-accent)]">A default rate already exists. Saving this will replace it.</p>
               ) : null}
             </div>
 
             <div className="grid gap-5 md:grid-cols-3">
               <div>
-                <label className="font-body text-[11px] uppercase tracking-[0.1em] text-[var(--color-muted-soft)]">Base Rate GH? *</label>
+                <label className="font-inter text-[11px] uppercase tracking-[0.1em] text-[var(--color-muted-soft)]">Base Rate GH? *</label>
                 <input
                   inputMode="decimal"
                   value={form.baseRate}
                   onChange={(event) => setForm((current) => ({ ...current, baseRate: event.target.value.replace(/[^\d.]/g, "") }))}
-                  className="mt-2 w-full border-0 border-b border-[var(--color-border)] bg-transparent pb-2 font-body text-[13px] text-[var(--color-primary)] outline-none focus:border-[var(--color-primary)]"
+                  className="mt-2 w-full border-0 border-b border-[var(--color-border)] bg-transparent pb-2 font-inter text-[13px] text-[var(--color-primary)] outline-none focus:border-[var(--color-primary)]"
                 />
               </div>
 
               <div>
-                <label className="font-body text-[11px] uppercase tracking-[0.1em] text-[var(--color-muted-soft)]">Estimated Delivery Min Days *</label>
+                <label className="font-inter text-[11px] uppercase tracking-[0.1em] text-[var(--color-muted-soft)]">Estimated Delivery Min Days *</label>
                 <input
                   inputMode="numeric"
                   value={form.minDays}
                   onChange={(event) => setForm((current) => ({ ...current, minDays: event.target.value.replace(/[^\d]/g, "") }))}
                   onBlur={validateDays}
-                  className="mt-2 w-full border-0 border-b border-[var(--color-border)] bg-transparent pb-2 font-body text-[13px] text-[var(--color-primary)] outline-none focus:border-[var(--color-primary)]"
+                  className="mt-2 w-full border-0 border-b border-[var(--color-border)] bg-transparent pb-2 font-inter text-[13px] text-[var(--color-primary)] outline-none focus:border-[var(--color-primary)]"
                 />
               </div>
 
               <div>
-                <label className="font-body text-[11px] uppercase tracking-[0.1em] text-[var(--color-muted-soft)]">Estimated Delivery Max Days *</label>
+                <label className="font-inter text-[11px] uppercase tracking-[0.1em] text-[var(--color-muted-soft)]">Estimated Delivery Max Days *</label>
                 <input
                   inputMode="numeric"
                   value={form.maxDays}
                   onChange={(event) => setForm((current) => ({ ...current, maxDays: event.target.value.replace(/[^\d]/g, "") }))}
                   onBlur={validateDays}
-                  className="mt-2 w-full border-0 border-b border-[var(--color-border)] bg-transparent pb-2 font-body text-[13px] text-[var(--color-primary)] outline-none focus:border-[var(--color-primary)]"
+                  className="mt-2 w-full border-0 border-b border-[var(--color-border)] bg-transparent pb-2 font-inter text-[13px] text-[var(--color-primary)] outline-none focus:border-[var(--color-primary)]"
                 />
               </div>
             </div>
 
-            {dayValidationMessage ? <p className="font-body text-[11px] text-[var(--color-danger)]">{dayValidationMessage}</p> : null}
+            {dayValidationMessage ? <p className="font-inter text-[11px] text-[var(--color-danger)]">{dayValidationMessage}</p> : null}
 
-            <label className="inline-flex items-center gap-2 font-body text-[12px] text-[var(--color-primary)]">
+            <label className="inline-flex items-center gap-2 font-inter text-[12px] text-[var(--color-primary)]">
               <input
                 type="checkbox"
                 checked={form.isActive}
@@ -548,14 +548,14 @@ const AdminShippingRatesPage = () => {
                 type="button"
                 onClick={() => void saveForm()}
                 disabled={isSaving}
-                className="w-full rounded-[var(--border-radius)] bg-[var(--color-primary)] px-4 py-4 font-body text-[11px] uppercase tracking-[0.1em] text-[var(--color-secondary)] transition-colors hover:bg-[var(--color-accent)] hover:text-[var(--color-secondary)] disabled:opacity-65"
+                className="w-full rounded-[var(--border-radius)] bg-[var(--color-primary)] px-4 py-4 font-inter text-[11px] uppercase tracking-[0.1em] text-[var(--color-secondary)] transition-colors hover:bg-[var(--color-accent)] hover:text-[var(--color-secondary)] disabled:opacity-65"
               >
                 {isSaving ? "Saving..." : form.id ? "Update Rate" : "Save Rate"}
               </button>
               <button
                 type="button"
                 onClick={closeForm}
-                className="mt-3 block w-full font-body text-[11px] uppercase tracking-[0.1em] text-[var(--color-muted-soft)] transition-colors hover:text-[var(--color-primary)]"
+                className="mt-3 block w-full font-inter text-[11px] uppercase tracking-[0.1em] text-[var(--color-muted-soft)] transition-colors hover:text-[var(--color-primary)]"
               >
                 Cancel
               </button>

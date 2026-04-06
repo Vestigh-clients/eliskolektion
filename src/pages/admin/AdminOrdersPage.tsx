@@ -127,7 +127,7 @@ const FilterSheet = ({
           <div className="h-1 w-10 rounded-full bg-[rgba(var(--color-primary-rgb),0.15)]" />
         </div>
         <div className="flex items-center justify-between border-b border-[rgba(var(--color-primary-rgb),0.08)] px-5 py-3">
-          <p className="font-body text-[14px] font-semibold text-[var(--color-navbar-solid-foreground)]">Filters</p>
+          <p className="font-inter text-[14px] font-semibold text-[var(--color-navbar-solid-foreground)]">Filters</p>
           <button
             type="button"
             onClick={onClose}
@@ -138,7 +138,7 @@ const FilterSheet = ({
         </div>
         <div className="space-y-5 px-5 py-4">
           <div>
-            <p className="mb-2.5 font-body text-[10px] uppercase tracking-[0.18em] text-[var(--color-primary)]">Status</p>
+            <p className="mb-2.5 font-inter text-[10px] uppercase tracking-[0.18em] text-[var(--color-primary)]">Status</p>
             <div className="flex flex-wrap gap-2">
               {statusTabs.map((tab) => {
                 const active = tab.value === statusFilter;
@@ -150,7 +150,7 @@ const FilterSheet = ({
                       setStatusFilter(tab.value);
                       setPage(1);
                     }}
-                    className={`rounded-full border px-4 py-2 font-body text-[10px] uppercase tracking-[0.12em] transition-colors ${
+                    className={`rounded-full border px-4 py-2 font-inter text-[10px] uppercase tracking-[0.12em] transition-colors ${
                       active
                         ? "text-white"
                         : "text-[var(--color-muted)] hover:border-[var(--color-primary)] hover:text-[var(--color-primary)]"
@@ -168,7 +168,7 @@ const FilterSheet = ({
           </div>
 
           <div>
-            <p className="mb-2.5 font-body text-[10px] uppercase tracking-[0.18em] text-[var(--color-primary)]">Payment</p>
+            <p className="mb-2.5 font-inter text-[10px] uppercase tracking-[0.18em] text-[var(--color-primary)]">Payment</p>
             <div className="flex flex-wrap gap-2">
               {paymentOptions.map((option) => {
                 const active = option.value === paymentFilter;
@@ -180,7 +180,7 @@ const FilterSheet = ({
                       setPaymentFilter(option.value);
                       setPage(1);
                     }}
-                    className={`rounded-full border px-4 py-2 font-body text-[10px] uppercase tracking-[0.12em] transition-colors ${
+                    className={`rounded-full border px-4 py-2 font-inter text-[10px] uppercase tracking-[0.12em] transition-colors ${
                       active
                         ? "text-white"
                         : "text-[var(--color-muted)] hover:border-[var(--color-primary)] hover:text-[var(--color-primary)]"
@@ -198,7 +198,7 @@ const FilterSheet = ({
           </div>
 
           <div>
-            <p className="mb-2.5 font-body text-[10px] uppercase tracking-[0.18em] text-[var(--color-primary)]">Date Range</p>
+            <p className="mb-2.5 font-inter text-[10px] uppercase tracking-[0.18em] text-[var(--color-primary)]">Date Range</p>
             <div className="grid grid-cols-2 gap-2">
               <input
                 type="date"
@@ -207,7 +207,7 @@ const FilterSheet = ({
                   setDateFrom(event.target.value);
                   setPage(1);
                 }}
-                className="h-11 rounded-full border px-3 font-body text-[11px] text-[var(--color-navbar-solid-foreground)] outline-none focus:border-[var(--color-primary)]"
+                className="h-11 rounded-full border px-3 font-inter text-[11px] text-[var(--color-navbar-solid-foreground)] outline-none focus:border-[var(--color-primary)]"
                 style={{ borderColor: "rgba(var(--color-primary-rgb),0.16)" }}
               />
               <input
@@ -217,7 +217,7 @@ const FilterSheet = ({
                   setDateTo(event.target.value);
                   setPage(1);
                 }}
-                className="h-11 rounded-full border px-3 font-body text-[11px] text-[var(--color-navbar-solid-foreground)] outline-none focus:border-[var(--color-primary)]"
+                className="h-11 rounded-full border px-3 font-inter text-[11px] text-[var(--color-navbar-solid-foreground)] outline-none focus:border-[var(--color-primary)]"
                 style={{ borderColor: "rgba(var(--color-primary-rgb),0.16)" }}
               />
             </div>
@@ -229,7 +229,7 @@ const FilterSheet = ({
               onClearFilters();
               onClose();
             }}
-            className="w-full rounded-full border py-3 font-body text-[11px] uppercase tracking-[0.14em] text-[var(--color-primary)]"
+            className="w-full rounded-full border py-3 font-inter text-[11px] uppercase tracking-[0.14em] text-[var(--color-primary)]"
             style={{ borderColor: "rgba(var(--color-primary-rgb),0.2)" }}
           >
             Clear Filters
@@ -237,7 +237,7 @@ const FilterSheet = ({
           <button
             type="button"
             onClick={onClose}
-            className="w-full rounded-full py-3 font-body text-[11px] uppercase tracking-[0.14em] text-white"
+            className="w-full rounded-full py-3 font-inter text-[11px] uppercase tracking-[0.14em] text-white"
             style={{ background: "var(--color-primary)" }}
           >
             Done{activeFilterCount > 0 ? ` (${activeFilterCount} active)` : ""}
@@ -380,11 +380,11 @@ const AdminOrdersPage = () => {
       <div className="mx-auto flex w-full max-w-[1120px] flex-1 flex-col text-left">
         <div className="flex flex-wrap items-start justify-between gap-3">
           <div>
-            <p className="font-body text-[11px] uppercase tracking-[0.22em] text-[var(--color-primary)]">Sales</p>
-            <h1 className="mt-3 font-display text-[38px] italic leading-[1.04] text-[var(--color-navbar-solid-foreground)] sm:text-[50px]">
+            <p className="font-inter text-[11px] uppercase tracking-[0.22em] text-[var(--color-primary)]">Sales</p>
+            <h1 className="mt-3 font-manrope text-[38px]  leading-[1.04] text-[var(--color-navbar-solid-foreground)] sm:text-[50px]">
               Orders
             </h1>
-            <p className="mt-2 max-w-[680px] font-body text-[13px] leading-[1.8] text-[var(--color-muted)] sm:text-[14px]">
+            <p className="mt-2 max-w-[680px] font-inter text-[13px] leading-[1.8] text-[var(--color-muted)] sm:text-[14px]">
               Track order activity, payment progress, and fulfillment status with the same focused flow as Products.
             </p>
           </div>
@@ -393,7 +393,7 @@ const AdminOrdersPage = () => {
               type="button"
               onClick={() => void onExport()}
               disabled={isExporting}
-              className="inline-flex items-center gap-2 rounded-full border px-5 py-2.5 font-body text-[11px] uppercase tracking-[0.12em] transition-colors hover:bg-[rgba(var(--color-primary-rgb),0.08)] disabled:cursor-not-allowed disabled:opacity-60"
+              className="inline-flex items-center gap-2 rounded-full border px-5 py-2.5 font-inter text-[11px] uppercase tracking-[0.12em] transition-colors hover:bg-[rgba(var(--color-primary-rgb),0.08)] disabled:cursor-not-allowed disabled:opacity-60"
               style={{
                 borderColor: "rgba(var(--color-primary-rgb),0.2)",
                 color: "var(--color-primary)",
@@ -418,7 +418,7 @@ const AdminOrdersPage = () => {
                   value={searchInput}
                   onChange={(event) => setSearchInput(event.target.value)}
                   placeholder="Search by order #, customer name or email..."
-                  className="h-11 w-full rounded-full border bg-white pl-10 pr-4 font-body text-[13px] text-[var(--color-navbar-solid-foreground)] outline-none transition-colors placeholder:text-[var(--color-muted-soft)] focus:border-[var(--color-primary)]"
+                  className="h-11 w-full rounded-full border bg-white pl-10 pr-4 font-inter text-[13px] text-[var(--color-navbar-solid-foreground)] outline-none transition-colors placeholder:text-[var(--color-muted-soft)] focus:border-[var(--color-primary)]"
                   style={{ borderColor: "rgba(var(--color-primary-rgb),0.18)" }}
                 />
               </label>
@@ -426,14 +426,14 @@ const AdminOrdersPage = () => {
               <button
                 type="button"
                 onClick={() => setFilterSheetOpen(true)}
-                className="relative flex h-11 shrink-0 items-center gap-2 rounded-full border px-4 font-body text-[11px] uppercase tracking-[0.12em] text-[var(--color-primary)] transition-colors hover:bg-[rgba(var(--color-primary-rgb),0.06)] lg:hidden"
+                className="relative flex h-11 shrink-0 items-center gap-2 rounded-full border px-4 font-inter text-[11px] uppercase tracking-[0.12em] text-[var(--color-primary)] transition-colors hover:bg-[rgba(var(--color-primary-rgb),0.06)] lg:hidden"
                 style={{ borderColor: "rgba(var(--color-primary-rgb),0.2)" }}
               >
                 <SlidersHorizontal className="h-3.5 w-3.5" />
                 Filter
                 {activeFilterCount > 0 ? (
                   <span
-                    className="absolute -right-1.5 -top-1.5 flex h-4 w-4 items-center justify-center rounded-full font-body text-[9px] text-white"
+                    className="absolute -right-1.5 -top-1.5 flex h-4 w-4 items-center justify-center rounded-full font-inter text-[9px] text-white"
                     style={{ background: "var(--color-primary)" }}
                   >
                     {activeFilterCount}
@@ -454,7 +454,7 @@ const AdminOrdersPage = () => {
                         setStatusFilter(tab.value);
                         setPage(1);
                       }}
-                      className={`rounded-full border px-4 py-2 font-body text-[10px] uppercase tracking-[0.12em] transition-colors ${
+                      className={`rounded-full border px-4 py-2 font-inter text-[10px] uppercase tracking-[0.12em] transition-colors ${
                         isActive
                           ? "text-white"
                           : "text-[var(--color-muted)] hover:border-[var(--color-primary)] hover:text-[var(--color-primary)]"
@@ -471,14 +471,14 @@ const AdminOrdersPage = () => {
               </div>
 
               <div className="flex flex-wrap items-center justify-end gap-2">
-                <p className="font-body text-[10px] uppercase tracking-[0.16em] text-[var(--color-primary)]">Payment</p>
+                <p className="font-inter text-[10px] uppercase tracking-[0.16em] text-[var(--color-primary)]">Payment</p>
                 <select
                   value={paymentFilter}
                   onChange={(event) => {
                     setPaymentFilter(event.target.value as PaymentFilter);
                     setPage(1);
                   }}
-                  className="h-10 rounded-full border bg-white px-4 font-body text-[11px] uppercase tracking-[0.1em] text-[var(--color-primary)] outline-none focus:border-[var(--color-primary)]"
+                  className="h-10 rounded-full border bg-white px-4 font-inter text-[11px] uppercase tracking-[0.1em] text-[var(--color-primary)] outline-none focus:border-[var(--color-primary)]"
                   style={{ borderColor: "rgba(var(--color-primary-rgb),0.16)" }}
                 >
                   {paymentOptions.map((option) => (
@@ -494,7 +494,7 @@ const AdminOrdersPage = () => {
                     setDateFrom(event.target.value);
                     setPage(1);
                   }}
-                  className="h-10 rounded-full border bg-white px-4 font-body text-[11px] text-[var(--color-primary)] outline-none focus:border-[var(--color-primary)]"
+                  className="h-10 rounded-full border bg-white px-4 font-inter text-[11px] text-[var(--color-primary)] outline-none focus:border-[var(--color-primary)]"
                   style={{ borderColor: "rgba(var(--color-primary-rgb),0.16)" }}
                 />
                 <input
@@ -504,14 +504,14 @@ const AdminOrdersPage = () => {
                     setDateTo(event.target.value);
                     setPage(1);
                   }}
-                  className="h-10 rounded-full border bg-white px-4 font-body text-[11px] text-[var(--color-primary)] outline-none focus:border-[var(--color-primary)]"
+                  className="h-10 rounded-full border bg-white px-4 font-inter text-[11px] text-[var(--color-primary)] outline-none focus:border-[var(--color-primary)]"
                   style={{ borderColor: "rgba(var(--color-primary-rgb),0.16)" }}
                 />
                 {hasActiveFilters ? (
                   <button
                     type="button"
                     onClick={onClearFilters}
-                    className="rounded-full border px-4 py-2 font-body text-[10px] uppercase tracking-[0.1em] text-[var(--color-primary)] transition-colors hover:bg-[rgba(var(--color-primary-rgb),0.06)]"
+                    className="rounded-full border px-4 py-2 font-inter text-[10px] uppercase tracking-[0.1em] text-[var(--color-primary)] transition-colors hover:bg-[rgba(var(--color-primary-rgb),0.06)]"
                     style={{ borderColor: "rgba(var(--color-primary-rgb),0.2)" }}
                   >
                     Clear
@@ -521,10 +521,10 @@ const AdminOrdersPage = () => {
             </div>
 
             <div className="flex flex-wrap items-center justify-between gap-2 border-t border-[rgba(var(--color-primary-rgb),0.1)] pt-3">
-              <p className="font-body text-[11px] uppercase tracking-[0.12em] text-[var(--color-primary)]">
+              <p className="font-inter text-[11px] uppercase tracking-[0.12em] text-[var(--color-primary)]">
                 {totalCount === 0 ? "No orders found" : `${totalCount} order${totalCount === 1 ? "" : "s"} found`}
               </p>
-              <p className="font-body text-[11px] text-[var(--color-muted)]">
+              <p className="font-inter text-[11px] text-[var(--color-muted)]">
                 Page {Math.min(page, totalPages)} of {totalPages}
               </p>
             </div>
@@ -551,7 +551,7 @@ const AdminOrdersPage = () => {
                 {["Order #", "Customer", "Items", "Payment", "Total", "Status", "Date", "Action"].map((heading) => (
                   <th
                     key={heading}
-                    className="px-2 py-2.5 text-left font-body text-[9px] uppercase tracking-[0.11em] text-[var(--color-muted-soft)] first:pl-3 last:pr-3"
+                    className="px-2 py-2.5 text-left font-inter text-[9px] uppercase tracking-[0.11em] text-[var(--color-muted-soft)] first:pl-3 last:pr-3"
                   >
                     {heading}
                   </th>
@@ -561,19 +561,19 @@ const AdminOrdersPage = () => {
             <tbody>
               {isLoading ? (
                 <tr>
-                  <td colSpan={8} className="px-3 py-9 text-center font-body text-[12px] text-[var(--color-muted-soft)]">
+                  <td colSpan={8} className="px-3 py-9 text-center font-inter text-[12px] text-[var(--color-muted-soft)]">
                     Loading orders...
                   </td>
                 </tr>
               ) : loadError ? (
                 <tr>
-                  <td colSpan={8} className="px-3 py-9 text-center font-body text-[12px] text-[var(--color-danger)]">
+                  <td colSpan={8} className="px-3 py-9 text-center font-inter text-[12px] text-[var(--color-danger)]">
                     {loadError}
                   </td>
                 </tr>
               ) : rows.length === 0 ? (
                 <tr>
-                  <td colSpan={8} className="px-3 py-9 text-center font-body text-[12px] text-[var(--color-muted-soft)]">
+                  <td colSpan={8} className="px-3 py-9 text-center font-inter text-[12px] text-[var(--color-muted-soft)]">
                     No orders found.
                   </td>
                 </tr>
@@ -593,26 +593,26 @@ const AdminOrdersPage = () => {
                     }}
                     className="cursor-pointer border-t border-[rgba(var(--color-primary-rgb),0.1)] transition-colors hover:bg-[rgba(var(--color-primary-rgb),0.04)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-accent)]"
                   >
-                    <td className="px-2 py-3 pl-3 font-body text-[10px] uppercase tracking-[0.06em] text-[var(--color-accent)]">
+                    <td className="px-2 py-3 pl-3 font-inter text-[10px] uppercase tracking-[0.06em] text-[var(--color-accent)]">
                       <span className="block truncate" title={row.order_number}>{truncateHalf(row.order_number, "-")}</span>
                     </td>
                     <td className="px-2 py-3">
-                      <p className="truncate font-body text-[12px] text-[var(--color-navbar-solid-foreground)]" title={`${row.customer.first_name} ${row.customer.last_name}`.trim()}>
+                      <p className="truncate font-inter text-[12px] text-[var(--color-navbar-solid-foreground)]" title={`${row.customer.first_name} ${row.customer.last_name}`.trim()}>
                         {truncateHalf(`${row.customer.first_name} ${row.customer.last_name}`.trim(), "Customer")}
                       </p>
-                      <p className="mt-0.5 truncate font-body text-[9px] text-[var(--color-muted-soft)]" title={row.customer.email}>
+                      <p className="mt-0.5 truncate font-inter text-[9px] text-[var(--color-muted-soft)]" title={row.customer.email}>
                         {truncateHalf(row.customer.email, "-")}
                       </p>
                     </td>
-                    <td className="px-2 py-3 font-body text-[10px] text-[var(--color-muted)]">
+                    <td className="px-2 py-3 font-inter text-[10px] text-[var(--color-muted)]">
                       {row.items} item{row.items === 1 ? "" : "s"}
                     </td>
                     <td className="px-2 py-3">
-                      <p className="truncate font-body text-[10px] text-[var(--color-muted)]" title={paymentMethodLabel(row.payment_method)}>
+                      <p className="truncate font-inter text-[10px] text-[var(--color-muted)]" title={paymentMethodLabel(row.payment_method)}>
                         {truncateHalf(paymentMethodLabel(row.payment_method), "-")}
                       </p>
                       <span
-                        className={`mt-1 inline-block whitespace-nowrap rounded-full px-2 py-1 font-body text-[8px] uppercase tracking-[0.08em] ${
+                        className={`mt-1 inline-block whitespace-nowrap rounded-full px-2 py-1 font-inter text-[8px] uppercase tracking-[0.08em] ${
                           paymentBadgeClass[row.payment_status] ?? "border border-[var(--color-border)] text-[var(--color-muted-soft)]"
                         }`}
                       >
@@ -620,18 +620,18 @@ const AdminOrdersPage = () => {
                       </span>
                     </td>
                     <td className="px-2 py-3">
-                      <p className="whitespace-nowrap font-body text-[12px] text-[var(--color-navbar-solid-foreground)]">{formatCurrency(row.total)}</p>
+                      <p className="whitespace-nowrap font-inter text-[12px] text-[var(--color-navbar-solid-foreground)]">{formatCurrency(row.total)}</p>
                     </td>
                     <td className="px-2 py-3">
                       <span
-                        className={`inline-block whitespace-nowrap rounded-full px-2 py-1 font-body text-[8px] uppercase tracking-[0.08em] ${
+                        className={`inline-block whitespace-nowrap rounded-full px-2 py-1 font-inter text-[8px] uppercase tracking-[0.08em] ${
                           statusBadgeClass[row.status] ?? "border border-[var(--color-border)] text-[var(--color-muted)]"
                         }`}
                       >
                         {toTitleCase(row.status)}
                       </span>
                     </td>
-                    <td className="px-2 py-3 font-body text-[10px] text-[var(--color-muted-soft)]">
+                    <td className="px-2 py-3 font-inter text-[10px] text-[var(--color-muted-soft)]">
                       {formatAdminDate(row.created_at)}
                     </td>
                     <td className="px-2 py-3 pr-3 text-right">
@@ -641,7 +641,7 @@ const AdminOrdersPage = () => {
                           event.stopPropagation();
                           navigate(`/admin/orders/${row.order_number}`);
                         }}
-                        className="rounded-full border border-transparent px-2.5 py-1 font-body text-[8px] uppercase tracking-[0.08em] text-[var(--color-accent)] transition-colors hover:border-[rgba(var(--color-primary-rgb),0.25)] hover:text-[var(--color-primary)]"
+                        className="rounded-full border border-transparent px-2.5 py-1 font-inter text-[8px] uppercase tracking-[0.08em] text-[var(--color-accent)] transition-colors hover:border-[rgba(var(--color-primary-rgb),0.25)] hover:text-[var(--color-primary)]"
                       >
                         View
                       </button>
@@ -669,7 +669,7 @@ const AdminOrdersPage = () => {
                 {["Order #", "Customer", "Total", "Action"].map((heading) => (
                   <th
                     key={heading}
-                    className="px-2 py-2 text-left font-body text-[9px] uppercase tracking-[0.1em] text-[var(--color-muted-soft)] first:pl-3 last:pr-3"
+                    className="px-2 py-2 text-left font-inter text-[9px] uppercase tracking-[0.1em] text-[var(--color-muted-soft)] first:pl-3 last:pr-3"
                   >
                     {heading}
                   </th>
@@ -679,19 +679,19 @@ const AdminOrdersPage = () => {
             <tbody>
               {isLoading ? (
                 <tr>
-                  <td colSpan={4} className="px-3 py-9 text-center font-body text-[12px] text-[var(--color-muted-soft)]">
+                  <td colSpan={4} className="px-3 py-9 text-center font-inter text-[12px] text-[var(--color-muted-soft)]">
                     Loading orders...
                   </td>
                 </tr>
               ) : loadError ? (
                 <tr>
-                  <td colSpan={4} className="px-3 py-9 text-center font-body text-[12px] text-[var(--color-danger)]">
+                  <td colSpan={4} className="px-3 py-9 text-center font-inter text-[12px] text-[var(--color-danger)]">
                     {loadError}
                   </td>
                 </tr>
               ) : rows.length === 0 ? (
                 <tr>
-                  <td colSpan={4} className="px-3 py-9 text-center font-body text-[12px] text-[var(--color-muted-soft)]">
+                  <td colSpan={4} className="px-3 py-9 text-center font-inter text-[12px] text-[var(--color-muted-soft)]">
                     No orders found.
                   </td>
                 </tr>
@@ -714,16 +714,16 @@ const AdminOrdersPage = () => {
                       }}
                       className="cursor-pointer border-t border-[rgba(var(--color-primary-rgb),0.1)] transition-colors hover:bg-[rgba(var(--color-primary-rgb),0.04)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-accent)]"
                     >
-                      <td className="px-2 py-2.5 pl-3 font-body text-[10px] uppercase tracking-[0.06em] text-[var(--color-accent)]">
+                      <td className="px-2 py-2.5 pl-3 font-inter text-[10px] uppercase tracking-[0.06em] text-[var(--color-accent)]">
                         <span className="block truncate" title={row.order_number}>{truncateHalf(row.order_number, "-")}</span>
                       </td>
                       <td className="px-2 py-2.5">
-                        <p className="truncate font-body text-[12px] text-[var(--color-navbar-solid-foreground)]" title={customerName}>
+                        <p className="truncate font-inter text-[12px] text-[var(--color-navbar-solid-foreground)]" title={customerName}>
                           {truncateHalf(customerName, "Customer")}
                         </p>
                       </td>
                       <td className="px-2 py-2.5 align-top">
-                        <p className="whitespace-nowrap font-body text-[11px] text-[var(--color-navbar-solid-foreground)]">
+                        <p className="whitespace-nowrap font-inter text-[11px] text-[var(--color-navbar-solid-foreground)]">
                           {formatCurrency(row.total)}
                         </p>
                       </td>
@@ -735,7 +735,7 @@ const AdminOrdersPage = () => {
                               event.stopPropagation();
                               setExpandedCompactRowId((current) => (current === row.id ? null : row.id));
                             }}
-                            className="inline-flex items-center gap-1 rounded-full border px-1.5 py-1 font-body text-[8px] uppercase tracking-[0.08em] text-[var(--color-primary)] transition-colors hover:bg-[rgba(var(--color-primary-rgb),0.06)]"
+                            className="inline-flex items-center gap-1 rounded-full border px-1.5 py-1 font-inter text-[8px] uppercase tracking-[0.08em] text-[var(--color-primary)] transition-colors hover:bg-[rgba(var(--color-primary-rgb),0.06)]"
                             style={{ borderColor: "rgba(var(--color-primary-rgb),0.2)" }}
                           >
                             {isExpanded ? <ChevronUp className="h-3 w-3" /> : <ChevronDown className="h-3 w-3" />}
@@ -747,7 +747,7 @@ const AdminOrdersPage = () => {
                               event.stopPropagation();
                               navigate(`/admin/orders/${row.order_number}`);
                             }}
-                            className="rounded-full border border-transparent px-1.5 py-1 font-body text-[8px] uppercase tracking-[0.08em] text-[var(--color-accent)] transition-colors hover:border-[rgba(var(--color-primary-rgb),0.25)] hover:text-[var(--color-primary)]"
+                            className="rounded-full border border-transparent px-1.5 py-1 font-inter text-[8px] uppercase tracking-[0.08em] text-[var(--color-accent)] transition-colors hover:border-[rgba(var(--color-primary-rgb),0.25)] hover:text-[var(--color-primary)]"
                           >
                             View
                           </button>
@@ -757,7 +757,7 @@ const AdminOrdersPage = () => {
                     isExpanded ? (
                       <tr key={`${row.id}-details`} className="border-t border-[rgba(var(--color-primary-rgb),0.08)] bg-[rgba(var(--color-primary-rgb),0.03)]">
                         <td colSpan={4} className="px-3 py-2.5">
-                          <div className="grid grid-cols-2 gap-x-3 gap-y-2 font-body text-[10px] text-[var(--color-navbar-solid-foreground)]">
+                          <div className="grid grid-cols-2 gap-x-3 gap-y-2 font-inter text-[10px] text-[var(--color-navbar-solid-foreground)]">
                             <p>
                               <span className="mr-1 text-[var(--color-muted)]">Status:</span>
                               {toTitleCase(row.status)}
@@ -805,7 +805,7 @@ const AdminOrdersPage = () => {
             type="button"
             onClick={() => setPage((current) => Math.max(1, current - 1))}
             disabled={page <= 1}
-            className="rounded-full border px-4 py-2 font-body text-[10px] uppercase tracking-[0.1em] text-[var(--color-primary)] transition-colors hover:bg-[rgba(var(--color-primary-rgb),0.06)] disabled:cursor-not-allowed disabled:opacity-40"
+            className="rounded-full border px-4 py-2 font-inter text-[10px] uppercase tracking-[0.1em] text-[var(--color-primary)] transition-colors hover:bg-[rgba(var(--color-primary-rgb),0.06)] disabled:cursor-not-allowed disabled:opacity-40"
             style={{ borderColor: "rgba(var(--color-primary-rgb),0.2)" }}
           >
             Previous
@@ -817,7 +817,7 @@ const AdminOrdersPage = () => {
                 key={pageNumber}
                 type="button"
                 onClick={() => setPage(pageNumber)}
-                className={`h-8 min-w-8 rounded-full px-3 font-body text-[11px] transition-colors ${
+                className={`h-8 min-w-8 rounded-full px-3 font-inter text-[11px] transition-colors ${
                   pageNumber === page
                     ? "bg-[var(--color-primary)] text-white"
                     : "text-[var(--color-muted)] hover:bg-[rgba(var(--color-primary-rgb),0.08)] hover:text-[var(--color-primary)]"
@@ -832,7 +832,7 @@ const AdminOrdersPage = () => {
             type="button"
             onClick={() => setPage((current) => Math.min(totalPages, current + 1))}
             disabled={page >= totalPages}
-            className="rounded-full border px-4 py-2 font-body text-[10px] uppercase tracking-[0.1em] text-[var(--color-primary)] transition-colors hover:bg-[rgba(var(--color-primary-rgb),0.06)] disabled:cursor-not-allowed disabled:opacity-40"
+            className="rounded-full border px-4 py-2 font-inter text-[10px] uppercase tracking-[0.1em] text-[var(--color-primary)] transition-colors hover:bg-[rgba(var(--color-primary-rgb),0.06)] disabled:cursor-not-allowed disabled:opacity-40"
             style={{ borderColor: "rgba(var(--color-primary-rgb),0.2)" }}
           >
             Next

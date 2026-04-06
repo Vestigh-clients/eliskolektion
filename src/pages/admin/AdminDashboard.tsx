@@ -64,8 +64,8 @@ const customTooltip = ({ active, payload, label }: TooltipProps<number, string>)
   const revenue = Number(payload[0]?.value ?? 0);
   return (
     <div className="rounded-[var(--border-radius)] border-none bg-[var(--color-primary)] px-[14px] py-[10px] text-[var(--color-secondary)]">
-      <p className="font-body text-[11px]">{label}</p>
-      <p className="mt-1 font-body text-[11px]">{formatCurrency(revenue)}</p>
+      <p className="font-inter text-[11px]">{label}</p>
+      <p className="mt-1 font-inter text-[11px]">{formatCurrency(revenue)}</p>
     </div>
   );
 };
@@ -80,9 +80,9 @@ const StatCard = ({
   trend: number | null;
 }) => (
   <div className="border-b-2 border-[var(--color-accent)] pb-5">
-    <p className="font-display text-[32px] leading-none text-[var(--color-primary)] md:text-[44px]">{value}</p>
-    <p className="mt-2 font-body text-[10px] uppercase tracking-[0.12em] text-[var(--color-muted-soft)]">{label}</p>
-    <p className={`mt-2 font-body text-[11px] ${trendClass(trend)}`}>{trendLabel(trend)}</p>
+    <p className="font-manrope text-[32px] leading-none text-[var(--color-primary)] md:text-[44px]">{value}</p>
+    <p className="mt-2 font-inter text-[10px] uppercase tracking-[0.12em] text-[var(--color-muted-soft)]">{label}</p>
+    <p className={`mt-2 font-inter text-[11px] ${trendClass(trend)}`}>{trendLabel(trend)}</p>
   </div>
 );
 
@@ -188,14 +188,14 @@ const AdminDashboard = () => {
 
       <section className="mt-12">
         <div className="mb-6 flex flex-wrap items-center justify-between gap-4">
-          <p className="font-body text-[10px] uppercase tracking-[0.2em] text-[var(--color-accent)]">Revenue Overview</p>
+          <p className="font-inter text-[10px] uppercase tracking-[0.2em] text-[var(--color-accent)]">Revenue Overview</p>
           <div className="flex items-center gap-4">
             {periods.map((periodOption) => (
               <button
                 key={periodOption.value}
                 type="button"
                 onClick={() => setPeriod(periodOption.value)}
-                className={`border-b font-body text-[10px] uppercase tracking-[0.12em] ${
+                className={`border-b font-inter text-[10px] uppercase tracking-[0.12em] ${
                   period === periodOption.value ? "border-[var(--color-primary)] text-[var(--color-primary)]" : "border-transparent text-[var(--color-muted-soft)]"
                 }`}
               >
@@ -216,12 +216,12 @@ const AdminDashboard = () => {
                   dataKey="label"
                   tickLine={false}
                   axisLine={false}
-                  tick={{ fontSize: 10, fill: "var(--color-muted-soft)", fontFamily: "var(--font-body)" }}
+                  tick={{ fontSize: 10, fill: "var(--color-muted-soft)", fontFamily: "var(--font-inter)" }}
                 />
                 <YAxis
                   tickLine={false}
                   axisLine={false}
-                  tick={{ fontSize: 10, fill: "var(--color-muted-soft)", fontFamily: "var(--font-body)" }}
+                  tick={{ fontSize: 10, fill: "var(--color-muted-soft)", fontFamily: "var(--font-inter)" }}
                   tickFormatter={(value) => formatCompactCurrency(Number(value))}
                 />
                 <Tooltip content={customTooltip} />
@@ -242,10 +242,10 @@ const AdminDashboard = () => {
       <section className="mt-12 grid gap-10 lg:grid-cols-[3fr_2fr]">
         <div>
           <div className="mb-4 flex items-center justify-between">
-            <p className="font-body text-[10px] uppercase tracking-[0.2em] text-[var(--color-accent)]">Recent Orders</p>
+            <p className="font-inter text-[10px] uppercase tracking-[0.2em] text-[var(--color-accent)]">Recent Orders</p>
             <Link
               to="/admin/orders"
-              className="font-body text-[10px] uppercase tracking-[0.1em] text-[var(--color-accent)] transition-colors hover:text-[var(--color-primary)]"
+              className="font-inter text-[10px] uppercase tracking-[0.1em] text-[var(--color-accent)] transition-colors hover:text-[var(--color-primary)]"
             >
               View All &rarr;
             </Link>
@@ -259,7 +259,7 @@ const AdminDashboard = () => {
                 <div className="h-14 animate-pulse bg-[var(--color-surface-alt)]" />
               </div>
             ) : recentOrders.length === 0 ? (
-              <p className="py-6 font-body text-[11px] text-[var(--color-muted-soft)]">No recent orders.</p>
+              <p className="py-6 font-inter text-[11px] text-[var(--color-muted-soft)]">No recent orders.</p>
             ) : (
               recentOrders.map((order) => (
                 <Link
@@ -267,14 +267,14 @@ const AdminDashboard = () => {
                   to={`/admin/orders/${order.order_number}`}
                   className="grid grid-cols-[1.2fr_1.8fr_1fr_auto] items-center gap-3 border-b border-[var(--color-border)] py-3"
                 >
-                  <p className="font-body text-[11px] uppercase tracking-[0.08em] text-[var(--color-accent)]">{order.order_number}</p>
+                  <p className="font-inter text-[11px] uppercase tracking-[0.08em] text-[var(--color-accent)]">{order.order_number}</p>
                   <div>
-                    <p className="font-body text-[12px] text-[var(--color-primary)]">{order.customer_name}</p>
-                    <p className="font-body text-[10px] text-[var(--color-muted-soft)]">{formatRelativeDate(order.created_at)}</p>
+                    <p className="font-inter text-[12px] text-[var(--color-primary)]">{order.customer_name}</p>
+                    <p className="font-inter text-[10px] text-[var(--color-muted-soft)]">{formatRelativeDate(order.created_at)}</p>
                   </div>
-                  <p className="justify-self-end font-body text-[12px] text-[var(--color-primary)]">{formatCurrency(order.total)}</p>
+                  <p className="justify-self-end font-inter text-[12px] text-[var(--color-primary)]">{formatCurrency(order.total)}</p>
                   <span
-                    className={`rounded-[var(--border-radius)] px-2 py-1 font-body text-[9px] uppercase tracking-[0.12em] ${
+                    className={`rounded-[var(--border-radius)] px-2 py-1 font-inter text-[9px] uppercase tracking-[0.12em] ${
                       statusBadgeClass[order.status] ?? "border border-[var(--color-border)] text-[var(--color-muted)]"
                     }`}
                   >
@@ -287,7 +287,7 @@ const AdminDashboard = () => {
         </div>
 
         <div>
-          <p className="mb-4 font-body text-[10px] uppercase tracking-[0.2em] text-[var(--color-accent)]">Low Stock</p>
+          <p className="mb-4 font-inter text-[10px] uppercase tracking-[0.2em] text-[var(--color-accent)]">Low Stock</p>
           <div className="border-t border-[var(--color-border)]">
             {isLoading ? (
               <div className="space-y-3 py-4">
@@ -295,7 +295,7 @@ const AdminDashboard = () => {
                 <div className="h-12 animate-pulse bg-[var(--color-surface-alt)]" />
               </div>
             ) : lowStockProducts.length === 0 ? (
-              <p className="py-6 font-body text-[11px] text-[var(--color-muted-soft)]">All products well stocked.</p>
+              <p className="py-6 font-inter text-[11px] text-[var(--color-muted-soft)]">All products well stocked.</p>
             ) : (
               lowStockProducts.map((product) => {
                 const stockColor = product.stock_quantity === 0 ? "text-[var(--color-danger)]" : "text-[var(--color-accent)]";
@@ -309,12 +309,12 @@ const AdminDashboard = () => {
                       )}
                     </div>
                     <div className="flex-1">
-                      <p className="font-body text-[12px] text-[var(--color-primary)]">{product.name}</p>
-                      <p className={`font-body text-[11px] ${stockColor}`}>{product.stock_quantity} in stock</p>
+                      <p className="font-inter text-[12px] text-[var(--color-primary)]">{product.name}</p>
+                      <p className={`font-inter text-[11px] ${stockColor}`}>{product.stock_quantity} in stock</p>
                     </div>
                     <Link
                       to={`/admin/products/${product.id}/edit`}
-                      className="font-body text-[10px] uppercase tracking-[0.1em] text-[var(--color-muted-soft)] transition-colors hover:text-[var(--color-primary)]"
+                      className="font-inter text-[10px] uppercase tracking-[0.1em] text-[var(--color-muted-soft)] transition-colors hover:text-[var(--color-primary)]"
                     >
                       Edit
                     </Link>
@@ -327,7 +327,7 @@ const AdminDashboard = () => {
       </section>
 
       <section className="mt-12">
-        <p className="mb-4 font-body text-[10px] uppercase tracking-[0.2em] text-[var(--color-accent)]">Top Sellers This Month</p>
+        <p className="mb-4 font-inter text-[10px] uppercase tracking-[0.2em] text-[var(--color-accent)]">Top Sellers This Month</p>
         <div className="border-t border-[var(--color-border)]">
           {isLoading ? (
             <div className="space-y-3 py-4">
@@ -335,11 +335,11 @@ const AdminDashboard = () => {
               <div className="h-16 animate-pulse bg-[var(--color-surface-alt)]" />
             </div>
           ) : topSellers.length === 0 ? (
-            <p className="py-6 font-body text-[11px] text-[var(--color-muted-soft)]">No top sellers yet.</p>
+            <p className="py-6 font-inter text-[11px] text-[var(--color-muted-soft)]">No top sellers yet.</p>
           ) : (
             topSellers.map((product, index) => (
               <div key={product.id} className="flex items-center gap-4 border-b border-[var(--color-border)] py-4">
-                <p className="w-8 font-display text-[32px] text-[var(--color-border)]">{index + 1}</p>
+                <p className="w-8 font-manrope text-[32px] text-[var(--color-border)]">{index + 1}</p>
                 <div className="h-16 w-12 overflow-hidden bg-[var(--color-surface-alt)]">
                   {product.image_url ? (
                     <img src={product.image_url} alt={product.name} className="h-full w-full object-cover" />
@@ -348,10 +348,10 @@ const AdminDashboard = () => {
                   )}
                 </div>
                 <div className="flex-1">
-                  <p className="font-body text-[12px] text-[var(--color-primary)]">{product.name}</p>
-                  <p className="font-body text-[11px] text-[var(--color-muted)]">{product.total_orders} units sold</p>
+                  <p className="font-inter text-[12px] text-[var(--color-primary)]">{product.name}</p>
+                  <p className="font-inter text-[11px] text-[var(--color-muted)]">{product.total_orders} units sold</p>
                 </div>
-                <p className="font-body text-[12px] text-[var(--color-accent)]">{formatCurrency(product.price * product.total_orders)}</p>
+                <p className="font-inter text-[12px] text-[var(--color-accent)]">{formatCurrency(product.price * product.total_orders)}</p>
               </div>
             ))
           )}
@@ -359,7 +359,7 @@ const AdminDashboard = () => {
       </section>
 
       {!isLoading && !stats ? (
-        <p className="mt-8 font-body text-[12px] text-[var(--color-danger)]">Dashboard data failed to load. Check your admin RLS policies and data access.</p>
+        <p className="mt-8 font-inter text-[12px] text-[var(--color-danger)]">Dashboard data failed to load. Check your admin RLS policies and data access.</p>
       ) : null}
     </div>
   );
