@@ -234,15 +234,15 @@ const AccountProfile = () => {
 
   return (
     <div>
-      <h1 className="font-manrope text-[42px]  text-[var(--color-primary)]">Personal Details</h1>
+      <h1 className="font-manrope text-lg font-bold tracking-tight uppercase text-zinc-900">Personal Details</h1>
 
-      <form onSubmit={handleSubmit} className="mt-8">
-        <div className="mb-8">
-          <div className="flex h-20 w-20 items-center justify-center overflow-hidden rounded-full bg-[var(--color-primary)]">
+      <form onSubmit={handleSubmit} className="mt-5">
+        <div className="mb-5">
+          <div className="flex h-14 w-14 items-center justify-center overflow-hidden rounded-full bg-zinc-900">
             {avatarUrl ? (
               <img src={avatarUrl} alt="Profile avatar" className="h-full w-full object-cover" />
             ) : (
-              <span className="font-inter text-[30px] text-[var(--color-secondary)]">{avatarInitial}</span>
+              <span className="font-inter text-xl text-white">{avatarInitial}</span>
             )}
           </div>
 
@@ -258,12 +258,12 @@ const AccountProfile = () => {
             type="button"
             onClick={() => fileInputRef.current?.click()}
             disabled={isAvatarUploading}
-            className="mt-3 font-inter text-[10px] uppercase tracking-[0.12em] text-[var(--color-accent)] transition-colors hover:text-[var(--color-primary)] disabled:cursor-not-allowed disabled:opacity-60"
+            className="mt-3 font-inter text-[10px] uppercase tracking-[0.12em] text-zinc-500 transition-colors hover:text-zinc-900 disabled:cursor-not-allowed disabled:opacity-60"
           >
             {isAvatarUploading ? "Uploading..." : "Change Photo"}
           </button>
 
-          {avatarError ? <p className="mt-2 font-inter text-[11px] text-[var(--color-danger)]">{avatarError}</p> : null}
+          {avatarError ? <p className="mt-2 font-inter text-[11px] text-red-600">{avatarError}</p> : null}
         </div>
 
         <div className="grid gap-x-6 md:grid-cols-2">
@@ -339,7 +339,7 @@ const AccountProfile = () => {
           />
         </div>
 
-        <div className="mt-8 flex items-center gap-3">
+        <div className="mt-5 flex items-center gap-3">
           <button
             type="button"
             role="switch"
@@ -351,7 +351,7 @@ const AccountProfile = () => {
               }))
             }
             className={`relative h-6 w-11 shrink-0 cursor-pointer overflow-hidden rounded-full border-0 p-0 transition-colors ${
-              formValues.marketingOptIn ? "bg-[var(--color-primary)]" : "bg-[var(--color-border)]"
+              formValues.marketingOptIn ? "bg-zinc-900" : "bg-zinc-200"
             }`}
           >
             <span
@@ -361,12 +361,12 @@ const AccountProfile = () => {
             />
           </button>
 
-          <p className="font-inter text-[12px] text-[var(--color-muted)]">Receive updates on new arrivals and offers</p>
+          <p className="font-inter text-[12px] text-zinc-500">Receive updates on new arrivals and offers</p>
         </div>
 
-        {submitError ? <p className="mt-4 font-inter text-[11px] text-[var(--color-danger)]">{submitError}</p> : null}
+        {submitError ? <p className="mt-4 font-inter text-[11px] text-red-600">{submitError}</p> : null}
         <p
-          className={`mt-4 font-inter text-[12px] text-[var(--color-accent)] transition-opacity duration-500 ${
+          className={`mt-4 font-inter text-[12px] text-[#E8A811] transition-opacity duration-500 ${
             showSavedMessage ? "opacity-100" : "opacity-0"
           }`}
         >
@@ -376,7 +376,7 @@ const AccountProfile = () => {
         <button
           type="submit"
           disabled={isSaving}
-          className="mt-8 rounded-[var(--border-radius)] bg-[var(--color-primary)] px-8 py-3 font-inter text-[11px] uppercase tracking-[0.14em] text-[var(--color-secondary)] transition-colors hover:bg-[var(--color-accent)] hover:text-[var(--color-secondary)] disabled:cursor-not-allowed disabled:opacity-65"
+          className="mt-6 bg-zinc-900 px-8 py-3 font-manrope font-black text-[11px] uppercase tracking-widest text-white transition-colors hover:bg-[#E8A811] hover:text-black disabled:cursor-not-allowed disabled:opacity-65"
         >
           {isSaving ? "Saving..." : "Save Changes"}
         </button>

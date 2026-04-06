@@ -32,7 +32,7 @@ const BestSellerCard = ({ product }: { product: Product }) => {
 
   return (
     <div
-      className="min-w-[260px] group cursor-pointer"
+      className="group cursor-pointer"
       onClick={() => navigate(`/shop/${product.slug}`)}
       role="link"
       tabIndex={0}
@@ -53,7 +53,7 @@ const BestSellerCard = ({ product }: { product: Product }) => {
           <span className="material-symbols-outlined text-zinc-300 text-5xl">image</span>
         )}
       </div>
-      <h4 className="font-manrope font-bold text-sm uppercase tracking-tight text-zinc-900 group-hover:text-[#E8A811] transition-colors">
+      <h4 className="font-manrope font-bold text-sm uppercase tracking-tight text-zinc-900 group-hover:text-[#E8A811] transition-colors truncate">
         {product.name}
       </h4>
       <p className="font-manrope font-black text-sm mt-1">{formatPrice(product.price)}</p>
@@ -134,27 +134,27 @@ const Index = () => {
     <div className="bg-white text-[#1a1c1c] font-inter">
       <main>
         {/* ── Hero ── */}
-        <section className="relative h-[700px] flex items-center bg-zinc-900 overflow-hidden">
+        <section className="relative min-h-[500px] md:h-[700px] flex items-center bg-zinc-900 overflow-hidden">
           <div className="absolute inset-0 z-0">
             <img
               src="/assets/homepage-hero1.png"
               alt="Hero Collection"
               className="w-full h-full object-cover"
             />
-            <div className="absolute inset-0 bg-gradient-to-r from-black/60 via-black/30 to-transparent" />
+            <div className="absolute inset-0 bg-gradient-to-r from-black/70 via-black/40 to-transparent" />
           </div>
 
-          <div className="relative z-10 px-8 lg:px-16 w-full max-w-[1440px] mx-auto">
+          <div className="relative z-10 px-6 lg:px-16 w-full max-w-[1440px] mx-auto py-16 md:py-0">
             <div className="max-w-xl">
-              <span className="text-[#E8A811] font-manrope font-bold uppercase tracking-[0.4em] text-[10px] mb-6 block">
+              <span className="text-[#E8A811] font-manrope font-bold uppercase tracking-[0.4em] text-[10px] mb-4 md:mb-6 block">
                 Season Drop 2024
               </span>
-              <h1 className="font-manrope font-extrabold text-6xl md:text-8xl text-white tracking-tighter leading-[0.9] mb-8 uppercase italic">
+              <h1 className="font-manrope font-extrabold text-4xl sm:text-6xl md:text-8xl text-white tracking-tighter leading-[0.9] mb-6 md:mb-8 uppercase italic">
                 Step Clean,
                 <br />
                 Dress Loud
               </h1>
-              <p className="text-white text-base font-medium mb-10 max-w-sm opacity-90 leading-relaxed font-manrope">
+              <p className="text-white text-sm md:text-base font-medium mb-8 md:mb-10 max-w-sm opacity-90 leading-relaxed font-manrope">
                 The definitive curation of rare footwear and elite streetwear for the modern digital collector.
               </p>
               <div className="flex flex-wrap gap-4">
@@ -175,48 +175,27 @@ const Index = () => {
           </div>
         </section>
 
-        {/* ── Trust Badges ── */}
-        <section className="bg-white py-12 border-b border-zinc-100">
-          <div className="max-w-[1440px] mx-auto px-8 grid grid-cols-1 md:grid-cols-3 gap-10 md:gap-12">
-            {TRUST_BADGES.map((badge) => (
-              <div key={badge.title} className="flex items-center gap-5">
-                <div className="w-12 h-12 flex items-center justify-center bg-zinc-50 rounded-full shrink-0">
-                  <span className="material-symbols-outlined text-black text-2xl">{badge.icon}</span>
-                </div>
-                <div>
-                  <h4 className="font-manrope font-black text-xs uppercase tracking-widest mb-1">
-                    {badge.title}
-                  </h4>
-                  <p className="text-[11px] text-zinc-500 font-medium uppercase tracking-wider font-manrope">
-                    {badge.description}
-                  </p>
-                </div>
-              </div>
-            ))}
-          </div>
-        </section>
-
         {/* ── Category Tiles ── */}
         {categoryTiles.length > 0 ? (
-          <section className="py-24 px-8 max-w-[1440px] mx-auto">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+          <section className="py-14 md:py-20 px-6 md:px-8 max-w-[1440px] mx-auto">
+            <div className="grid grid-cols-2 gap-4 md:gap-8">
               {categoryTiles.slice(0, 2).map((tile) => (
                 <Link
                   key={tile.key}
                   to={tile.to}
-                  className="group relative aspect-[16/9] overflow-hidden bg-zinc-100 block"
+                  className="group relative aspect-[4/3] md:aspect-[16/9] overflow-hidden bg-zinc-100 block"
                 >
                   <img
                     src={tile.imageUrl}
                     alt={tile.imageAlt}
                     className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105"
                   />
-                  <div className="absolute inset-0 bg-black/20 group-hover:bg-black/30 transition-colors" />
-                  <div className="absolute inset-0 flex flex-col justify-center items-center p-8 text-center">
-                    <h3 className="font-manrope text-4xl md:text-5xl text-white font-black uppercase italic tracking-tighter mb-4">
+                  <div className="absolute inset-0 bg-black/30 group-hover:bg-black/40 transition-colors" />
+                  <div className="absolute inset-0 flex flex-col justify-center items-center p-4 md:p-8 text-center">
+                    <h3 className="font-manrope text-xl sm:text-3xl md:text-5xl text-white font-black uppercase italic tracking-tighter mb-2 md:mb-4">
                       {tile.title}
                     </h3>
-                    <span className="bg-white text-black text-[10px] font-manrope font-black uppercase px-8 py-3 tracking-widest group-hover:bg-[#E8A811] transition-colors shadow-lg">
+                    <span className="bg-white text-black text-[9px] md:text-[10px] font-manrope font-black uppercase px-4 md:px-8 py-2 md:py-3 tracking-widest group-hover:bg-[#E8A811] transition-colors shadow-lg">
                       Shop {tile.title}
                     </span>
                   </div>
@@ -224,39 +203,69 @@ const Index = () => {
               ))}
             </div>
 
-            {/* Additional category tiles (3+) in a 3-col sub-grid */}
-            {categoryTiles.length > 2 ? (
-              <div className="grid grid-cols-2 md:grid-cols-3 gap-8 mt-8">
-                {categoryTiles.slice(2).map((tile) => (
-                  <Link
-                    key={tile.key}
-                    to={tile.to}
-                    className="group relative aspect-[16/9] overflow-hidden bg-zinc-100 block"
-                  >
-                    <img
-                      src={tile.imageUrl}
-                      alt={tile.imageAlt}
-                      className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105"
-                    />
-                    <div className="absolute inset-0 bg-black/20 group-hover:bg-black/30 transition-colors" />
-                    <div className="absolute inset-0 flex flex-col justify-center items-center p-6 text-center">
-                      <h3 className="font-manrope text-2xl md:text-3xl text-white font-black uppercase italic tracking-tighter mb-3">
-                        {tile.title}
-                      </h3>
-                      <span className="bg-white text-black text-[10px] font-manrope font-black uppercase px-6 py-2 tracking-widest group-hover:bg-[#E8A811] transition-colors shadow-lg">
-                        Shop Now
-                      </span>
-                    </div>
-                  </Link>
-                ))}
-              </div>
-            ) : null}
+            {/* Additional category tiles (3+) in a balanced sub-grid */}
+            {categoryTiles.length > 2 ? (() => {
+              const subTiles = categoryTiles.slice(2);
+              const hasOdd = subTiles.length % 2 !== 0;
+              const mainTiles = hasOdd ? subTiles.slice(0, -1) : subTiles;
+              const lastTile = hasOdd ? subTiles[subTiles.length - 1] : null;
+              return (
+                <div className="mt-4 md:mt-8 space-y-4 md:space-y-8">
+                  <div className="grid grid-cols-2 md:grid-cols-3 gap-4 md:gap-8">
+                    {mainTiles.map((tile) => (
+                      <Link
+                        key={tile.key}
+                        to={tile.to}
+                        className="group relative aspect-[4/3] overflow-hidden bg-zinc-100 block"
+                      >
+                        <img
+                          src={tile.imageUrl}
+                          alt={tile.imageAlt}
+                          className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105"
+                        />
+                        <div className="absolute inset-0 bg-black/30 group-hover:bg-black/40 transition-colors" />
+                        <div className="absolute inset-0 flex flex-col justify-center items-center p-4 md:p-6 text-center">
+                          <h3 className="font-manrope text-lg sm:text-2xl md:text-3xl text-white font-black uppercase italic tracking-tighter mb-2 md:mb-3">
+                            {tile.title}
+                          </h3>
+                          <span className="bg-white text-black text-[9px] md:text-[10px] font-manrope font-black uppercase px-4 md:px-6 py-2 tracking-widest group-hover:bg-[#E8A811] transition-colors shadow-lg">
+                            Shop Now
+                          </span>
+                        </div>
+                      </Link>
+                    ))}
+                  </div>
+                  {lastTile ? (
+                    <Link
+                      key={lastTile.key}
+                      to={lastTile.to}
+                      className="group relative aspect-[21/9] md:aspect-[21/6] overflow-hidden bg-zinc-100 block w-full"
+                    >
+                      <img
+                        src={lastTile.imageUrl}
+                        alt={lastTile.imageAlt}
+                        className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105"
+                      />
+                      <div className="absolute inset-0 bg-black/30 group-hover:bg-black/40 transition-colors" />
+                      <div className="absolute inset-0 flex flex-col justify-center items-center p-4 md:p-6 text-center">
+                        <h3 className="font-manrope text-2xl sm:text-3xl md:text-4xl text-white font-black uppercase italic tracking-tighter mb-2 md:mb-3">
+                          {lastTile.title}
+                        </h3>
+                        <span className="bg-white text-black text-[9px] md:text-[10px] font-manrope font-black uppercase px-6 md:px-8 py-2 md:py-3 tracking-widest group-hover:bg-[#E8A811] transition-colors shadow-lg">
+                          Shop Now
+                        </span>
+                      </div>
+                    </Link>
+                  ) : null}
+                </div>
+              );
+            })() : null}
           </section>
         ) : null}
 
         {/* ── Current Drops / New Arrivals ── */}
-        <section className="py-24 px-8 max-w-[1440px] mx-auto border-t border-zinc-100">
-          <div className="flex flex-col sm:flex-row justify-between items-end mb-12 gap-4">
+        <section className="py-6 md:py-8 px-6 md:px-8 max-w-[1440px] mx-auto border-t border-zinc-100">
+          <div className="flex flex-col sm:flex-row justify-between items-end mb-8 md:mb-12 gap-4">
             <div className="max-w-md">
               <h2 className="font-manrope text-4xl font-extrabold tracking-tighter uppercase italic">
                 Current Drops
@@ -294,14 +303,14 @@ const Index = () => {
         </section>
 
         {/* ── Best Sellers ── */}
-        <section className="py-24 bg-zinc-50 border-y border-zinc-100">
-          <div className="max-w-[1440px] mx-auto px-8">
-            <div className="flex justify-between items-end mb-12">
+        <section className="py-14 md:py-20 bg-zinc-50 border-y border-zinc-100">
+          <div className="max-w-[1440px] mx-auto px-6 md:px-8">
+            <div className="flex justify-between items-end mb-8 md:mb-12">
               <div>
-                <h2 className="font-manrope text-4xl font-extrabold tracking-tighter uppercase italic">
+                <h2 className="font-manrope text-3xl md:text-4xl font-extrabold tracking-tighter uppercase italic">
                   Best Sellers
                 </h2>
-                <p className="text-zinc-500 mt-2 text-sm uppercase tracking-wider font-medium font-manrope">
+                <p className="text-zinc-500 mt-2 text-xs md:text-sm uppercase tracking-wider font-medium font-manrope">
                   Most coveted pieces in the kolektion.
                 </p>
               </div>
@@ -314,7 +323,7 @@ const Index = () => {
             </div>
 
             {bestSellers.length > 0 ? (
-              <div className="flex gap-6 overflow-x-auto pb-6 hide-scrollbar">
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6">
                 {bestSellers.map((product) => (
                   <BestSellerCard key={product.id} product={product} />
                 ))}
@@ -331,7 +340,7 @@ const Index = () => {
 
         {/* ── Curator's Choice / Trending ── */}
         {newArrivals.length >= 4 ? (
-          <section className="py-24 px-8 max-w-[1440px] mx-auto">
+          <section className="py-14 md:py-20 px-6 md:px-8 max-w-[1440px] mx-auto">
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
               {/* Left: Editorial Image */}
               <div className="relative group">
@@ -417,12 +426,12 @@ const Index = () => {
         ) : null}
 
         {/* ── Newsletter ── */}
-        <section className="py-24 bg-black text-white overflow-hidden relative">
-          <div className="max-w-[1440px] mx-auto px-8 relative z-10 flex flex-col items-center text-center">
-            <h2 className="font-manrope text-5xl md:text-7xl font-extrabold tracking-tighter uppercase italic mb-6">
+        <section className="py-16 md:py-24 bg-black text-white overflow-hidden relative">
+          <div className="max-w-[1440px] mx-auto px-6 md:px-8 relative z-10 flex flex-col items-center text-center">
+            <h2 className="font-manrope text-4xl md:text-7xl font-extrabold tracking-tighter uppercase italic mb-4 md:mb-6">
               Join the Kolektion
             </h2>
-            <p className="text-zinc-400 text-sm md:text-base uppercase tracking-[0.3em] font-medium mb-12 max-w-lg font-manrope">
+            <p className="text-zinc-400 text-sm md:text-base uppercase tracking-[0.3em] font-medium mb-8 md:mb-12 max-w-lg font-manrope">
               Early access to limited drops and exclusive member-only pricing.
             </p>
             <div className="w-full max-w-md">
@@ -450,6 +459,27 @@ const Index = () => {
           {/* Decorative background text */}
           <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-[18vw] font-black text-white/5 uppercase italic pointer-events-none whitespace-nowrap font-manrope select-none">
             KOLEKTION ELITE
+          </div>
+        </section>
+
+        {/* ── Trust Badges ── */}
+        <section className="bg-white py-10 md:py-14 border-b border-zinc-100">
+          <div className="max-w-[1440px] mx-auto px-6 md:px-8 grid grid-cols-1 sm:grid-cols-3 gap-8 md:gap-12">
+            {TRUST_BADGES.map((badge) => (
+              <div key={badge.title} className="flex items-center gap-4">
+                <div className="w-10 h-10 md:w-12 md:h-12 flex items-center justify-center bg-zinc-50 rounded-full shrink-0">
+                  <span className="material-symbols-outlined text-black text-xl md:text-2xl">{badge.icon}</span>
+                </div>
+                <div>
+                  <h4 className="font-manrope font-black text-xs uppercase tracking-widest mb-1">
+                    {badge.title}
+                  </h4>
+                  <p className="text-[11px] text-zinc-500 font-medium uppercase tracking-wider font-manrope">
+                    {badge.description}
+                  </p>
+                </div>
+              </div>
+            ))}
           </div>
         </section>
       </main>

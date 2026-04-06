@@ -13,7 +13,8 @@
       "Bash(curl -sL \"https://app-companion-430619.appspot.com/share/project/16075901609910492037/screen/745a01dda6be4a6bb0c8be61d4b4ac61\" -w \"\\\\nHTTP_STATUS:%{http_code}\")",
       "Bash(npx --yes tsc --noEmit --project \"c:/Users/agyek/vestighclients/eliskolektion/tsconfig.json\")",
       "Bash(node -e \"require\\('child_process'\\).execSync\\('npx tsc --noEmit', {cwd: 'c:/Users/agyek/vestighclients/eliskolektion', stdio: 'pipe'}\\)\")",
-      "Bash(cmd /c \"cd c:\\\\Users\\\\agyek\\\\vestighclients\\\\eliskolektion && npx tsc --noEmit 2>&1\")"
+      "Bash(cmd /c \"cd c:\\\\Users\\\\agyek\\\\vestighclients\\\\eliskolektion && npx tsc --noEmit 2>&1\")",
+      "Bash(cmd /c \"npx tsc --noEmit 2>&1\")"
     ]
   }
 }

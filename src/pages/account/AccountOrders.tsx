@@ -80,9 +80,9 @@ const AccountOrders = () => {
 
   return (
     <div>
-      <h1 className="font-manrope text-[42px]  text-[var(--color-primary)]">My Orders</h1>
+      <h1 className="font-manrope text-lg font-bold tracking-tight uppercase text-zinc-900">My Orders</h1>
 
-      <div className="mt-7 border-b border-[var(--color-border)] pb-5">
+      <div className="mt-5 border-b border-zinc-100 pb-4">
         <div className="flex flex-wrap gap-2.5">
           {filterTabs.map((filter) => {
             const isActive = activeFilter === filter.value;
@@ -92,10 +92,10 @@ const AccountOrders = () => {
                 key={filter.value}
                 type="button"
                 onClick={() => setActiveFilter(filter.value)}
-                className={`rounded-[var(--border-radius)] border px-5 py-2.5 font-inter text-[11px] font-light uppercase tracking-[0.1em] transition-colors duration-300 ${
+                className={`border px-5 py-2.5 font-inter text-[11px] font-light uppercase tracking-[0.1em] transition-colors duration-300 ${
                   isActive
-                    ? "border-[var(--color-primary)] bg-[var(--color-primary)] text-[var(--color-secondary)]"
-                    : "border-[var(--color-border)] text-[var(--color-primary)] hover:border-[var(--color-primary)]"
+                    ? "border-zinc-900 bg-zinc-900 text-white"
+                    : "border-zinc-200 text-zinc-700 hover:border-zinc-900"
                 }`}
               >
                 {filter.label}
@@ -112,13 +112,13 @@ const AccountOrders = () => {
           <div className="lux-order-pulse h-[96px] w-full" />
         </div>
       ) : loadError ? (
-        <p className="mt-8 font-inter text-[12px] text-[var(--color-danger)]">{loadError}</p>
+        <p className="mt-8 font-inter text-[12px] text-red-600">{loadError}</p>
       ) : filteredOrders.length === 0 ? (
         <div className="mt-10">
-          <p className="font-manrope text-[24px]  text-[var(--color-muted)]">You haven't placed any orders yet.</p>
+          <p className="font-manrope text-sm font-medium text-zinc-400">You haven't placed any orders yet.</p>
           <Link
             to="/shop"
-            className="mt-5 inline-block font-inter text-[10px] uppercase tracking-[0.12em] text-[var(--color-accent)] transition-colors hover:text-[var(--color-primary)]"
+            className="mt-5 inline-block font-manrope font-black text-[10px] uppercase tracking-widest border-b-2 border-zinc-900 pb-1 hover:text-[#E8A811] hover:border-[#E8A811] transition-all"
           >
             Start Shopping
           </Link>

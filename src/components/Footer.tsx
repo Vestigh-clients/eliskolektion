@@ -98,13 +98,13 @@ const Footer = () => {
   };
 
   const linkClass = "text-zinc-500 text-[10px] uppercase tracking-widest font-bold font-manrope hover:text-[#E8A811] transition-colors";
-  const headingClass = "text-[11px] font-black uppercase tracking-widest text-black mb-8 font-manrope";
+  const headingClass = "text-[11px] font-black uppercase tracking-widest text-black mb-4 md:mb-8 font-manrope";
 
   return (
-    <footer className="bg-white border-t border-zinc-100 pt-24 pb-10 md:pb-12">
+    <footer className="bg-white border-t border-zinc-100 pt-4 pb-4">
       <div className="px-6 w-full max-w-[1440px] mx-auto md:px-8">
         {/* Main grid */}
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-12 md:gap-16 mb-10 md:mb-14">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-x-6 gap-y-10 md:gap-16 mb-10 md:mb-14">
           {/* Brand */}
           <div>
             <div className="text-xl font-black text-black uppercase mb-6 tracking-tighter italic font-manrope">
@@ -197,7 +197,7 @@ const Footer = () => {
         </div>
 
         {/* Bottom bar */}
-        <div className="flex flex-col md:flex-row justify-between items-center gap-6 border-t border-zinc-100 pt-6 md:pt-8">
+        <div className="flex flex-col md:flex-row justify-between items-center gap-6 border-t border-zinc-100 pt-2">
           <div className="text-[10px] text-zinc-400 uppercase tracking-[0.2em] font-bold font-manrope">
             &copy; {new Date().getFullYear()} {storefrontConfig.storeName}. Crafted for the Digital Curator.
           </div>

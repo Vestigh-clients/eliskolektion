@@ -22,22 +22,22 @@ const formatOrderDate = (value: string): string => {
 
 const getStatusClassName = (status: AccountOrderStatus): string => {
   if (status === "delivered") {
-    return "border-[var(--color-primary)] bg-[var(--color-primary)] text-[var(--color-secondary)]";
+    return "border-zinc-900 bg-zinc-900 text-white";
   }
 
   if (status === "shipped") {
-    return "border-[var(--color-accent)] text-[var(--color-accent)]";
+    return "border-[#E8A811] text-[#E8A811]";
   }
 
   if (status === "cancelled") {
-    return "border-[var(--color-danger)] text-[var(--color-danger)]";
+    return "border-red-600 text-red-600";
   }
 
   if (status === "confirmed" || status === "processing") {
-    return "border-[var(--color-primary)] text-[var(--color-primary)]";
+    return "border-zinc-900 text-zinc-900";
   }
 
-  return "border-[var(--color-border)] bg-[var(--color-secondary)] text-[var(--color-muted)]";
+  return "border-zinc-200 bg-zinc-50 text-zinc-400";
 };
 
 const getItemsSummaryText = (order: AccountOrderSummary): string => {
@@ -54,32 +54,32 @@ const AccountOrderList = ({ orders }: AccountOrderListProps) => {
       {orders.map((order, index) => (
         <article
           key={order.id}
-          className={`py-6 ${index < orders.length - 1 ? "border-b border-[var(--color-border)]" : ""}`}
+          className={`py-6 ${index < orders.length - 1 ? "border-b border-zinc-100" : ""}`}
         >
           <div className="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
             <div className="min-w-0">
-              <p className="font-body text-[12px] uppercase tracking-[0.1em] text-[var(--color-accent)]">{order.order_number}</p>
-              <p className="mt-1 font-body text-[11px] text-[var(--color-muted-soft)]">{formatOrderDate(order.created_at)}</p>
+              <p className="font-manrope font-black text-[12px] uppercase tracking-[0.1em] text-[#E8A811]">{order.order_number}</p>
+              <p className="mt-1 font-inter text-[11px] text-zinc-400">{formatOrderDate(order.created_at)}</p>
 
               <span
-                className={`mt-4 inline-flex rounded-[var(--border-radius)] border px-3 py-[4px] font-body text-[9px] uppercase tracking-[0.15em] ${getStatusClassName(order.status)}`}
+                className={`mt-4 inline-flex border px-3 py-[4px] font-inter text-[9px] uppercase tracking-[0.15em] ${getStatusClassName(order.status)}`}
               >
                 {formatStatusLabel(order.status)}
               </span>
 
-              <p className="mt-4 truncate font-body text-[12px] text-[var(--color-muted)]">{getItemsSummaryText(order)}</p>
+              <p className="mt-4 truncate font-inter text-[12px] text-zinc-500">{getItemsSummaryText(order)}</p>
 
               <Link
                 to={`/orders/${order.order_number}`}
-                className="mt-4 inline-block font-body text-[10px] uppercase tracking-[0.12em] text-[var(--color-accent)] transition-colors hover:text-[var(--color-primary)]"
+                className="mt-4 inline-block font-manrope font-black text-[10px] uppercase tracking-widest border-b-2 border-zinc-900 pb-[2px] hover:text-[#E8A811] hover:border-[#E8A811] transition-all"
               >
                 View Order
               </Link>
             </div>
 
             <div className="md:text-right">
-              <p className="font-body text-[10px] uppercase tracking-[0.12em] text-[var(--color-muted-soft)]">Order Total</p>
-              <p className="mt-1 font-body text-[13px] text-[var(--color-primary)]">{formatPrice(order.total)}</p>
+              <p className="font-inter text-[10px] uppercase tracking-[0.12em] text-zinc-400">Order Total</p>
+              <p className="mt-1 font-manrope font-bold text-[13px] text-zinc-900">{formatPrice(order.total)}</p>
             </div>
           </div>
         </article>

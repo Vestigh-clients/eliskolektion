@@ -35,7 +35,6 @@ import {
 } from "@/types/product";
 import { ChevronLeft, ChevronRight, Star, X } from "lucide-react";
 
-const TRYON_CATEGORY_KEYWORDS = ["mens", "womens", "men", "women", "bag", "shoe"];
 const REVIEW_STAR_LEVELS = [5, 4, 3, 2, 1] as const;
 
 const createEmptyReviewSummary = (): ProductReviewSummary => ({
@@ -116,7 +115,7 @@ const RelatedProductTile = ({ product }: { product: Product }) => {
   return (
     <article className="group cursor-pointer">
       <Link to={`/shop/${product.slug}`} className="mb-4 block">
-        <div className="relative overflow-hidden bg-surface-container-lowest">
+        <div className="relative overflow-hidden bg-white">
           {imageUrl && !hasImageError ? (
             <img
               src={imageUrl}
@@ -134,7 +133,7 @@ const RelatedProductTile = ({ product }: { product: Product }) => {
         </div>
       </Link>
       <Link to={`/shop/${product.slug}`} className="block space-y-1">
-        <h4 className="font-headline font-bold text-sm text-black">{product.name}</h4>
+        <h4 className="font-manrope font-bold text-sm text-black">{product.name}</h4>
         {product.categories?.name ? (
           <p className="text-zinc-500 text-[10px] uppercase font-medium mb-1">{product.categories.name}</p>
         ) : null}
@@ -494,6 +493,10 @@ const ProductPage = () => {
   const [reviewMessage, setReviewMessage] = useState<string | null>(null);
   const [reviewMessageTone, setReviewMessageTone] = useState<"success" | "error" | "info">("info");
   const [isReviewSectionOpen, setReviewSectionOpen] = useState(false);
+  const [accordionNarrative, setAccordionNarrative] = useState(true);
+  const [accordionSpecs, setAccordionSpecs] = useState(false);
+  const [accordionShipping, setAccordionShipping] = useState(false);
+  const [visibleReviewCount, setVisibleReviewCount] = useState(3);
   const [shippingRates, setShippingRates] = useState<ShippingRateRow[]>([]);
   const [isShippingRatesLoading, setIsShippingRatesLoading] = useState(true);
   const [paymentSettings, setPaymentSettings] = useState<PaymentSettings | null>(null);
@@ -650,8 +653,10 @@ const ProductPage = () => {
       setReviewSummary(createEmptyReviewSummary());
       setReviewsError(null);
       setIsReviewsLoading(false);
+      setVisibleReviewCount(3);
       return;
     }
+    setVisibleReviewCount(3);
 
     let isMounted = true;
 
@@ -803,9 +808,7 @@ const ProductPage = () => {
     product?.price,
   );
   const normalizedCategorySlug = categorySlug.toLowerCase();
-  const showTryOn = storeConfig.features.tryOn
-    ? TRYON_CATEGORY_KEYWORDS.some((keyword) => normalizedCategorySlug.includes(keyword))
-    : false;
+  const showTryOn = storeConfig.features.tryOn && Boolean(primaryImage);
   const isShoeCategory = normalizedCategorySlug.includes("shoe");
   const isBagCategory = normalizedCategorySlug.includes("bag");
   const sizeOptionType = useMemo(
@@ -1277,7 +1280,7 @@ const ProductPage = () => {
 
   return (
     <div className="bg-surface font-manrope text-on-surface">
-      <main className={`mx-auto max-w-screen-2xl px-4 pt-10 md:px-8 ${showTryOn ? "pb-44 md:pb-14" : "pb-28 md:pb-14"}`}>
+      <main className={`mx-auto max-w-[1440px] px-8 pt-6 ${showTryOn ? "pb-44 md:pb-0" : "pb-28 md:pb-0"}`}>
         <nav aria-label="Breadcrumb" className="py-6 flex flex-wrap items-center gap-2 text-[10px] uppercase tracking-widest text-zinc-400 font-medium">
           <Link to="/" className="transition-colors hover:text-black">
             Home
@@ -1298,7 +1301,7 @@ const ProductPage = () => {
           <div className="flex flex-col gap-3 lg:col-span-7 lg:gap-4">
             {galleryImages.length > 0 ? (
               <>
-                <div className="overflow-hidden bg-surface-container-lowest mb-4">
+                <div className="overflow-hidden bg-white mb-4">
                   <button
                     type="button"
                     onClick={handleOpenLightbox}
@@ -1334,7 +1337,7 @@ const ProductPage = () => {
                           setHasActiveImageError(false);
                           setLightboxIndex(index);
                         }}
-                        className={`w-24 h-24 overflow-hidden bg-surface-container-lowest transition-all duration-200 ${
+                        className={`w-24 h-24 overflow-hidden bg-white transition-all duration-200 ${
                           isActive
                             ? "border border-black"
                             : "border border-zinc-200 hover:border-black"
@@ -1374,14 +1377,28 @@ const ProductPage = () => {
                     {stockStatus.text}
                   </span>
                 </div>
-                <h1 className="font-headline font-extrabold text-4xl mb-4 tracking-tighter text-black leading-tight">{product.name}</h1>
+                <h1 className="font-manrope font-extrabold text-4xl mb-4 tracking-tighter text-black leading-tight">{product.name}</h1>
+                {storeConfig.features.reviews && reviewSummary.totalReviews > 0 ? (
+                  <button
+                    type="button"
+                    onClick={() => {
+                      document.getElementById("reviews-section")?.scrollIntoView({ behavior: "smooth" });
+                    }}
+                    className="flex items-center gap-2 mb-3 group w-fit"
+                  >
+                    <StarRating rating={reviewAverageRating} className="h-3.5 w-3.5" />
+                    <span className="text-[10px] font-bold uppercase tracking-widest text-zinc-400 group-hover:text-black transition-colors">
+                      {reviewSummary.totalReviews} {reviewSummary.totalReviews === 1 ? "review" : "reviews"}
+                    </span>
+                  </button>
+                ) : null}
                 {(product.short_description || product.description) ? (
-                  <p className="font-headline text-zinc-500 text-sm mb-4 leading-relaxed max-w-md">
+                  <p className="font-manrope text-zinc-500 text-sm mb-4 leading-relaxed max-w-md">
                     {product.short_description || product.description}
                   </p>
                 ) : null}
                 <div className="flex items-baseline gap-4 mb-8">
-                  <p className="text-2xl font-bold text-black font-headline">{formatPrice(displayPrice)}</p>
+                  <p className="text-2xl font-bold text-black font-manrope">{formatPrice(displayPrice)}</p>
                   {displayComparePrice !== null && displayComparePrice > displayPrice ? (
                     <span className="text-sm text-zinc-400 line-through">{formatPrice(displayComparePrice)}</span>
                   ) : null}
@@ -1406,20 +1423,17 @@ const ProductPage = () => {
 
                     return (
                       <div key={optionType.id} className="space-y-3">
-                        <div className="flex items-center justify-between">
-                          <label className="text-xs font-bold uppercase tracking-widest text-on-surface/70">{optionTypeLabel}</label>
-                          <div className="flex items-center gap-4">
-                            {selectedValue ? <span className="text-xs text-on-surface-variant">{selectedValue.value}</span> : null}
-                            {sizeOptionType?.id === optionType.id ? (
-                              <button
-                                type="button"
-                                onClick={() => setSizeGuideOpen(true)}
-                                className="text-xs text-on-surface-variant underline transition-colors hover:text-primary"
-                              >
-                                Size Guide
-                              </button>
-                            ) : null}
-                          </div>
+                        <div className="flex items-center justify-between mb-4">
+                          <label className="text-xs font-bold uppercase tracking-widest text-zinc-500">{optionTypeLabel}</label>
+                          {sizeOptionType?.id === optionType.id ? (
+                            <button
+                              type="button"
+                              onClick={() => setSizeGuideOpen(true)}
+                              className="text-[10px] font-bold uppercase tracking-widest text-black underline decoration-[#E8A811] underline-offset-4"
+                            >
+                              Size Guide
+                            </button>
+                          ) : null}
                         </div>
 
                         {renderAsSwatches ? (
@@ -1547,73 +1561,109 @@ const ProductPage = () => {
               </div>
 
               <div className="border-t border-zinc-200">
-                <details className="group border-b border-zinc-200" open>
-                  <summary className="flex justify-between items-center cursor-pointer py-6 list-none">
-                    <span className="font-headline font-bold text-sm tracking-tight text-black">Product Narrative</span>
-                    <span className="material-symbols-outlined text-[#E8A811] group-open:rotate-180 transition-transform">expand_more</span>
-                  </summary>
-                  <div className="pb-6 text-zinc-500 text-sm leading-relaxed">
-                    {product.description || product.short_description || "No description available."}
-                  </div>
-                </details>
+                <div className="border-b border-zinc-200">
+                  <button
+                    type="button"
+                    onClick={() => setAccordionNarrative((v) => !v)}
+                    className="flex justify-between items-center w-full py-6 text-left"
+                  >
+                    <span className="font-manrope font-bold text-sm tracking-tight text-black">Product Narrative</span>
+                    <span className={`material-symbols-outlined text-[#E8A811] transition-transform duration-200 ${accordionNarrative ? "rotate-180" : "rotate-0"}`}>expand_more</span>
+                  </button>
+                  {accordionNarrative ? (
+                    <div className="pb-6 text-zinc-500 text-sm leading-relaxed">
+                      {product.description || product.short_description || "No description available."}
+                    </div>
+                  ) : null}
+                </div>
 
-                <details className="group border-b border-zinc-200">
-                  <summary className="flex justify-between items-center cursor-pointer py-6 list-none">
-                    <span className="font-headline font-bold text-sm tracking-tight text-black">Technical Specifications</span>
-                    <span className="material-symbols-outlined text-[#E8A811] group-open:rotate-180 transition-transform">expand_more</span>
-                  </summary>
-                  <div className="pb-6 space-y-2 text-zinc-500 text-sm">
-                    {productInfoLines.map((line, index) => (
-                      <p key={`${line}-${index}`}>· {line}</p>
-                    ))}
-                  </div>
-                </details>
+                <div className="border-b border-zinc-200">
+                  <button
+                    type="button"
+                    onClick={() => setAccordionSpecs((v) => !v)}
+                    className="flex justify-between items-center w-full py-6 text-left"
+                  >
+                    <span className="font-manrope font-bold text-sm tracking-tight text-black">Technical Specifications</span>
+                    <span className={`material-symbols-outlined text-[#E8A811] transition-transform duration-200 ${accordionSpecs ? "rotate-180" : "rotate-0"}`}>expand_more</span>
+                  </button>
+                  {accordionSpecs ? (
+                    <div className="pb-6 space-y-2 text-zinc-500 text-sm">
+                      {productInfoLines.map((line, index) => (
+                        <p key={`${line}-${index}`}>· {line}</p>
+                      ))}
+                    </div>
+                  ) : null}
+                </div>
 
-                <details className="group border-b border-zinc-200">
-                  <summary className="flex justify-between items-center cursor-pointer py-6 list-none">
-                    <span className="font-headline font-bold text-sm tracking-tight text-black">Shipping &amp; Returns</span>
-                    <span className="material-symbols-outlined text-[#E8A811] group-open:rotate-180 transition-transform">expand_more</span>
-                  </summary>
-                  <div className="pb-6 text-zinc-500 text-sm leading-relaxed">
-                    {paymentMethodsSummary} Returns are accepted within 7 days of delivery in unworn condition with all original tags and packaging intact.
-                  </div>
-                </details>
+                <div className="border-b border-zinc-200">
+                  <button
+                    type="button"
+                    onClick={() => setAccordionShipping((v) => !v)}
+                    className="flex justify-between items-center w-full py-6 text-left"
+                  >
+                    <span className="font-manrope font-bold text-sm tracking-tight text-black">Shipping &amp; Returns</span>
+                    <span className={`material-symbols-outlined text-[#E8A811] transition-transform duration-200 ${accordionShipping ? "rotate-180" : "rotate-0"}`}>expand_more</span>
+                  </button>
+                  {accordionShipping ? (
+                    <div className="pb-6 text-zinc-500 text-sm leading-relaxed">
+                      {paymentMethodsSummary} Returns are accepted within 7 days of delivery in unworn condition with all original tags and packaging intact.
+                    </div>
+                  ) : null}
+                </div>
               </div>
             </div>
           </div>
         </div>
 
         {storeConfig.features.reviews ? (
-          <section className="mb-24 border-t border-zinc-100 pt-16">
-            <div className="flex flex-col lg:flex-row gap-16">
-              <div className="lg:w-1/3">
-                <h2 className="font-headline font-extrabold text-2xl tracking-tighter text-black mb-6">Customer Reviews</h2>
-                <div className="flex items-center gap-4 mb-4">
-                  <span className="text-5xl font-extrabold font-headline text-black">{reviewAverageRating.toFixed(1)}</span>
+          <section id="reviews-section" className={relatedProducts.length > 0 ? "mb-16" : "mb-0 pb-16"}>
+            {/* Section header */}
+            <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4 mb-10 pb-6 border-b border-zinc-100">
+              <div>
+                <p className="text-[10px] uppercase tracking-[0.2em] font-bold text-[#E8A811] mb-2">What People Say</p>
+                <h2 className="font-manrope font-extrabold text-3xl tracking-tighter text-black">Customer Reviews</h2>
+              </div>
+              {reviewSummary.totalReviews > 0 ? (
+                <div className="flex items-center gap-3">
+                  <span className="text-4xl font-extrabold font-manrope text-black leading-none">{reviewAverageRating.toFixed(1)}</span>
                   <div>
                     <StarRating rating={reviewAverageRating} className="h-4 w-4" />
                     <p className="text-[10px] uppercase tracking-widest font-bold text-zinc-400 mt-1">
-                      Based on {reviewSummary.totalReviews} review{reviewSummary.totalReviews === 1 ? "" : "s"}
+                      {reviewSummary.totalReviews} {reviewSummary.totalReviews === 1 ? "review" : "reviews"}
                     </p>
                   </div>
                 </div>
+              ) : null}
+            </div>
 
-                <div className="space-y-2 mb-8">
-                  {REVIEW_STAR_LEVELS.map((ratingLevel) => {
-                    const ratingCount = reviewSummary.distribution[ratingLevel];
-                    const widthPercent =
-                      reviewSummary.totalReviews > 0 ? Math.round((ratingCount / reviewSummary.totalReviews) * 100) : 0;
-                    return (
-                      <div key={`rating-level-${ratingLevel}`} className="flex items-center gap-3">
-                        <span className="text-[10px] font-bold w-3">{ratingLevel}</span>
-                        <div className="flex-1 h-1.5 bg-zinc-100 rounded-full overflow-hidden">
-                          <div className="h-full bg-[#E8A811]" style={{ width: `${widthPercent}%` }} />
-                        </div>
-                        <span className="text-[10px] text-zinc-400 w-8 text-right">{widthPercent}%</span>
-                      </div>
-                    );
-                  })}
-                </div>
+            <div className="flex flex-col lg:flex-row gap-12">
+              {/* Left panel: rating breakdown + write review */}
+              <div className="lg:w-72 shrink-0">
+                {reviewSummary.totalReviews > 0 ? (
+                  <div className="bg-zinc-50 p-6 mb-6">
+                    <p className="text-[10px] uppercase tracking-widest font-bold text-zinc-400 mb-4">Rating Breakdown</p>
+                    <div className="space-y-2.5">
+                      {REVIEW_STAR_LEVELS.map((ratingLevel) => {
+                        const ratingCount = reviewSummary.distribution[ratingLevel];
+                        const widthPercent =
+                          reviewSummary.totalReviews > 0 ? Math.round((ratingCount / reviewSummary.totalReviews) * 100) : 0;
+                        return (
+                          <div key={`rating-level-${ratingLevel}`} className="flex items-center gap-3">
+                            <div className="flex items-center gap-0.5 w-20 shrink-0">
+                              {Array.from({ length: ratingLevel }, (_, i) => (
+                                <Star key={i} className="h-3 w-3 text-[#E8A811]" fill="currentColor" strokeWidth={0} />
+                              ))}
+                            </div>
+                            <div className="flex-1 h-1.5 bg-zinc-200 rounded-full overflow-hidden">
+                              <div className="h-full bg-[#E8A811] rounded-full transition-all duration-500" style={{ width: `${widthPercent}%` }} />
+                            </div>
+                            <span className="text-[10px] text-zinc-400 w-7 text-right shrink-0">{ratingCount}</span>
+                          </div>
+                        );
+                      })}
+                    </div>
+                  </div>
+                ) : null}
 
                 {!isAuthenticated ? (
                   <Link
@@ -1623,12 +1673,10 @@ const ProductPage = () => {
                     Sign In to Write a Review
                   </Link>
                 ) : existingReview ? (
-                  <div className="border border-zinc-200 p-4">
-                    <p className="text-xs uppercase tracking-widest text-zinc-500">{existingReviewMessage}</p>
-                    <div className="mt-2">
-                      <StarRating rating={existingReview.rating} className="h-4 w-4" />
-                    </div>
-                    <p className="mt-2 text-xs text-zinc-400">Submitted on {formatReviewDate(existingReview.createdAt)}</p>
+                  <div className="bg-zinc-50 border-l-2 border-[#E8A811] p-4">
+                    <p className="text-[10px] uppercase tracking-widest font-bold text-zinc-500 mb-2">{existingReviewMessage}</p>
+                    <StarRating rating={existingReview.rating} className="h-4 w-4" />
+                    <p className="mt-2 text-[10px] text-zinc-400">Submitted {formatReviewDate(existingReview.createdAt)}</p>
                   </div>
                 ) : (
                   <div className="space-y-3">
@@ -1637,10 +1685,10 @@ const ProductPage = () => {
                       onClick={() => setReviewSectionOpen((current) => !current)}
                       className="w-full border-2 border-black py-4 text-[10px] font-bold uppercase tracking-widest hover:bg-black hover:text-white transition-all"
                     >
-                      {isReviewSectionOpen ? "Cancel Review" : "Write a Review"}
+                      {isReviewSectionOpen ? "Cancel" : "Write a Review"}
                     </button>
                     {isReviewSectionOpen ? (
-                      <div className="space-y-3 border border-zinc-200 p-4">
+                      <div className="space-y-3 bg-zinc-50 p-5">
                         {reviewMessage ? (
                           <p className={`text-xs ${reviewMessageTone === "error" ? "text-[var(--theme-danger)]" : reviewMessageTone === "success" ? "text-[var(--theme-success)]" : "text-zinc-500"}`}>
                             {reviewMessage}
@@ -1651,7 +1699,7 @@ const ProductPage = () => {
                         ) : (
                           <>
                             <div>
-                              <p className="mb-2 text-[10px] uppercase tracking-widest text-zinc-400">Rating</p>
+                              <p className="mb-2 text-[10px] uppercase tracking-widest text-zinc-400">Your Rating</p>
                               <div className="flex items-center gap-1">
                                 {Array.from({ length: 5 }, (_, index) => {
                                   const value = index + 1;
@@ -1665,9 +1713,9 @@ const ProductPage = () => {
                                       aria-label={`Rate ${value} star${value === 1 ? "" : "s"}`}
                                     >
                                       <Star
-                                        className={`h-5 w-5 ${isSelected ? "text-[#E8A811]" : "text-zinc-300"}`}
+                                        className={`h-6 w-6 ${isSelected ? "text-[#E8A811]" : "text-zinc-300"}`}
                                         fill={isSelected ? "currentColor" : "none"}
-                                        strokeWidth={1.7}
+                                        strokeWidth={1.5}
                                       />
                                     </button>
                                   );
@@ -1679,14 +1727,14 @@ const ProductPage = () => {
                               onChange={(event) => setReviewTitle(event.target.value)}
                               placeholder="Review title (optional)"
                               maxLength={80}
-                              className="w-full h-10 border border-zinc-200 px-3 text-sm text-black outline-none focus:border-black"
+                              className="w-full h-10 bg-white border border-zinc-200 px-3 text-sm text-black outline-none focus:border-black"
                             />
                             <textarea
                               value={reviewBody}
                               onChange={(event) => setReviewBody(event.target.value)}
-                              rows={3}
+                              rows={4}
                               placeholder="Tell shoppers what stood out about this product."
-                              className="w-full border border-zinc-200 px-3 py-2 text-sm leading-relaxed text-black outline-none focus:border-black"
+                              className="w-full bg-white border border-zinc-200 px-3 py-2 text-sm leading-relaxed text-black outline-none focus:border-black"
                             />
                             <button
                               type="button"
@@ -1708,34 +1756,72 @@ const ProductPage = () => {
                 )}
               </div>
 
-              <div className="lg:w-2/3 space-y-10">
+              {/* Right panel: review list */}
+              <div className="flex-1 min-w-0">
                 {isReviewsLoading ? (
-                  <p className="text-sm text-zinc-400">Loading reviews...</p>
+                  <div className="space-y-4">
+                    {[1, 2].map((i) => (
+                      <div key={i} className="bg-zinc-50 p-6 animate-pulse">
+                        <div className="h-3 w-24 bg-zinc-200 rounded mb-3" />
+                        <div className="h-4 w-48 bg-zinc-200 rounded mb-3" />
+                        <div className="h-3 w-full bg-zinc-100 rounded mb-2" />
+                        <div className="h-3 w-3/4 bg-zinc-100 rounded" />
+                      </div>
+                    ))}
+                  </div>
                 ) : reviewsError ? (
                   <p className="text-sm text-[var(--theme-danger)]">{reviewsError}</p>
                 ) : reviews.length === 0 ? (
-                  <p className="text-sm text-zinc-400">No reviews yet. Be the first to share your experience.</p>
+                  <div className="bg-zinc-50 px-8 py-14 text-center">
+                    <p className="text-sm font-medium text-zinc-400 mb-1">No reviews yet</p>
+                    <p className="text-xs text-zinc-300">Be the first to share your experience.</p>
+                  </div>
                 ) : (
                   <>
-                    {reviews.map((review) => (
-                      <div key={review.id} className="border-b border-zinc-100 pb-10 last:border-0">
-                        <div className="flex justify-between items-start mb-4">
-                          <div>
-                            <div className="mb-2">
-                              <StarRating rating={review.rating} className="h-4 w-4" />
+                    <div className="space-y-4">
+                      {reviews.slice(0, visibleReviewCount).map((review) => {
+                        const initials = review.authorDisplayName
+                          .split(" ")
+                          .map((part) => part[0] ?? "")
+                          .slice(0, 2)
+                          .join("")
+                          .toUpperCase();
+                        return (
+                          <div key={review.id} className="bg-zinc-50 p-6">
+                            <div className="flex items-start gap-4">
+                              {/* Avatar */}
+                              <div className="shrink-0 h-9 w-9 rounded-full bg-black text-white flex items-center justify-center text-[11px] font-bold tracking-wide">
+                                {initials}
+                              </div>
+                              <div className="flex-1 min-w-0">
+                                <div className="flex flex-wrap items-center justify-between gap-2 mb-2">
+                                  <div>
+                                    <p className="text-[11px] font-bold text-black leading-none mb-1">{review.authorDisplayName}</p>
+                                    <p className="text-[10px] text-zinc-400 uppercase tracking-wider">{formatReviewDate(review.createdAt)}</p>
+                                  </div>
+                                  <StarRating rating={review.rating} className="h-3.5 w-3.5" />
+                                </div>
+                                {review.title ? (
+                                  <h4 className="font-manrope font-bold text-sm text-black mb-2">{review.title}</h4>
+                                ) : null}
+                                <p className="text-zinc-500 text-sm leading-relaxed">{review.body}</p>
+                              </div>
                             </div>
-                            {review.title ? (
-                              <h4 className="font-headline font-bold text-sm text-black">{review.title}</h4>
-                            ) : null}
                           </div>
-                          <div className="text-right">
-                            <p className="text-[10px] font-bold text-black">{review.authorDisplayName}</p>
-                            <p className="text-[10px] text-zinc-400 uppercase tracking-tighter">{formatReviewDate(review.createdAt)}</p>
-                          </div>
-                        </div>
-                        <p className="text-zinc-500 text-sm leading-relaxed max-w-2xl">{review.body}</p>
+                        );
+                      })}
+                    </div>
+                    {visibleReviewCount < reviews.length ? (
+                      <div className="flex justify-center pt-8">
+                        <button
+                          type="button"
+                          onClick={() => setVisibleReviewCount((n) => n + 3)}
+                          className="text-[10px] font-bold uppercase tracking-widest text-black underline underline-offset-8 decoration-[#E8A811] hover:text-[#E8A811] transition-colors"
+                        >
+                          Load More Reviews
+                        </button>
                       </div>
-                    ))}
+                    ) : null}
                   </>
                 )}
               </div>
@@ -1744,10 +1830,13 @@ const ProductPage = () => {
         ) : null}
 
         {relatedProducts.length > 0 ? (
-          <section className="mb-24">
-            <div className="flex items-center justify-between mb-10">
-              <h2 className="font-headline font-extrabold text-2xl tracking-tighter text-black">The Curator's Choice</h2>
-              <Link to="/shop" className="text-[10px] font-bold uppercase tracking-widest text-[#E8A811] hover:text-black transition-colors">
+          <section className="mb-0 pb-16">
+            <div className="flex items-end justify-between mb-10 pb-6 border-b border-zinc-100">
+              <div>
+                <p className="text-[10px] uppercase tracking-[0.2em] font-bold text-[#E8A811] mb-2">Style It With</p>
+                <h2 className="font-manrope font-extrabold text-3xl tracking-tighter text-black">Complete the Look</h2>
+              </div>
+              <Link to="/shop" className="text-[10px] font-bold uppercase tracking-widest text-zinc-400 hover:text-black transition-colors">
                 View All
               </Link>
             </div>

@@ -212,18 +212,18 @@ const TryOnModal = ({ product, isOpen, onClose }: TryOnModalProps) => {
         <button
           type="button"
           onClick={handleClose}
-          className="absolute right-5 top-5 z-10 text-[var(--color-muted)] transition-colors duration-200 hover:text-[var(--color-primary)]"
+          className="absolute right-5 top-5 z-10 text-zinc-500 transition-colors duration-200 hover:text-black"
           aria-label="Close try-on modal"
         >
           <X size={20} strokeWidth={1.4} />
         </button>
 
-        <h2 className="mb-1 font-display text-[28px] italic text-[var(--color-primary)]">Try it On</h2>
-        <p className="mb-8 font-body text-[12px] text-[var(--color-muted-soft)]">{product.name}</p>
+        <h2 className="mb-1 font-headline text-[28px] font-extrabold tracking-tight text-black">Try it On</h2>
+        <p className="mb-8 font-manrope text-[12px] text-zinc-500">{product.name}</p>
 
         {tryOnState === "upload" ? (
           <div>
-            <p className="mb-4 font-body text-[10px] uppercase tracking-[0.2em] text-[var(--color-accent)]">Your Photo</p>
+            <p className="mb-4 font-manrope text-[10px] uppercase tracking-[0.2em] text-zinc-500">Your Photo</p>
 
             {!modelPreview ? (
               <button
@@ -241,7 +241,7 @@ const TryOnModal = ({ product, isOpen, onClose }: TryOnModalProps) => {
                 <button
                   type="button"
                   onClick={() => fileInputRef.current?.click()}
-                  className="mt-3 font-body text-[10px] uppercase tracking-[0.15em] text-[var(--color-accent)]"
+                  className="mt-3 font-manrope text-[10px] uppercase tracking-[0.15em] text-black transition-colors hover:text-zinc-700"
                 >
                   Change photo
                 </button>
@@ -258,7 +258,7 @@ const TryOnModal = ({ product, isOpen, onClose }: TryOnModalProps) => {
 
             <div className="my-6 border-b border-[var(--color-border)]" />
 
-            <p className="mb-3 font-body text-[10px] uppercase tracking-[0.2em] text-[var(--color-accent)]">Trying On</p>
+            <p className="mb-3 font-manrope text-[10px] uppercase tracking-[0.2em] text-zinc-500">Trying On</p>
 
             <div className="flex items-start gap-4">
               <img
@@ -267,8 +267,8 @@ const TryOnModal = ({ product, isOpen, onClose }: TryOnModalProps) => {
                 className="h-[85px] w-[64px] rounded-[var(--border-radius)] object-cover"
               />
               <div>
-                <p className="font-body text-[12px] text-[var(--color-primary)]">{product.name}</p>
-                <p className="mt-1 font-body text-[10px] uppercase tracking-[0.15em] text-[var(--color-accent)]">{product.categories.name}</p>
+                <p className="font-manrope text-[12px] text-black">{product.name}</p>
+                <p className="mt-1 font-manrope text-[10px] uppercase tracking-[0.15em] text-zinc-500">{product.categories.name}</p>
               </div>
             </div>
 
@@ -276,7 +276,7 @@ const TryOnModal = ({ product, isOpen, onClose }: TryOnModalProps) => {
               type="button"
               onClick={handleStartTryOn}
               disabled={!modelFile}
-              className="mt-6 w-full rounded-[var(--border-radius)] bg-[var(--color-primary)] px-4 py-[18px] font-body text-[11px] uppercase tracking-[0.18em] text-[var(--color-secondary)] transition-colors duration-300 hover:bg-[var(--color-accent)] hover:text-[var(--color-secondary)] disabled:cursor-not-allowed disabled:opacity-40"
+              className="mt-6 w-full rounded-[var(--border-radius)] bg-black px-4 py-[18px] font-manrope text-[11px] font-bold uppercase tracking-[0.18em] text-white transition-colors duration-300 hover:bg-zinc-800 disabled:cursor-not-allowed disabled:opacity-40"
             >
               Start Try-On
             </button>
@@ -285,28 +285,27 @@ const TryOnModal = ({ product, isOpen, onClose }: TryOnModalProps) => {
 
         {tryOnState === "processing" ? (
           <div>
-            <p className="mb-8 text-center font-display text-[24px] italic text-[var(--color-primary)]">Creating your try-on</p>
+            <p className="mb-8 text-center font-headline text-[24px] font-bold tracking-tight text-black">Creating your try-on</p>
 
-            <div className="relative h-[3px] w-full overflow-hidden rounded-[var(--border-radius)] bg-[var(--color-surface)]">
+            <div className="relative h-[3px] w-full overflow-hidden rounded-[var(--border-radius)] bg-zinc-200">
               {progress === 0 ? (
                 <div
                   className="absolute top-0 h-full w-[30%]"
                   style={{
-                    background:
-                      "linear-gradient(90deg, transparent 0%, var(--color-accent) 50%, transparent 100%)",
+                    background: "linear-gradient(90deg, transparent 0%, rgba(24,24,27,0.6) 50%, transparent 100%)",
                     animation: "lux-tryon-shimmer 1.5s ease-in-out infinite",
                   }}
                 />
               ) : (
                 <div
-                  className="h-full rounded-[var(--border-radius)] bg-[var(--color-accent)] transition-all duration-500 ease-in-out"
+                  className="h-full rounded-[var(--border-radius)] bg-black transition-all duration-500 ease-in-out"
                   style={{ width: `${Math.min(100, Math.max(0, progress))}%` }}
                 />
               )}
             </div>
 
             {isRetrying ? (
-              <p className="mt-4 text-center font-body text-[11px] text-[var(--color-muted)]">
+              <p className="mt-4 text-center font-manrope text-[11px] text-zinc-500">
                 {`Retrying (${retryCount}): ${retryReason ?? "request retry in progress"}`}
               </p>
             ) : null}
@@ -315,7 +314,7 @@ const TryOnModal = ({ product, isOpen, onClose }: TryOnModalProps) => {
 
         {tryOnState === "result" ? (
           <div>
-            <p className="mb-4 font-body text-[10px] uppercase tracking-[0.2em] text-[var(--color-accent)]">Try-On Complete</p>
+            <p className="mb-4 font-manrope text-[10px] uppercase tracking-[0.2em] text-zinc-500">Try-On Complete</p>
 
             {resultImage ? (
               <img
@@ -338,7 +337,7 @@ const TryOnModal = ({ product, isOpen, onClose }: TryOnModalProps) => {
                   link.download = `${normalizedStoreName}-tryon-${product.slug}.png`;
                   link.click();
                 }}
-                className="flex-1 rounded-[var(--border-radius)] bg-[var(--color-primary)] px-4 py-4 font-body text-[11px] uppercase tracking-[0.18em] text-[var(--color-secondary)] transition-colors duration-300 hover:bg-[var(--color-accent)] hover:text-[var(--color-secondary)]"
+                className="flex-1 rounded-[var(--border-radius)] bg-black px-4 py-4 font-manrope text-[11px] font-bold uppercase tracking-[0.18em] text-white transition-colors duration-300 hover:bg-zinc-800"
               >
                 Download Photo
               </button>
@@ -346,7 +345,7 @@ const TryOnModal = ({ product, isOpen, onClose }: TryOnModalProps) => {
               <button
                 type="button"
                 onClick={resetTryOn}
-                className="flex-1 rounded-[var(--border-radius)] border border-[var(--color-primary)] bg-transparent px-4 py-4 font-body text-[11px] uppercase tracking-[0.18em] text-[var(--color-primary)] transition-colors duration-300 hover:bg-[var(--color-primary)] hover:text-[var(--color-secondary)]"
+                className="flex-1 rounded-[var(--border-radius)] border border-zinc-300 bg-transparent px-4 py-4 font-manrope text-[11px] font-bold uppercase tracking-[0.18em] text-black transition-colors duration-300 hover:border-black hover:bg-black hover:text-white"
               >
                 Try Another Photo
               </button>
@@ -357,14 +356,14 @@ const TryOnModal = ({ product, isOpen, onClose }: TryOnModalProps) => {
         {tryOnState === "error" ? (
           <div className="py-2 text-center">
             <AlertCircle size={40} strokeWidth={1.25} className="mx-auto mb-4 text-[var(--color-danger)]" />
-            <p className="mb-6 font-display text-[22px] italic leading-[1.2] text-[var(--color-primary)]">
+            <p className="mb-6 font-headline text-[22px] font-bold leading-[1.2] text-black">
               {errorMessage ?? "Something went wrong. Please try again."}
             </p>
 
             <button
               type="button"
               onClick={resetTryOn}
-              className="w-full rounded-[var(--border-radius)] bg-[var(--color-primary)] px-4 py-4 font-body text-[11px] uppercase tracking-[0.18em] text-[var(--color-secondary)] transition-colors duration-300 hover:bg-[var(--color-accent)] hover:text-[var(--color-secondary)]"
+              className="w-full rounded-[var(--border-radius)] bg-black px-4 py-4 font-manrope text-[11px] font-bold uppercase tracking-[0.18em] text-white transition-colors duration-300 hover:bg-zinc-800"
             >
               Try Again
             </button>

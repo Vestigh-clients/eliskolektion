@@ -112,9 +112,9 @@ const AccountPassword = () => {
 
   return (
     <div>
-      <h1 className="font-manrope text-[42px]  text-[var(--color-primary)]">Change Password</h1>
+      <h1 className="font-manrope text-lg font-bold tracking-tight uppercase text-zinc-900">Change Password</h1>
 
-      <form onSubmit={handleSubmit} className="mt-8 max-w-[400px]">
+      <form onSubmit={handleSubmit} className="mt-5 max-w-[400px]">
         <AccountInputField
           id="account-current-password"
           type={showCurrentPassword ? "text" : "password"}
@@ -129,7 +129,7 @@ const AccountPassword = () => {
             <button
               type="button"
               onClick={() => setShowCurrentPassword((previous) => !previous)}
-              className="inline-flex text-[var(--color-muted)] transition-colors hover:text-[var(--color-primary)]"
+              className="inline-flex text-zinc-400 transition-colors hover:text-zinc-900"
               aria-label={showCurrentPassword ? "Hide current password" : "Show current password"}
             >
               {showCurrentPassword ? <EyeOff size={16} strokeWidth={1.35} /> : <Eye size={16} strokeWidth={1.35} />}
@@ -151,7 +151,7 @@ const AccountPassword = () => {
             <button
               type="button"
               onClick={() => setShowNewPassword((previous) => !previous)}
-              className="inline-flex text-[var(--color-muted)] transition-colors hover:text-[var(--color-primary)]"
+              className="inline-flex text-zinc-400 transition-colors hover:text-zinc-900"
               aria-label={showNewPassword ? "Hide new password" : "Show new password"}
             >
               {showNewPassword ? <EyeOff size={16} strokeWidth={1.35} /> : <Eye size={16} strokeWidth={1.35} />}
@@ -173,7 +173,7 @@ const AccountPassword = () => {
             <button
               type="button"
               onClick={() => setShowConfirmPassword((previous) => !previous)}
-              className="inline-flex text-[var(--color-muted)] transition-colors hover:text-[var(--color-primary)]"
+              className="inline-flex text-zinc-400 transition-colors hover:text-zinc-900"
               aria-label={showConfirmPassword ? "Hide confirm password" : "Show confirm password"}
             >
               {showConfirmPassword ? (
@@ -185,13 +185,13 @@ const AccountPassword = () => {
           }
         />
 
-        {submitError ? <p className="mt-4 font-inter text-[11px] text-[var(--color-danger)]">{submitError}</p> : null}
-        {successMessage ? <p className="mt-4 font-inter text-[12px] text-[var(--color-accent)]">{successMessage}</p> : null}
+        {submitError ? <p className="mt-4 font-inter text-[11px] text-red-600">{submitError}</p> : null}
+        {successMessage ? <p className="mt-4 font-inter text-[12px] text-[#E8A811]">{successMessage}</p> : null}
 
         <button
           type="submit"
           disabled={isSubmitting}
-          className="mt-8 rounded-[var(--border-radius)] bg-[var(--color-primary)] px-8 py-3 font-inter text-[11px] uppercase tracking-[0.14em] text-[var(--color-secondary)] transition-colors hover:bg-[var(--color-accent)] hover:text-[var(--color-secondary)] disabled:cursor-not-allowed disabled:opacity-65"
+          className="mt-6 bg-zinc-900 px-8 py-3 font-manrope font-black text-[11px] uppercase tracking-widest text-white transition-colors hover:bg-[#E8A811] hover:text-black disabled:cursor-not-allowed disabled:opacity-65"
         >
           {isSubmitting ? "Updating..." : "Update Password"}
         </button>

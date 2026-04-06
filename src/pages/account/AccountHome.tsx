@@ -13,20 +13,20 @@ const AccountHome = () => {
       : user?.email ?? "My Account";
 
   return (
-    <div className="bg-[var(--color-secondary)] px-6 py-[80px] sm:px-6">
+    <div className="bg-white px-6 py-[80px] sm:px-6">
       <div className="mx-auto max-w-[720px]">
-        <p className="font-inter text-[10px] uppercase tracking-[0.2em] text-[var(--color-accent)]">Account</p>
-        <h1 className="mt-3 font-manrope text-[40px]  font-light leading-none text-[var(--color-primary)] sm:text-[52px]">
+        <p className="font-inter text-[10px] uppercase tracking-[0.2em] text-[#E8A811]">Account</p>
+        <h1 className="mt-3 font-manrope text-[40px] font-extrabold tracking-tighter uppercase text-zinc-900 sm:text-[52px]">
           {displayName}
         </h1>
-        <p className="mt-4 font-inter text-[13px] font-light leading-[1.8] text-[var(--color-muted)]">
+        <p className="mt-4 font-inter text-[13px] leading-[1.8] text-zinc-500">
           Manage your profile and orders from here.
         </p>
 
         <div className="mt-10 grid gap-3 sm:max-w-[340px]">
           <Link
             to="/account/orders"
-            className="rounded-[var(--border-radius)] border border-[var(--color-border)] px-5 py-[14px] font-inter text-[11px] uppercase tracking-[0.14em] text-[var(--color-primary)] transition-colors hover:border-[var(--color-primary)]"
+            className="border border-zinc-200 px-5 py-[14px] font-inter text-[11px] uppercase tracking-[0.14em] text-zinc-900 transition-colors hover:border-zinc-900"
           >
             My Orders
           </Link>
@@ -34,7 +34,7 @@ const AccountHome = () => {
           <button
             type="button"
             onClick={requestSignOut}
-            className="rounded-[var(--border-radius)] bg-[var(--color-primary)] px-5 py-[14px] text-left font-inter text-[11px] uppercase tracking-[0.14em] text-[var(--color-secondary)] transition-colors hover:bg-[var(--color-accent)] hover:text-[var(--color-secondary)]"
+            className="bg-zinc-900 px-5 py-[14px] text-left font-manrope font-black text-[11px] uppercase tracking-widest text-white transition-colors hover:bg-[#E8A811] hover:text-black"
           >
             Sign Out
           </button>

@@ -57,7 +57,7 @@ export const AccountInputField = ({
   const hasValue = value.trim().length > 0;
   const shouldFloatLabel = isFocused || hasValue || type === "date";
   const showSuccess = touched && hasValue && !error && !readOnly;
-  const borderClass = error ? "border-[var(--color-danger)]" : showSuccess ? "border-[var(--color-accent)]" : "border-[var(--color-border)]";
+  const borderClass = error ? "border-red-500" : showSuccess ? "border-[#E8A811]" : "border-zinc-200";
 
   return (
     <div className="pt-[14px]">
@@ -75,26 +75,26 @@ export const AccountInputField = ({
             setIsFocused(false);
             onBlur();
           }}
-          className={`w-full border-0 border-b ${borderClass} bg-transparent pb-[10px] pt-[16px] pr-8 font-body text-[14px] text-[var(--color-primary)] transition-colors duration-200 placeholder:text-transparent focus:border-[var(--color-primary)] focus:outline-none ${readOnly ? "cursor-not-allowed text-[var(--color-muted)]" : ""}`}
+          className={`w-full border-0 border-b ${borderClass} bg-transparent pb-[10px] pt-[16px] pr-8 font-body text-[14px] text-zinc-900 transition-colors duration-200 placeholder:text-transparent focus:border-zinc-900 focus:outline-none ${readOnly ? "cursor-not-allowed text-zinc-400" : ""}`}
         />
 
         <label
           htmlFor={id}
           className={`pointer-events-none absolute left-0 font-body transition-all duration-200 ${
             shouldFloatLabel
-              ? "top-[2px] text-[10px] uppercase tracking-[0.12em] text-[var(--color-accent)]"
-              : "top-[20px] text-[14px] text-[var(--color-muted)]"
+              ? "top-[2px] text-[10px] uppercase tracking-[0.12em] text-[#E8A811]"
+              : "top-[20px] text-[14px] text-zinc-400"
           }`}
         >
           {label}
-          {required ? <span className="ml-[2px] text-[var(--color-danger)]">*</span> : null}
+          {required ? <span className="ml-[2px] text-red-600">*</span> : null}
         </label>
 
         {trailingControl ? <div className="absolute right-0 top-[17px]">{trailingControl}</div> : null}
       </div>
 
-      {helperText ? <p className="mt-[6px] font-body text-[11px] text-[var(--color-muted-soft)]">{helperText}</p> : null}
-      {error ? <p className="mt-[6px] font-body text-[11px] text-[var(--color-danger)]">{error}</p> : null}
+      {helperText ? <p className="mt-[6px] font-body text-[11px] text-zinc-400">{helperText}</p> : null}
+      {error ? <p className="mt-[6px] font-body text-[11px] text-red-600">{error}</p> : null}
     </div>
   );
 };
@@ -113,20 +113,20 @@ export const AccountSelectField = ({
 }: AccountSelectFieldProps) => {
   const hasValue = value.trim().length > 0;
   const showSuccess = touched && hasValue && !error;
-  const borderClass = error ? "border-[var(--color-danger)]" : showSuccess ? "border-[var(--color-accent)]" : "border-[var(--color-border)]";
+  const borderClass = error ? "border-red-500" : showSuccess ? "border-[#E8A811]" : "border-zinc-200";
 
   return (
     <div className="pt-[14px]">
-      <label htmlFor={id} className="font-body text-[10px] uppercase tracking-[0.12em] text-[var(--color-accent)]">
+      <label htmlFor={id} className="font-body text-[10px] uppercase tracking-[0.12em] text-[#E8A811]">
         {label}
-        {required ? <span className="ml-[2px] text-[var(--color-danger)]">*</span> : null}
+        {required ? <span className="ml-[2px] text-red-600">*</span> : null}
       </label>
       <select
         id={id}
         value={value}
         onChange={(event) => onChange(event.target.value)}
         onBlur={onBlur}
-        className={`mt-[8px] h-[42px] w-full border-0 border-b ${borderClass} bg-transparent font-body text-[14px] text-[var(--color-primary)] outline-none transition-colors focus:border-[var(--color-primary)]`}
+        className={`mt-[8px] h-[42px] w-full border-0 border-b ${borderClass} bg-transparent font-body text-[14px] text-zinc-900 outline-none transition-colors focus:border-zinc-900`}
       >
         {options.map((option) => (
           <option key={option.value} value={option.value}>
@@ -135,8 +135,8 @@ export const AccountSelectField = ({
         ))}
       </select>
 
-      {helperText ? <p className="mt-[6px] font-body text-[11px] text-[var(--color-muted-soft)]">{helperText}</p> : null}
-      {error ? <p className="mt-[6px] font-body text-[11px] text-[var(--color-danger)]">{error}</p> : null}
+      {helperText ? <p className="mt-[6px] font-body text-[11px] text-zinc-400">{helperText}</p> : null}
+      {error ? <p className="mt-[6px] font-body text-[11px] text-red-600">{error}</p> : null}
     </div>
   );
 };
@@ -157,13 +157,13 @@ export const AccountTextareaField = ({
 }: AccountTextareaFieldProps) => {
   const hasValue = value.trim().length > 0;
   const showSuccess = touched && hasValue && !error;
-  const borderClass = error ? "border-[var(--color-danger)]" : showSuccess ? "border-[var(--color-accent)]" : "border-[var(--color-border)]";
+  const borderClass = error ? "border-red-500" : showSuccess ? "border-[#E8A811]" : "border-zinc-200";
 
   return (
     <div className="pt-[14px]">
-      <label htmlFor={id} className="font-body text-[10px] uppercase tracking-[0.12em] text-[var(--color-accent)]">
+      <label htmlFor={id} className="font-body text-[10px] uppercase tracking-[0.12em] text-[#E8A811]">
         {label}
-        {required ? <span className="ml-[2px] text-[var(--color-danger)]">*</span> : null}
+        {required ? <span className="ml-[2px] text-red-600">*</span> : null}
       </label>
       <textarea
         id={id}
@@ -173,16 +173,16 @@ export const AccountTextareaField = ({
         placeholder={placeholder}
         onChange={(event) => onChange(event.target.value)}
         onBlur={onBlur}
-        className={`mt-[8px] w-full border-0 border-b ${borderClass} bg-transparent pb-[10px] font-body text-[14px] text-[var(--color-primary)] outline-none transition-colors placeholder:text-[var(--color-muted-soft)] focus:border-[var(--color-primary)]`}
+        className={`mt-[8px] w-full border-0 border-b ${borderClass} bg-transparent pb-[10px] font-body text-[14px] text-zinc-900 outline-none transition-colors placeholder:text-zinc-400 focus:border-zinc-900`}
       />
 
       {maxLength ? (
-        <p className="mt-[6px] text-right font-body text-[10px] text-[var(--color-muted-soft)]">
+        <p className="mt-[6px] text-right font-body text-[10px] text-zinc-400">
           {value.length}/{maxLength}
         </p>
       ) : null}
-      {helperText ? <p className="mt-[6px] font-body text-[11px] text-[var(--color-muted-soft)]">{helperText}</p> : null}
-      {error ? <p className="mt-[6px] font-body text-[11px] text-[var(--color-danger)]">{error}</p> : null}
+      {helperText ? <p className="mt-[6px] font-body text-[11px] text-zinc-400">{helperText}</p> : null}
+      {error ? <p className="mt-[6px] font-body text-[11px] text-red-600">{error}</p> : null}
     </div>
   );
 };

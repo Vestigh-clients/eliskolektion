@@ -89,21 +89,21 @@ const AccountLayout = () => {
   );
 
   return (
-    <div className="bg-[var(--color-secondary)]">
+    <div className="bg-white">
       <div className="mx-auto w-full max-w-[1240px] lg:grid lg:grid-cols-[260px_minmax(0,1fr)]">
-        <div className="border-b border-[var(--color-border)] px-6 py-6 sm:px-8 lg:hidden">
+        <div className="border-b border-zinc-100 px-6 py-6 sm:px-8 lg:hidden">
           <div className="flex items-center gap-3">
-            <div className="flex h-12 w-12 items-center justify-center rounded-full bg-[var(--color-primary)] font-inter text-[18px] text-[var(--color-secondary)]">
+            <div className="flex h-12 w-12 items-center justify-center rounded-full bg-zinc-900 font-inter text-[18px] text-white">
               {avatarInitial}
             </div>
             <div>
-              <p className="font-manrope text-[20px]  text-[var(--color-primary)]">{fullName || "My Account"}</p>
-              <p className="font-inter text-[11px] text-[var(--color-muted)]">{email}</p>
+              <p className="font-manrope text-[18px] font-bold text-zinc-900">{fullName || "My Account"}</p>
+              <p className="font-inter text-[11px] text-zinc-500">{email}</p>
             </div>
           </div>
 
           <div className="mt-5 overflow-x-auto">
-            <nav className="flex min-w-max items-center gap-5 border-b border-[var(--color-border)] pb-2">
+            <nav className="flex min-w-max items-center gap-5 border-b border-zinc-100 pb-2">
               {accountNavLinks.map((link) => {
                 const isActive = isActiveRoute(location.pathname, link.to);
 
@@ -113,8 +113,8 @@ const AccountLayout = () => {
                     to={link.to}
                     className={`whitespace-nowrap border-b-2 pb-[6px] font-inter text-[11px] uppercase tracking-[0.12em] transition-colors ${
                       isActive
-                        ? "border-[var(--color-accent)] text-[var(--color-primary)]"
-                        : "border-transparent text-[var(--color-muted)] hover:text-[var(--color-primary)]"
+                        ? "border-[#E8A811] text-zinc-900"
+                        : "border-transparent text-zinc-400 hover:text-zinc-900"
                     }`}
                   >
                     {link.label}
@@ -125,7 +125,7 @@ const AccountLayout = () => {
               <button
                 type="button"
                 onClick={requestSignOut}
-                className="whitespace-nowrap border-b-2 border-transparent pb-[6px] font-inter text-[11px] uppercase tracking-[0.12em] text-[var(--color-muted-soft)] transition-colors hover:text-[var(--color-danger)]"
+                className="whitespace-nowrap border-b-2 border-transparent pb-[6px] font-inter text-[11px] uppercase tracking-[0.12em] text-zinc-400 transition-colors hover:text-red-600"
               >
                 Sign Out
               </button>
@@ -133,14 +133,14 @@ const AccountLayout = () => {
           </div>
         </div>
 
-        <aside className="hidden border-r border-[var(--color-border)] px-8 py-[48px] lg:block">
+        <aside className="hidden border-r border-zinc-100 px-8 py-[48px] lg:block">
           <div className="flex items-center gap-3">
-            <div className="flex h-12 w-12 items-center justify-center rounded-full bg-[var(--color-primary)] font-inter text-[18px] text-[var(--color-secondary)]">
+            <div className="flex h-12 w-12 items-center justify-center rounded-full bg-zinc-900 font-inter text-[18px] text-white">
               {avatarInitial}
             </div>
             <div>
-              <p className="font-manrope text-[20px]  text-[var(--color-primary)]">{fullName || "My Account"}</p>
-              <p className="font-inter text-[11px] text-[var(--color-muted)]">{email}</p>
+              <p className="font-manrope text-[18px] font-bold text-zinc-900">{fullName || "My Account"}</p>
+              <p className="font-inter text-[11px] text-zinc-500">{email}</p>
             </div>
           </div>
 
@@ -154,8 +154,8 @@ const AccountLayout = () => {
                   to={link.to}
                   className={`block border-l-2 py-[10px] pl-4 font-inter text-[11px] uppercase tracking-[0.12em] transition-colors ${
                     isActive
-                      ? "border-[var(--color-accent)] text-[var(--color-primary)]"
-                      : "border-transparent text-[var(--color-muted)] hover:text-[var(--color-primary)]"
+                      ? "border-[#E8A811] text-zinc-900"
+                      : "border-transparent text-zinc-400 hover:text-zinc-900"
                   }`}
                 >
                   {link.label}
@@ -166,19 +166,19 @@ const AccountLayout = () => {
             <button
               type="button"
               onClick={requestSignOut}
-              className="mt-4 block w-full border-l-2 border-transparent py-[10px] pl-4 text-left font-inter text-[11px] uppercase tracking-[0.12em] text-[var(--color-muted-soft)] transition-colors hover:text-[var(--color-danger)]"
+              className="mt-4 block w-full border-l-2 border-transparent py-[10px] pl-4 text-left font-inter text-[11px] uppercase tracking-[0.12em] text-zinc-400 transition-colors hover:text-red-600"
             >
               Sign Out
             </button>
           </nav>
 
           {isProfileLoading ? (
-            <p className="mt-10 font-inter text-[11px] uppercase tracking-[0.12em] text-[var(--color-muted-soft)]">Loading profile...</p>
+            <p className="mt-10 font-inter text-[11px] uppercase tracking-[0.12em] text-zinc-400">Loading profile...</p>
           ) : null}
-          {profileError ? <p className="mt-4 font-inter text-[11px] text-[var(--color-danger)]">{profileError}</p> : null}
+          {profileError ? <p className="mt-4 font-inter text-[11px] text-red-600">{profileError}</p> : null}
         </aside>
 
-        <section className="px-6 py-10 sm:px-8 lg:px-[60px] lg:py-[48px]">
+        <section className="px-5 py-6 sm:px-6 lg:px-10 lg:py-8">
           <Outlet context={contextValue} />
         </section>
       </div>

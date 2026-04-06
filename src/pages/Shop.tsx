@@ -855,37 +855,40 @@ const Shop = () => {
           </div>
         </section>
 
+        {/* ── Mobile sticky toolbar — lives outside the flex row so sticky works ── */}
+        <div
+          className="lg:hidden sticky z-20 bg-[#f9f9f9] flex items-center justify-between py-3 -mx-8 px-8 border-b border-zinc-100 mb-6"
+          style={{ top: "var(--navbar-height)" }}
+        >
+          <button
+            type="button"
+            onClick={() => setIsMobileFilterOpen(true)}
+            className="flex items-center gap-2 text-xs font-black uppercase tracking-widest border-b border-black pb-1 font-manrope"
+          >
+            <span className="material-symbols-outlined text-sm">tune</span>
+            Filters{activeFilterCount > 0 ? ` (${activeFilterCount})` : ""}
+          </button>
+          <div className="flex items-center gap-3">
+            <span className="text-xs text-zinc-400 font-manrope uppercase tracking-widest">
+              {loading ? "—" : filteredProducts.length} pieces
+            </span>
+            <select
+              value={sortBy}
+              onChange={(e) => setSortBy(e.target.value as SortKey)}
+              className="text-xs font-bold border-0 bg-transparent focus:ring-0 cursor-pointer font-manrope"
+            >
+              <option value="newest">Newest</option>
+              <option value="price-low">Price ↑</option>
+              <option value="price-high">Price ↓</option>
+              <option value="popular">Popular</option>
+            </select>
+          </div>
+        </div>
+
         <div className="flex flex-col lg:flex-row gap-12">
 
           {/* ── Sidebar ── */}
           <aside className="w-full lg:w-64 flex-shrink-0">
-            {/* Mobile toolbar */}
-            <div className="lg:hidden mb-6 flex items-center justify-between">
-              <button
-                type="button"
-                onClick={() => setIsMobileFilterOpen(true)}
-                className="flex items-center gap-2 text-xs font-black uppercase tracking-widest border-b border-black pb-1 font-manrope"
-              >
-                <span className="material-symbols-outlined text-sm">tune</span>
-                Filters{activeFilterCount > 0 ? ` (${activeFilterCount})` : ""}
-              </button>
-              <div className="flex items-center gap-3">
-                <span className="text-xs text-zinc-400 font-manrope uppercase tracking-widest">
-                  {loading ? "—" : filteredProducts.length} pieces
-                </span>
-                <select
-                  value={sortBy}
-                  onChange={(e) => setSortBy(e.target.value as SortKey)}
-                  className="text-xs font-bold border-0 bg-transparent focus:ring-0 cursor-pointer font-manrope"
-                >
-                  <option value="newest">Newest</option>
-                  <option value="price-low">Price ↑</option>
-                  <option value="price-high">Price ↓</option>
-                  <option value="popular">Popular</option>
-                </select>
-              </div>
-            </div>
-
             {/* Desktop sticky filter panel */}
             <div className="hidden lg:block sticky top-24 max-h-[calc(100dvh-7.5rem)] overflow-y-auto hide-scrollbar">
               <FilterPanel {...filterPanelProps} />
@@ -904,7 +907,7 @@ const Shop = () => {
             </div>
 
             {loading ? (
-              <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-x-6 gap-y-12">
+              <div className="grid grid-cols-2 xl:grid-cols-3 gap-x-4 md:gap-x-6 gap-y-8 md:gap-y-12">
                 {Array.from({ length: shopPageSize }).map((_, i) => (
                   <div key={`skeleton-${i}`} className="animate-pulse">
                     <div className="mb-5 aspect-[4/5] bg-zinc-100" />
@@ -914,7 +917,7 @@ const Shop = () => {
                 ))}
               </div>
             ) : visibleProducts.length > 0 ? (
-              <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-x-6 gap-y-12">
+              <div className="grid grid-cols-2 xl:grid-cols-3 gap-x-4 md:gap-x-6 gap-y-8 md:gap-y-12">
                 {visibleProducts.map((product) => (
                   <StorefrontProductCard
                     key={product.id}

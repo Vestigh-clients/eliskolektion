@@ -151,14 +151,14 @@ const StorefrontProductCard = ({
         </div>
       </div>
 
-      <div className="flex justify-between items-start mt-1">
-        <div className="min-w-0 pr-2">
-          <h4 className="font-manrope font-bold text-base leading-tight text-zinc-900 group-hover:text-[#E8A811] transition-colors mb-1">
+      <div className="flex justify-between items-start mt-1 gap-2">
+        <div className="min-w-0 flex-1">
+          <h4 className="font-manrope font-bold text-sm md:text-base leading-tight text-zinc-900 group-hover:text-[#E8A811] transition-colors mb-1 truncate">
             {product.name}
           </h4>
-          <p className="text-zinc-400 text-sm font-manrope">{categoryLabel}</p>
+          <p className="text-zinc-400 text-xs md:text-sm font-manrope truncate">{categoryLabel}</p>
         </div>
-        <p className="font-manrope font-bold text-base shrink-0">{formatPrice(product.price)}</p>
+        <p className="font-manrope font-bold text-sm md:text-base shrink-0">{formatPrice(product.price)}</p>
       </div>
     </article>
   );
