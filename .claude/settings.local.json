@@ -1,0 +1,16 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(claude mcp:*)",
+      "WebFetch(domain:stitch.withgoogle.com)",
+      "Bash(curl -sL \"https://stitch.withgoogle.com/public/project/16075901609910492037/screen/84d51be0a4db488e92d4af14d44da8ca\" -o /tmp/stitch_screen.html)",
+      "Read(//tmp/**)",
+      "WebFetch(domain:app-companion-430619.appspot.com)",
+      "Bash(curl -sI \"https://app-companion-430619.appspot.com/screens/84d51be0a4db488e92d4af14d44da8ca/preview\")",
+      "Bash(curl -sI \"https://app-companion-430619.appspot.com/api/screens/84d51be0a4db488e92d4af14d44da8ca\")",
+      "Bash(npx tsc:*)",
+      "Bash(curl -sL \"https://app-companion-430619.appspot.com/screens/745a01dda6be4a6bb0c8be61d4b4ac61/preview\" -o /tmp/shop_screen.html)",
+      "Bash(curl -sL \"https://app-companion-430619.appspot.com/share/project/16075901609910492037/screen/745a01dda6be4a6bb0c8be61d4b4ac61\" -w \"\\\\nHTTP_STATUS:%{http_code}\")"
+    ]
+  }
+}

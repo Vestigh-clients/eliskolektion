@@ -64,15 +64,9 @@ const SHOP_PAGE_SIZE_DESKTOP = 6;
 const SHOP_PAGE_SIZE_MOBILE = 8;
 
 const normalizeColorHex = (colorHex: string | null) => {
-  if (!colorHex) {
-    return null;
-  }
-
+  if (!colorHex) return null;
   const normalized = colorHex.trim();
-  if (/^#([a-f\d]{3}|[a-f\d]{6})$/i.test(normalized)) {
-    return normalized;
-  }
-
+  if (/^#([a-f\d]{3}|[a-f\d]{6})$/i.test(normalized)) return normalized;
   return null;
 };
 
@@ -84,15 +78,11 @@ const getAvailableVariantOptionIdsByType = (product: Product) => {
   const variants = product.product_variants ?? [];
 
   for (const variant of variants) {
-    if (!variant.is_available || variant.stock_quantity <= 0) {
-      continue;
-    }
-
+    if (!variant.is_available || variant.stock_quantity <= 0) continue;
     for (const optionLink of variant.product_variant_options) {
       if (!result.has(optionLink.option_type_id)) {
         result.set(optionLink.option_type_id, new Set<string>());
       }
-
       result.get(optionLink.option_type_id)?.add(optionLink.option_value_id);
     }
   }
@@ -102,9 +92,7 @@ const getAvailableVariantOptionIdsByType = (product: Product) => {
 
 const getProductOptionIdsByType = (product: Product) => {
   const optionTypes = product.product_option_types ?? [];
-  if (optionTypes.length === 0) {
-    return new Map<string, Set<string>>();
-  }
+  if (optionTypes.length === 0) return new Map<string, Set<string>>();
 
   const availableByType = getAvailableVariantOptionIdsByType(product);
   const hasAvailableVariantConstraints = availableByType.size > 0;
@@ -112,36 +100,21 @@ const getProductOptionIdsByType = (product: Product) => {
 
   for (const optionType of optionTypes) {
     const typeKey = normalizeVariationTypeKey(optionType.name);
-    if (!typeKey) {
-      continue;
-    }
+    if (!typeKey) continue;
 
     const ids = result.get(typeKey) ?? new Set<string>();
     const allowedIds = availableByType.get(optionType.id);
 
     for (const optionValue of optionType.product_option_values) {
       const optionLabel = optionValue.value.trim();
-      if (!optionLabel) {
-        continue;
-      }
-
-      if (hasAvailableVariantConstraints) {
-        if (!allowedIds || !allowedIds.has(optionValue.id)) {
-          continue;
-        }
-      }
-
+      if (!optionLabel) continue;
+      if (hasAvailableVariantConstraints && (!allowedIds || !allowedIds.has(optionValue.id))) continue;
       const optionKey = normalizeVariationOptionKey(optionLabel);
-      if (!optionKey) {
-        continue;
-      }
-
+      if (!optionKey) continue;
       ids.add(optionKey);
     }
 
-    if (ids.size > 0) {
-      result.set(typeKey, ids);
-    }
+    if (ids.size > 0) result.set(typeKey, ids);
   }
 
   return result;
@@ -150,12 +123,7 @@ const getProductOptionIdsByType = (product: Product) => {
 const collectVariationFilterTypes = (products: Product[]): VariationFilterType[] => {
   const typeMap = new Map<
     string,
-    {
-      id: string;
-      name: string;
-      displayOrder: number;
-      options: Map<string, VariationFilterOption>;
-    }
+    { id: string; name: string; displayOrder: number; options: Map<string, VariationFilterOption> }
   >();
 
   for (const product of products) {
@@ -165,14 +133,10 @@ const collectVariationFilterTypes = (products: Product[]): VariationFilterType[]
 
     for (const optionType of optionTypes) {
       const typeKey = normalizeVariationTypeKey(optionType.name);
-      if (!typeKey) {
-        continue;
-      }
+      if (!typeKey) continue;
 
       const availableOptionIds = optionIdsByType.get(typeKey);
-      if (!availableOptionIds || availableOptionIds.size === 0) {
-        continue;
-      }
+      if (!availableOptionIds || availableOptionIds.size === 0) continue;
 
       if (!typeMap.has(typeKey)) {
         typeMap.set(typeKey, {
@@ -184,9 +148,7 @@ const collectVariationFilterTypes = (products: Product[]): VariationFilterType[]
       }
 
       const typeEntry = typeMap.get(typeKey);
-      if (!typeEntry) {
-        continue;
-      }
+      if (!typeEntry) continue;
 
       typeEntry.displayOrder = Math.min(typeEntry.displayOrder, optionType.display_order);
       const seenInProduct = seenOptionKeysByType.get(typeKey) ?? new Set<string>();
@@ -194,14 +156,9 @@ const collectVariationFilterTypes = (products: Product[]): VariationFilterType[]
 
       for (const optionValue of optionType.product_option_values) {
         const optionLabel = optionValue.value.trim();
-        if (!optionLabel) {
-          continue;
-        }
-
+        if (!optionLabel) continue;
         const optionKey = normalizeVariationOptionKey(optionLabel);
-        if (!optionKey || !availableOptionIds.has(optionKey)) {
-          continue;
-        }
+        if (!optionKey || !availableOptionIds.has(optionKey)) continue;
 
         const existing = typeEntry.options.get(optionKey);
         const normalizedColor = normalizeColorHex(optionValue.color_hex);
@@ -214,13 +171,9 @@ const collectVariationFilterTypes = (products: Product[]): VariationFilterType[]
             count: seenInProduct.has(optionKey) ? 0 : 1,
           });
         } else {
-          if (!seenInProduct.has(optionKey)) {
-            existing.count += 1;
-          }
+          if (!seenInProduct.has(optionKey)) existing.count += 1;
           existing.displayOrder = Math.min(existing.displayOrder, optionValue.display_order);
-          if (!existing.colorHex && normalizedColor) {
-            existing.colorHex = normalizedColor;
-          }
+          if (!existing.colorHex && normalizedColor) existing.colorHex = normalizedColor;
         }
 
         seenInProduct.add(optionKey);
@@ -230,29 +183,22 @@ const collectVariationFilterTypes = (products: Product[]): VariationFilterType[]
 
   return Array.from(typeMap.values())
     .map((typeEntry) => {
-      const options = Array.from(typeEntry.options.values()).sort((left, right) => {
-        if (left.displayOrder !== right.displayOrder) {
-          return left.displayOrder - right.displayOrder;
-        }
-
-        return left.label.localeCompare(right.label);
+      const options = Array.from(typeEntry.options.values()).sort((l, r) => {
+        if (l.displayOrder !== r.displayOrder) return l.displayOrder - r.displayOrder;
+        return l.label.localeCompare(r.label);
       });
-
       return {
         id: typeEntry.id,
         name: typeEntry.name,
         displayOrder: typeEntry.displayOrder,
-        hasColorSwatches: options.some((option) => Boolean(option.colorHex)),
+        hasColorSwatches: options.some((o) => Boolean(o.colorHex)),
         options,
       };
     })
-    .filter((typeEntry) => typeEntry.options.length > 0)
-    .sort((left, right) => {
-      if (left.displayOrder !== right.displayOrder) {
-        return left.displayOrder - right.displayOrder;
-      }
-
-      return left.name.localeCompare(right.name);
+    .filter((t) => t.options.length > 0)
+    .sort((l, r) => {
+      if (l.displayOrder !== r.displayOrder) return l.displayOrder - r.displayOrder;
+      return l.name.localeCompare(r.name);
     });
 };
 
@@ -262,7 +208,7 @@ const sanitizeSelectedVariationFilters = (
 ) => {
   const allowedByType = new Map<string, Set<string>>();
   for (const typeEntry of variationFilterTypes) {
-    allowedByType.set(typeEntry.id, new Set(typeEntry.options.map((option) => option.id)));
+    allowedByType.set(typeEntry.id, new Set(typeEntry.options.map((o) => o.id)));
   }
 
   const next: Record<string, string[]> = {};
@@ -270,29 +216,14 @@ const sanitizeSelectedVariationFilters = (
 
   for (const [typeId, selectedIds] of Object.entries(current)) {
     const allowed = allowedByType.get(typeId);
-    if (!allowed) {
-      changed = true;
-      continue;
-    }
-
-    const filtered = selectedIds.filter((optionId) => allowed.has(optionId));
-    if (filtered.length === 0) {
-      if (selectedIds.length > 0) {
-        changed = true;
-      }
-      continue;
-    }
-
-    if (filtered.length !== selectedIds.length) {
-      changed = true;
-    }
+    if (!allowed) { changed = true; continue; }
+    const filtered = selectedIds.filter((id) => allowed.has(id));
+    if (filtered.length === 0) { if (selectedIds.length > 0) changed = true; continue; }
+    if (filtered.length !== selectedIds.length) changed = true;
     next[typeId] = filtered;
   }
 
-  if (!changed && Object.keys(next).length !== Object.keys(current).length) {
-    changed = true;
-  }
-
+  if (!changed && Object.keys(next).length !== Object.keys(current).length) changed = true;
   return { next, changed };
 };
 
@@ -300,26 +231,20 @@ const productMatchesVariationFilters = (
   product: Product,
   selectedVariationOptionIdsByType: Record<string, string[]>,
 ) => {
-  const selections = Object.entries(selectedVariationOptionIdsByType).filter(([, optionIds]) => optionIds.length > 0);
-  if (selections.length === 0) {
-    return true;
-  }
+  const selections = Object.entries(selectedVariationOptionIdsByType).filter(([, ids]) => ids.length > 0);
+  if (selections.length === 0) return true;
 
   const productOptionIdsByType = getProductOptionIdsByType(product);
   for (const [typeId, selectedIds] of selections) {
     const productOptionIds = productOptionIdsByType.get(typeId);
-    if (!productOptionIds || productOptionIds.size === 0) {
-      return false;
-    }
-
-    const hasMatch = selectedIds.some((selectedId) => productOptionIds.has(selectedId));
-    if (!hasMatch) {
-      return false;
-    }
+    if (!productOptionIds || productOptionIds.size === 0) return false;
+    if (!selectedIds.some((id) => productOptionIds.has(id))) return false;
   }
 
   return true;
 };
+
+// ── Filter Panel ──────────────────────────────────────────────────────────────
 
 const FilterPanel = ({
   activeFilter,
@@ -335,107 +260,177 @@ const FilterPanel = ({
   toggleVariationFilterOption,
   variationFilterTypes,
 }: FilterPanelProps) => {
+  const heading = "text-xs font-black tracking-widest uppercase mb-5 text-zinc-400 font-manrope";
+
   return (
-    <div className="space-y-8 rounded-xl border border-outline-variant/30 bg-surface-container-low p-4 shadow-[0_10px_30px_rgba(26,28,28,0.04)] md:p-5">
+    <div className="space-y-10">
+      {/* Filter header */}
       <div className="flex items-center justify-between">
-        <p className="font-manrope text-[11px] font-semibold uppercase tracking-[0.16em] text-on-surface-variant">
-          Filters {activeFilterCount > 0 ? `(${activeFilterCount})` : ""}
-        </p>
-        <button
-          type="button"
-          onClick={clearAllFilters}
-          className="font-manrope text-[11px] uppercase tracking-[0.1em] text-primary transition-colors hover:text-on-surface"
-        >
-          Clear
-        </button>
+        <span className="text-xs font-black tracking-widest uppercase text-zinc-400 font-manrope">
+          Filters{activeFilterCount > 0 ? ` (${activeFilterCount})` : ""}
+        </span>
+        {activeFilterCount > 0 ? (
+          <button
+            type="button"
+            onClick={clearAllFilters}
+            className="text-[10px] font-black uppercase tracking-widest text-zinc-400 hover:text-black transition-colors font-manrope"
+          >
+            Clear All
+          </button>
+        ) : null}
       </div>
 
-      <section>
-        <h3 className="mb-4 font-notoSerif text-xl font-bold">Category</h3>
-        <div className="space-y-1">
-          {categoryFilterItems.map((category) => (
-            <label
-              key={category.slug}
-              className="group flex cursor-pointer items-center justify-between rounded-md border border-transparent px-2 py-1.5 transition-colors hover:border-outline-variant/40 hover:bg-surface"
-            >
-              <div className="flex items-center gap-3">
-                <input
-                  type="checkbox"
-                  checked={activeFilter === category.slug}
-                  onChange={() => setActiveFilter(activeFilter === category.slug ? "all" : category.slug)}
-                  className="h-4 w-4 rounded border-outline-variant text-primary focus:ring-primary"
-                />
-                <span className="font-manrope text-sm transition-colors group-hover:text-primary">{category.label}</span>
-              </div>
-              <span className="font-manrope text-xs text-on-surface-variant">{categoryCounts[category.slug] ?? 0}</span>
-            </label>
-          ))}
+      {/* Categories */}
+      {categoryFilterItems.length > 0 ? (
+        <div>
+          <h3 className={heading}>Categories</h3>
+          <ul className="space-y-3">
+            <li>
+              <button
+                type="button"
+                onClick={() => setActiveFilter("all")}
+                className="flex justify-between items-center w-full group"
+              >
+                <span
+                  className={[
+                    "text-sm font-bold font-manrope transition-colors",
+                    activeFilter === "all" ? "text-[#E8A811]" : "text-zinc-500 group-hover:text-black",
+                  ].join(" ")}
+                >
+                  All
+                </span>
+                <span
+                  className={[
+                    "text-xs font-manrope",
+                    activeFilter === "all" ? "text-[#E8A811]" : "text-zinc-300",
+                  ].join(" ")}
+                >
+                  ({Object.values(categoryCounts).reduce((a, b) => a + b, 0)})
+                </span>
+              </button>
+            </li>
+            {categoryFilterItems.map((category) => {
+              const isActive = activeFilter === category.slug;
+              return (
+                <li key={category.slug}>
+                  <button
+                    type="button"
+                    onClick={() => setActiveFilter(isActive ? "all" : category.slug)}
+                    className="flex justify-between items-center w-full group"
+                  >
+                    <span
+                      className={[
+                        "text-sm font-bold font-manrope transition-colors",
+                        isActive ? "text-[#E8A811]" : "text-zinc-500 group-hover:text-black",
+                      ].join(" ")}
+                    >
+                      {category.label}
+                    </span>
+                    <span
+                      className={[
+                        "text-xs font-manrope",
+                        isActive ? "text-[#E8A811]" : "text-zinc-300",
+                      ].join(" ")}
+                    >
+                      ({categoryCounts[category.slug] ?? 0})
+                    </span>
+                  </button>
+                </li>
+              );
+            })}
+          </ul>
         </div>
-      </section>
+      ) : null}
 
-      {variationFilterTypes.length > 0 ? (
-        <>
-          {variationFilterTypes.map((variationType) => (
-            <section key={variationType.id} className="border-t border-outline-variant/25 pt-6">
-              <h3 className="mb-4 font-notoSerif text-xl font-bold">{variationType.name}</h3>
-              <div className="flex flex-wrap gap-2.5">
+      {/* Variation filters */}
+      {variationFilterTypes.map((variationType) => {
+        const selectedIds = selectedVariationOptionIdsByType[variationType.id] ?? [];
+
+        return (
+          <div key={variationType.id}>
+            <h3 className={heading}>{variationType.name}</h3>
+
+            {variationType.hasColorSwatches ? (
+              /* Color swatch chips */
+              <div className="flex flex-wrap gap-2">
                 {variationType.options.map((option) => {
-                  const selectedIds = selectedVariationOptionIdsByType[variationType.id] ?? [];
                   const isSelected = selectedIds.includes(option.id);
-
                   return (
                     <button
                       key={option.id}
                       type="button"
                       onClick={() => toggleVariationFilterOption(variationType.id, option.id)}
-                      className={[
-                        "inline-flex items-center gap-2 rounded-md border bg-surface px-3 py-2 text-xs font-medium transition-all",
-                        isSelected
-                          ? "border-primary text-primary"
-                          : "border-outline-variant hover:border-primary hover:text-primary",
-                      ].join(" ")}
                       title={`${option.label} (${option.count})`}
+                      className={[
+                        "flex items-center gap-1.5 px-3 py-1.5 text-xs font-manrope font-bold border transition-all",
+                        isSelected
+                          ? "bg-black text-white border-black"
+                          : "bg-white border-zinc-200 text-zinc-600 hover:border-black",
+                      ].join(" ")}
                     >
-                      {variationType.hasColorSwatches && option.colorHex ? (
+                      {option.colorHex ? (
                         <span
-                          className="h-3 w-3 rounded-full border border-outline-variant/50"
+                          className="w-3 h-3 rounded-full border border-zinc-200 shrink-0"
                           style={{ backgroundColor: option.colorHex }}
                           aria-hidden="true"
                         />
                       ) : null}
-                      <span>{option.label}</span>
+                      {option.label}
                     </button>
                   );
                 })}
               </div>
-            </section>
-          ))}
-        </>
-      ) : (
-        <section className="border-t border-outline-variant/25 pt-6">
-          <h3 className="mb-2 font-notoSerif text-xl font-bold">Variations</h3>
-          <p className="font-manrope text-sm text-on-surface-variant">No variation options available.</p>
-        </section>
-      )}
+            ) : (
+              /* Button grid (sizes, etc.) */
+              <div className="grid grid-cols-4 gap-2">
+                {variationType.options.map((option) => {
+                  const isSelected = selectedIds.includes(option.id);
+                  return (
+                    <button
+                      key={option.id}
+                      type="button"
+                      onClick={() => toggleVariationFilterOption(variationType.id, option.id)}
+                      title={`${option.label} (${option.count})`}
+                      className={[
+                        "h-10 text-xs font-black font-manrope transition-all",
+                        isSelected
+                          ? "bg-black text-white"
+                          : "bg-zinc-50 border border-transparent hover:border-black",
+                      ].join(" ")}
+                    >
+                      {option.label}
+                    </button>
+                  );
+                })}
+              </div>
+            )}
+          </div>
+        );
+      })}
 
-      <section className="border-t border-outline-variant/25 pt-6">
-        <h3 className="mb-4 font-notoSerif text-xl font-bold">Price Range</h3>
-        <input
-          type="range"
-          min={0}
-          max={priceCeiling}
-          value={priceLimit}
-          onChange={(event) => setPriceLimit(Number(event.target.value))}
-          className="h-1 w-full cursor-pointer appearance-none rounded-lg bg-surface-variant accent-primary"
-        />
-        <div className="mt-4 flex justify-between text-xs font-medium uppercase tracking-widest text-on-surface-variant">
-          <span>{formatPrice(0)}</span>
-          <span>{formatPrice(priceLimit)}</span>
+      {/* Price Range */}
+      <div>
+        <h3 className={heading}>Price</h3>
+        <div className="space-y-4">
+          <input
+            type="range"
+            min={0}
+            max={priceCeiling}
+            value={priceLimit}
+            onChange={(e) => setPriceLimit(Number(e.target.value))}
+            className="w-full h-1 cursor-pointer appearance-none bg-zinc-200 accent-[#E8A811]"
+          />
+          <div className="flex justify-between text-xs font-bold font-manrope">
+            <span>{formatPrice(0)}</span>
+            <span>{formatPrice(priceLimit)}</span>
+          </div>
         </div>
-      </section>
+      </div>
     </div>
   );
 };
+
+// ── Shop Page ─────────────────────────────────────────────────────────────────
 
 const Shop = () => {
   const isMobile = useIsMobile();
@@ -474,91 +469,62 @@ const Shop = () => {
 
   const categoryFilterItems = useMemo(() => {
     const fromBackend = storefrontCategories
-      .map((category) => ({
-        slug: category.slug.trim().toLowerCase(),
-        label: category.name.trim() || "Category",
-      }))
-      .filter((category) => Boolean(category.slug));
+      .map((c) => ({ slug: c.slug.trim().toLowerCase(), label: c.name.trim() || "Category" }))
+      .filter((c) => Boolean(c.slug));
 
-    if (fromBackend.length > 0) {
-      return fromBackend;
-    }
+    if (fromBackend.length > 0) return fromBackend;
 
     const seen = new Set<string>();
     return products
-      .map((product) => ({
-        slug: (product.categories?.slug ?? "").trim().toLowerCase(),
-        label: (product.categories?.name ?? "").trim(),
+      .map((p) => ({
+        slug: (p.categories?.slug ?? "").trim().toLowerCase(),
+        label: (p.categories?.name ?? "").trim(),
       }))
-      .filter((category) => {
-        if (!category.slug || seen.has(category.slug)) {
-          return false;
-        }
-
-        seen.add(category.slug);
+      .filter((c) => {
+        if (!c.slug || seen.has(c.slug)) return false;
+        seen.add(c.slug);
         return true;
       })
-      .map((category) => ({
-        slug: category.slug,
-        label: category.label || "Category",
-      }));
+      .map((c) => ({ slug: c.slug, label: c.label || "Category" }));
   }, [products, storefrontCategories]);
-  const categoryLookup = useMemo(() => new Set(categoryFilterItems.map((item) => item.slug)), [categoryFilterItems]);
+
+  const categoryLookup = useMemo(() => new Set(categoryFilterItems.map((i) => i.slug)), [categoryFilterItems]);
   const requestedCategory = (searchParams.get("category") ?? "").trim().toLowerCase();
   const activeFilter: ShopFilter = requestedCategory && categoryLookup.has(requestedCategory) ? requestedCategory : "all";
   const normalizedSearchTerm = (searchParams.get("q") ?? "").trim().toLowerCase();
 
   const setActiveFilter = (nextFilter: ShopFilter) => {
     const nextParams = new URLSearchParams(searchParams);
-
     if (nextFilter === "all") {
       nextParams.delete("category");
     } else {
       nextParams.set("category", nextFilter);
     }
-
     const query = nextParams.toString();
     navigate(query ? `/shop?${query}` : "/shop");
   };
 
   const searchedProducts = useMemo(() => {
-    if (!normalizedSearchTerm) {
-      return products;
-    }
-
-    return products.filter((product) => {
-      const fields = [
-        product.name,
-        product.short_description ?? "",
-        product.description ?? "",
-        product.categories?.name ?? "",
-      ];
-
-      return fields.some((field) => field.toLowerCase().includes(normalizedSearchTerm));
+    if (!normalizedSearchTerm) return products;
+    return products.filter((p) => {
+      const fields = [p.name, p.short_description ?? "", p.description ?? "", p.categories?.name ?? ""];
+      return fields.some((f) => f.toLowerCase().includes(normalizedSearchTerm));
     });
   }, [normalizedSearchTerm, products]);
 
   const categoryCounts = useMemo(() => {
     const counts: Record<string, number> = {};
-
-    for (const product of searchedProducts) {
-      const slug = (product.categories?.slug ?? "").trim().toLowerCase();
-      if (!slug) {
-        continue;
-      }
-
+    for (const p of searchedProducts) {
+      const slug = (p.categories?.slug ?? "").trim().toLowerCase();
+      if (!slug) continue;
       counts[slug] = (counts[slug] ?? 0) + 1;
     }
-
     return counts;
   }, [searchedProducts]);
 
   const productsByCategoryAndSearch = useMemo(() => {
-    if (activeFilter === "all") {
-      return searchedProducts;
-    }
-
-    return searchedProducts.filter((product) => (product.categories?.slug ?? "").trim().toLowerCase() === activeFilter);
+    if (activeFilter === "all") return searchedProducts;
+    return searchedProducts.filter((p) => (p.categories?.slug ?? "").trim().toLowerCase() === activeFilter);
   }, [activeFilter, searchedProducts]);
 
   const variationFilterTypes = useMemo(
@@ -574,12 +540,9 @@ const Shop = () => {
   }, [variationFilterTypes]);
 
   const priceCeiling = useMemo(() => {
-    const maxProductPrice = products.reduce((max, product) => Math.max(max, Number(product.price) || 0), 0);
-    if (maxProductPrice <= DEFAULT_PRICE_CEILING) {
-      return DEFAULT_PRICE_CEILING;
-    }
-
-    return Math.ceil(maxProductPrice / 100) * 100;
+    const max = products.reduce((m, p) => Math.max(m, Number(p.price) || 0), 0);
+    if (max <= DEFAULT_PRICE_CEILING) return DEFAULT_PRICE_CEILING;
+    return Math.ceil(max / 100) * 100;
   }, [products]);
 
   useEffect(() => {
@@ -587,32 +550,22 @@ const Shop = () => {
   }, [priceCeiling]);
 
   const filteredProducts = useMemo(() => {
-    const afterVariationFilters = productsByCategoryAndSearch.filter((product) =>
-      productMatchesVariationFilters(product, selectedVariationOptionIdsByType),
+    const afterVariation = productsByCategoryAndSearch.filter((p) =>
+      productMatchesVariationFilters(p, selectedVariationOptionIdsByType),
     );
-
-    const afterPriceFilter = afterVariationFilters.filter((product) => Number(product.price) <= priceLimit);
-    const next = [...afterPriceFilter];
+    const afterPrice = afterVariation.filter((p) => Number(p.price) <= priceLimit);
+    const next = [...afterPrice];
 
     switch (sortBy) {
-      case "price-low":
-        next.sort((left, right) => Number(left.price) - Number(right.price));
-        break;
-      case "price-high":
-        next.sort((left, right) => Number(right.price) - Number(left.price));
-        break;
+      case "price-low": next.sort((a, b) => Number(a.price) - Number(b.price)); break;
+      case "price-high": next.sort((a, b) => Number(b.price) - Number(a.price)); break;
       case "popular":
-        next.sort((left, right) => {
-          if ((left.is_featured ?? false) === (right.is_featured ?? false)) {
-            return left.name.localeCompare(right.name);
-          }
-
-          return left.is_featured ? -1 : 1;
+        next.sort((a, b) => {
+          if ((a.is_featured ?? false) === (b.is_featured ?? false)) return a.name.localeCompare(b.name);
+          return a.is_featured ? -1 : 1;
         });
         break;
-      case "newest":
-      default:
-        break;
+      default: break;
     }
 
     return next;
@@ -626,32 +579,22 @@ const Shop = () => {
     setVisibleCount(shopPageSize);
   }, [filteredProducts, shopPageSize]);
 
+  // Infinite scroll
   useEffect(() => {
     const loadMoreNode = loadMoreRef.current;
-    if (!loadMoreNode || loading || !hasMoreProducts) {
-      return;
-    }
+    if (!loadMoreNode || loading || !hasMoreProducts) return;
 
     const observer = new IntersectionObserver(
       (entries) => {
         const [entry] = entries;
-        if (!entry?.isIntersecting) {
-          return;
-        }
-
+        if (!entry?.isIntersecting) return;
         setVisibleCount((current) => Math.min(current + shopPageSize, filteredProducts.length));
       },
-      {
-        root: null,
-        rootMargin: "320px 0px",
-        threshold: 0,
-      },
+      { root: null, rootMargin: "320px 0px", threshold: 0 },
     );
 
     observer.observe(loadMoreNode);
-    return () => {
-      observer.disconnect();
-    };
+    return () => observer.disconnect();
   }, [filteredProducts.length, hasMoreProducts, isMobile, loading, shopPageSize, visibleProducts.length]);
 
   const toggleVariationFilterOption = (typeId: string, optionId: string) => {
@@ -660,14 +603,8 @@ const Shop = () => {
       const nextSelected = currentSelected.includes(optionId)
         ? currentSelected.filter((id) => id !== optionId)
         : [...currentSelected, optionId];
-
       const next = { ...current };
-      if (nextSelected.length === 0) {
-        delete next[typeId];
-      } else {
-        next[typeId] = nextSelected;
-      }
-
+      if (nextSelected.length === 0) { delete next[typeId]; } else { next[typeId] = nextSelected; }
       return next;
     });
   };
@@ -678,11 +615,9 @@ const Shop = () => {
     setActiveFilter("all");
   };
 
-  const selectedVariationCount = Object.values(selectedVariationOptionIdsByType).reduce((sum, values) => sum + values.length, 0);
+  const selectedVariationCount = Object.values(selectedVariationOptionIdsByType).reduce((sum, v) => sum + v.length, 0);
   const activeFilterCount =
-    (activeFilter === "all" ? 0 : 1) +
-    selectedVariationCount +
-    (priceLimit < priceCeiling ? 1 : 0);
+    (activeFilter === "all" ? 0 : 1) + selectedVariationCount + (priceLimit < priceCeiling ? 1 : 0);
 
   const handleAddToCart = (product: Product) => {
     const basePayload = {
@@ -696,25 +631,20 @@ const Shop = () => {
 
     if (product.has_variants) {
       const firstAvailableVariant = (product.product_variants ?? []).find(
-        (variant) => variant.is_available && variant.stock_quantity > 0,
+        (v) => v.is_available && v.stock_quantity > 0,
       );
-
-      if (!firstAvailableVariant) {
-        return;
-      }
+      if (!firstAvailableVariant) return;
 
       const optionValueById = new Map<string, string>();
       for (const optionType of product.product_option_types ?? []) {
         for (const optionValue of optionType.product_option_values) {
           const label = optionValue.value.trim();
-          if (label) {
-            optionValueById.set(optionValue.id, label);
-          }
+          if (label) optionValueById.set(optionValue.id, label);
         }
       }
 
       const derivedVariantLabel = firstAvailableVariant.product_variant_options
-        .map((optionLink) => optionValueById.get(optionLink.option_value_id) ?? "")
+        .map((link) => optionValueById.get(link.option_value_id) ?? "")
         .filter(Boolean)
         .join(" / ");
 
@@ -730,9 +660,7 @@ const Shop = () => {
       return;
     }
 
-    if (!isInStock(product)) {
-      return;
-    }
+    if (!isInStock(product)) return;
 
     addToCart({
       ...basePayload,
@@ -745,6 +673,21 @@ const Shop = () => {
     });
   };
 
+  const filterPanelProps = {
+    activeFilter,
+    activeFilterCount,
+    categoryCounts,
+    categoryFilterItems,
+    clearAllFilters,
+    priceCeiling,
+    priceLimit,
+    selectedVariationOptionIdsByType,
+    setActiveFilter,
+    setPriceLimit,
+    toggleVariationFilterOption,
+    variationFilterTypes,
+  };
+
   if (error) {
     return (
       <div className="container mx-auto px-4 py-14 md:py-16">
@@ -754,140 +697,159 @@ const Shop = () => {
   }
 
   return (
-    <div className="bg-surface font-manrope text-on-surface">
-      <header className="mx-auto max-w-screen-2xl px-4 pb-10 pt-14 md:px-8 md:pb-12 md:pt-16">
-        <h1 className="font-notoSerif text-6xl font-bold tracking-tight text-on-background md:text-8xl">
-          The <span className="italic text-primary">Shop</span>
-        </h1>
-        <p className="mt-4 max-w-xl text-lg text-on-surface-variant">
-          Shop stylish, carefully selected clothing that brings together trend, elegance, and confidence.
-        </p>
-      </header>
+    <div className="bg-[#f9f9f9] font-inter text-[#1a1c1c]">
+      <main className="max-w-[1440px] mx-auto px-8 pt-12 pb-24">
 
-      <main className="mx-auto grid max-w-screen-2xl grid-cols-1 gap-10 px-4 pb-16 md:grid-cols-12 md:gap-12 md:px-8">
-        <aside className="hidden md:col-span-3 md:block md:pr-2">
-          <div className="md:sticky md:top-24 md:max-h-[calc(100dvh-7.5rem)] md:overflow-y-auto md:overscroll-contain lux-hide-scrollbar">
-            <FilterPanel
-              activeFilter={activeFilter}
-              activeFilterCount={activeFilterCount}
-              categoryCounts={categoryCounts}
-              categoryFilterItems={categoryFilterItems}
-              clearAllFilters={clearAllFilters}
-              priceCeiling={priceCeiling}
-              priceLimit={priceLimit}
-              selectedVariationOptionIdsByType={selectedVariationOptionIdsByType}
-              setActiveFilter={setActiveFilter}
-              setPriceLimit={setPriceLimit}
-              toggleVariationFilterOption={toggleVariationFilterOption}
-              variationFilterTypes={variationFilterTypes}
-            />
+        {/* ── Editorial Header ── */}
+        <section className="mb-16">
+          <div className="flex flex-col md:flex-row md:items-end justify-between gap-8 border-b border-zinc-200 pb-8">
+            <div className="max-w-2xl">
+              <h1 className="font-manrope font-extrabold text-5xl md:text-6xl tracking-tighter leading-none mb-6 uppercase">
+                All Pieces
+              </h1>
+              <p className="text-zinc-500 text-lg leading-relaxed">
+                A meticulously curated selection of the season's most essential pieces.
+                From limited drops to high-performance streetwear.
+              </p>
+            </div>
+
+            {/* Sort — desktop */}
+            <div className="hidden md:flex items-center gap-4 shrink-0">
+              <span className="text-xs font-semibold tracking-widest uppercase text-zinc-400 font-manrope">
+                Sort by:
+              </span>
+              <select
+                value={sortBy}
+                onChange={(e) => setSortBy(e.target.value as SortKey)}
+                className="text-sm font-bold border-0 border-b border-black bg-transparent pb-1 focus:ring-0 cursor-pointer font-manrope pr-6 appearance-none"
+              >
+                <option value="newest">Newest Arrivals</option>
+                <option value="price-low">Price: Low to High</option>
+                <option value="price-high">Price: High to Low</option>
+                <option value="popular">Most Popular</option>
+              </select>
+              <span className="material-symbols-outlined text-sm pointer-events-none -ml-5">expand_more</span>
+            </div>
           </div>
-        </aside>
+        </section>
 
-        <div className="md:col-span-9">
-          <div className="mb-8 flex flex-col items-start justify-between gap-4 border-b border-outline-variant/30 pb-4 sm:flex-row sm:items-center">
-            <p className="text-sm text-on-surface-variant">
-              Showing {loading ? 0 : visibleProducts.length} results of {loading ? 0 : filteredProducts.length} items
-            </p>
-            <div className="flex w-full items-center justify-between gap-4 sm:w-auto sm:justify-end">
+        <div className="flex flex-col lg:flex-row gap-12">
+
+          {/* ── Sidebar ── */}
+          <aside className="w-full lg:w-64 flex-shrink-0">
+            {/* Mobile toolbar */}
+            <div className="lg:hidden mb-6 flex items-center justify-between">
               <button
                 type="button"
                 onClick={() => setIsMobileFilterOpen(true)}
-                className="inline-flex items-center gap-2 rounded-md border border-outline-variant bg-surface px-3 py-2 text-xs font-semibold uppercase tracking-[0.14em] text-on-surface-variant transition-colors hover:border-primary hover:text-primary md:hidden"
+                className="flex items-center gap-2 text-xs font-black uppercase tracking-widest border-b border-black pb-1 font-manrope"
               >
-                <span className="material-symbols-outlined text-base">tune</span>
-                Filters {activeFilterCount > 0 ? `(${activeFilterCount})` : ""}
+                <span className="material-symbols-outlined text-sm">tune</span>
+                Filters{activeFilterCount > 0 ? ` (${activeFilterCount})` : ""}
               </button>
-              <div className="flex items-center gap-4">
-                <span className="text-xs font-bold uppercase tracking-widest text-on-surface-variant">Sort By</span>
+              <div className="flex items-center gap-3">
+                <span className="text-xs text-zinc-400 font-manrope uppercase tracking-widest">
+                  {loading ? "—" : filteredProducts.length} pieces
+                </span>
                 <select
                   value={sortBy}
-                  onChange={(event) => setSortBy(event.target.value as SortKey)}
-                  className="cursor-pointer border-none bg-transparent p-0 text-sm font-semibold text-primary focus:ring-0"
+                  onChange={(e) => setSortBy(e.target.value as SortKey)}
+                  className="text-xs font-bold border-0 bg-transparent focus:ring-0 cursor-pointer font-manrope"
                 >
-                  <option value="newest">Newest Arrivals</option>
-                  <option value="price-low">Price: Low to High</option>
-                  <option value="price-high">Price: High to Low</option>
-                  <option value="popular">Most Popular</option>
+                  <option value="newest">Newest</option>
+                  <option value="price-low">Price ↑</option>
+                  <option value="price-high">Price ↓</option>
+                  <option value="popular">Popular</option>
                 </select>
               </div>
             </div>
-          </div>
 
-          {loading ? (
-            <div className="grid grid-cols-2 gap-x-4 gap-y-10 sm:grid-cols-2 sm:gap-x-7 sm:gap-y-14 lg:grid-cols-3">
-              {Array.from({ length: shopPageSize }).map((_, index) => (
-                <div key={`shop-skeleton-${index}`} className="animate-pulse">
-                  <div className="mb-6 aspect-[4/5] rounded-lg bg-surface-container-lowest" />
-                  <div className="h-5 w-2/3 rounded bg-surface-container-high" />
-                  <div className="mt-2 h-4 w-1/2 rounded bg-surface-container-high" />
-                </div>
-              ))}
+            {/* Desktop sticky filter panel */}
+            <div className="hidden lg:block sticky top-24 max-h-[calc(100dvh-7.5rem)] overflow-y-auto hide-scrollbar">
+              <FilterPanel {...filterPanelProps} />
             </div>
-          ) : visibleProducts.length > 0 ? (
-            <div className="grid grid-cols-2 gap-x-4 gap-y-10 sm:grid-cols-2 sm:gap-x-7 sm:gap-y-14 lg:grid-cols-3">
-              {visibleProducts.map((product) => (
-                <StorefrontProductCard
-                  key={product.id}
-                  product={product}
-                  onAction={handleAddToCart}
-                  actionLabel="Add to Cart"
-                />
-              ))}
-            </div>
-          ) : (
-            <div className="rounded border border-outline-variant bg-surface-container-low px-6 py-10 text-center">
-              <p className="font-manrope text-sm text-on-surface-variant">No products match the selected filters.</p>
-            </div>
-          )}
+          </aside>
 
-          {!loading && visibleProducts.length > 0 ? (
-            <div className="mt-10">
-              <div ref={loadMoreRef} className="h-1 w-full" aria-hidden />
-              <p className="mt-4 text-center font-manrope text-xs uppercase tracking-[0.12em] text-on-surface-variant">
-                {hasMoreProducts ? "Loading more products as you scroll" : "You have reached the end"}
+          {/* ── Product Grid ── */}
+          <section className="flex-1 min-w-0">
+            {/* Count bar */}
+            <div className="mb-8">
+              <p className="text-xs font-manrope uppercase tracking-widest text-zinc-400">
+                {loading
+                  ? "Loading pieces..."
+                  : `Showing ${visibleProducts.length} of ${filteredProducts.length} pieces`}
               </p>
             </div>
-          ) : null}
+
+            {loading ? (
+              <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-x-6 gap-y-12">
+                {Array.from({ length: shopPageSize }).map((_, i) => (
+                  <div key={`skeleton-${i}`} className="animate-pulse">
+                    <div className="mb-5 aspect-[4/5] bg-zinc-100" />
+                    <div className="h-5 w-2/3 bg-zinc-100 mb-2" />
+                    <div className="h-4 w-1/3 bg-zinc-100" />
+                  </div>
+                ))}
+              </div>
+            ) : visibleProducts.length > 0 ? (
+              <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-x-6 gap-y-12">
+                {visibleProducts.map((product) => (
+                  <StorefrontProductCard
+                    key={product.id}
+                    product={product}
+                    onAction={handleAddToCart}
+                    actionLabel="Add to Bag"
+                  />
+                ))}
+              </div>
+            ) : (
+              <div className="py-16 text-center">
+                <p className="font-manrope text-sm text-zinc-400 uppercase tracking-widest">
+                  No products match the selected filters.
+                </p>
+              </div>
+            )}
+
+            {/* Infinite scroll sentinel */}
+            {!loading && visibleProducts.length > 0 ? (
+              <div className="mt-16 border-t border-zinc-200 pt-8">
+                <div ref={loadMoreRef} className="h-1 w-full" aria-hidden />
+                <p className="text-center font-manrope text-xs uppercase tracking-widest text-zinc-400">
+                  {hasMoreProducts ? "Loading more as you scroll..." : "You've seen all pieces"}
+                </p>
+              </div>
+            ) : null}
+          </section>
         </div>
       </main>
 
+      {/* ── Mobile Filter Drawer ── */}
       <Drawer open={isMobileFilterOpen} onOpenChange={setIsMobileFilterOpen}>
-        <DrawerContent className="max-h-[88vh] border-outline-variant/50 bg-surface">
-          <DrawerHeader className="border-b border-outline-variant/30 pb-4">
+        <DrawerContent className="max-h-[88vh] bg-[#f9f9f9] border-zinc-200">
+          <DrawerHeader className="border-b border-zinc-200 pb-4">
             <div className="flex items-center justify-between">
-              <DrawerTitle className="font-notoSerif text-2xl font-bold">Filter Products</DrawerTitle>
+              <DrawerTitle className="font-manrope font-black text-lg uppercase tracking-tighter">
+                Filter Pieces
+              </DrawerTitle>
               <button
                 type="button"
                 onClick={() => setIsMobileFilterOpen(false)}
-                className="inline-flex h-8 w-8 items-center justify-center rounded-full border border-outline-variant text-on-surface-variant"
+                className="flex items-center justify-center w-8 h-8 text-zinc-500 hover:text-black transition-colors"
                 aria-label="Close filters"
               >
                 <span className="material-symbols-outlined text-base">close</span>
               </button>
             </div>
           </DrawerHeader>
-          <div className="overflow-y-auto px-4 pb-6 pt-3">
-            <FilterPanel
-              activeFilter={activeFilter}
-              activeFilterCount={activeFilterCount}
-              categoryCounts={categoryCounts}
-              categoryFilterItems={categoryFilterItems}
-              clearAllFilters={clearAllFilters}
-              priceCeiling={priceCeiling}
-              priceLimit={priceLimit}
-              selectedVariationOptionIdsByType={selectedVariationOptionIdsByType}
-              setActiveFilter={setActiveFilter}
-              setPriceLimit={setPriceLimit}
-              toggleVariationFilterOption={toggleVariationFilterOption}
-              variationFilterTypes={variationFilterTypes}
-            />
+
+          <div className="overflow-y-auto px-6 pb-6 pt-5">
+            <FilterPanel {...filterPanelProps} />
             <button
               type="button"
               onClick={() => setIsMobileFilterOpen(false)}
-              className="mt-5 w-full rounded-md bg-primary px-4 py-3 font-manrope text-sm font-semibold uppercase tracking-[0.14em] text-on-primary"
+              className="mt-8 w-full bg-black text-white py-4 font-manrope font-black text-xs uppercase tracking-widest hover:bg-[#E8A811] hover:text-black transition-colors"
             >
-              Show {filteredProducts.length} Results
+              Show {filteredProducts.length} Pieces
             </button>
           </div>
         </DrawerContent>

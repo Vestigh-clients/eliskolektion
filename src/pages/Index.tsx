@@ -1,33 +1,72 @@
-import { useEffect, useMemo, useState } from "react";
-import { Link } from "react-router-dom";
+import { FormEvent, useEffect, useMemo, useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import StorefrontProductCard from "@/components/products/StorefrontProductCard";
 import { useStorefrontConfig } from "@/contexts/StorefrontConfigContext";
 import { getAllProducts, getTopSellingProductIds } from "@/services/productService";
+import { formatPrice } from "@/lib/price";
+import { getPrimaryImage } from "@/types/product";
 import { type Product } from "@/types/product";
 
-const FUNDAMENTALS = [
+const TRUST_BADGES = [
   {
-    title: "Curated Quality",
-    description: "Every piece is selected for design quality, fit consistency, and lasting wear.",
+    icon: "local_shipping",
+    title: "Global Express",
+    description: "Free shipping on orders over $300",
   },
   {
-    title: "Shipping & Delivery",
-    description: "Reliable shipping with delivery updates so customers always know when to expect their order.",
+    icon: "verified_user",
+    title: "Authenticity Guaranteed",
+    description: "Verified by expert curators",
   },
   {
-    title: "Secure Checkout",
-    description: "Fast and protected checkout flow designed for confidence at every step.",
-  },
-  {
-    title: "Customer Support",
-    description: "Responsive support for sizing, orders, and post-purchase assistance.",
+    icon: "history",
+    title: "Easy Returns",
+    description: "30-day hassle-free return policy",
   },
 ];
 
+// Inline best-seller card used in the horizontal carousel
+const BestSellerCard = ({ product }: { product: Product }) => {
+  const navigate = useNavigate();
+  const imageUrl = getPrimaryImage(product);
+
+  return (
+    <div
+      className="min-w-[260px] group cursor-pointer"
+      onClick={() => navigate(`/shop/${product.slug}`)}
+      role="link"
+      tabIndex={0}
+      onKeyDown={(e) => {
+        if (e.key === "Enter" || e.key === " ") navigate(`/shop/${product.slug}`);
+      }}
+      aria-label={`Open ${product.name}`}
+    >
+      <div className="aspect-square bg-white border border-zinc-100 mb-4 p-6 flex items-center justify-center overflow-hidden">
+        {imageUrl ? (
+          <img
+            src={imageUrl}
+            alt={product.name}
+            className="w-full h-auto object-contain transition-transform duration-700 group-hover:rotate-6 group-hover:scale-110"
+            loading="lazy"
+          />
+        ) : (
+          <span className="material-symbols-outlined text-zinc-300 text-5xl">image</span>
+        )}
+      </div>
+      <h4 className="font-manrope font-bold text-sm uppercase tracking-tight text-zinc-900 group-hover:text-[#E8A811] transition-colors">
+        {product.name}
+      </h4>
+      <p className="font-manrope font-black text-sm mt-1">{formatPrice(product.price)}</p>
+    </div>
+  );
+};
+
 const Index = () => {
-  const { storefrontCategories } = useStorefrontConfig();
+  const { storefrontConfig, storefrontCategories } = useStorefrontConfig();
+  const navigate = useNavigate();
   const [newArrivals, setNewArrivals] = useState<Product[]>([]);
   const [bestSellers, setBestSellers] = useState<Product[]>([]);
+  const [newsletterEmail, setNewsletterEmail] = useState("");
 
   useEffect(() => {
     let isMounted = true;
@@ -41,23 +80,24 @@ const Index = () => {
       if (!isMounted) return;
 
       const allProducts =
-        allProductsResult.status === "fulfilled" && Array.isArray(allProductsResult.value) ? allProductsResult.value : [];
+        allProductsResult.status === "fulfilled" && Array.isArray(allProductsResult.value)
+          ? allProductsResult.value
+          : [];
       const topSellingIds =
         topSellingIdsResult.status === "fulfilled" && Array.isArray(topSellingIdsResult.value)
           ? topSellingIdsResult.value
           : [];
 
-      const productById = new Map(allProducts.map((product) => [product.id, product]));
+      const productById = new Map(allProducts.map((p) => [p.id, p]));
       const rankedBestSellers = topSellingIds
-        .map((productId) => productById.get(productId))
-        .filter((product): product is Product => Boolean(product));
+        .map((id) => productById.get(id))
+        .filter((p): p is Product => Boolean(p));
 
       setNewArrivals(allProducts.slice(0, 4));
       setBestSellers((rankedBestSellers.length > 0 ? rankedBestSellers : allProducts).slice(0, 4));
     };
 
     void loadHomepageProducts();
-
     return () => {
       isMounted = false;
     };
@@ -69,233 +109,350 @@ const Index = () => {
         key: category.id || category.slug,
         title: category.name,
         to: `/shop?category=${encodeURIComponent(category.slug)}`,
-        imageAlt: `${category.name} collection`,
         imageUrl: category.imageUrl || "/placeholder.svg",
+        imageAlt: `${category.name} collection`,
       })),
     [storefrontCategories],
   );
 
+  const handleNewsletterSubmit = (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    const normalizedEmail = newsletterEmail.trim();
+    if (!normalizedEmail) return;
+    const supportEmail = storefrontConfig.contact.email.trim();
+    if (!supportEmail) {
+      navigate("/contact");
+      return;
+    }
+    const subject = encodeURIComponent(`${storefrontConfig.storeName} newsletter signup`);
+    const body = encodeURIComponent(`Please add this email to the newsletter list:\n\n${normalizedEmail}`);
+    window.location.href = `mailto:${supportEmail}?subject=${subject}&body=${body}`;
+    setNewsletterEmail("");
+  };
+
   return (
-    <div className="bg-[#F9F9F9] font-notoSerif text-[#1A1C1C] selection:bg-[#e9ecef] selection:text-[#3e001f]">
+    <div className="bg-white text-[#1a1c1c] font-inter">
       <main>
-        <section className="relative flex h-[921px] items-center overflow-hidden bg-[#F3F3F4]">
-          <div className="absolute inset-0 overflow-hidden">
+        {/* ── Hero ── */}
+        <section className="relative h-[700px] flex items-center bg-zinc-900 overflow-hidden">
+          <div className="absolute inset-0 z-0">
             <img
-              src="/assets/homepage-hero.jpg"
-              alt="Stylish couple in coordinated modern fashion"
-              className="h-full w-full object-cover object-[center_20%]"
+              src="/assets/homepage-hero1.png"
+              alt="Hero Collection"
+              className="w-full h-full object-cover"
             />
+            <div className="absolute inset-0 bg-gradient-to-r from-black/60 via-black/30 to-transparent" />
           </div>
 
-          <div className="absolute inset-0 bg-gradient-to-r from-[#F9F9F9]/88 via-[#F9F9F9]/42 to-transparent" />
-          <div className="absolute inset-0 bg-gradient-to-t from-[#F9F9F9]/64 via-transparent to-transparent" />
-
-          <div className="relative z-10 mx-auto w-full max-w-[1536px] self-end px-4 pb-6 sm:px-8 sm:pb-10 md:pb-14">
-            <div className="max-w-lg rounded-2xl border border-[#e3bdc7] bg-[rgba(249,249,249,0.86)] p-5 shadow-[0_20px_45px_rgba(26,28,28,0.08)] backdrop-blur-[12px] sm:max-w-xl sm:p-6 md:ml-4">
-              <h1 className="font-notoSerif text-[2.7rem] font-bold leading-[1.05] text-[#1A1C1C] sm:text-[3.5rem]">
-                Your Wardrobe,
-                <br />
-                <span className="italic text-[#D81B60]">Our Closet</span>
-              </h1>
-
-              {/* <p className="mt-6 max-w-[640px] text-[1.15rem] leading-relaxed text-[#5E5E5E]">
-                Curated high-end Ghanaian fashion, redefined for the contemporary aesthetic. Luxury accessible to your
-                everyday.
-              </p> */}
-
-              <Link
-                to="/shop"
-                className="mt-8 inline-flex bg-gradient-to-r from-[#B0004A] to-[#D81B60] px-10 py-4 font-manrope text-sm font-semibold uppercase tracking-[0.18em] text-white transition-all duration-300 hover:-translate-y-1 hover:from-[#B0004A] hover:to-[#B0004A]"
-              >
-                Shop Now
-              </Link>
-            </div>
-          </div>
-        </section>
-
-        <section className="bg-[#FFFFFF] py-6 md:py-8">
-          <div className="mx-auto max-w-[1536px] px-4 sm:px-8">
-            <div className="mb-6 md:mb-7">
-              <span className="font-manrope text-xs font-semibold uppercase tracking-[0.18em] text-[#B0004A]">
-                Why E&S Closet
+          <div className="relative z-10 px-8 lg:px-16 w-full max-w-[1440px] mx-auto">
+            <div className="max-w-xl">
+              <span className="text-[#E8A811] font-manrope font-bold uppercase tracking-[0.4em] text-[10px] mb-6 block">
+                Season Drop 2024
               </span>
-              <h2 className="mt-2 font-notoSerif text-3xl font-bold text-[#1A1C1C] md:text-4xl lg:text-5xl">Built for a Better Store Experience</h2>
-            </div>
-
-            <div className="grid grid-cols-2 gap-3.5 sm:gap-4 md:grid-cols-2 lg:grid-cols-4 lg:gap-6">
-              {FUNDAMENTALS.map((item) => (
-                <article key={item.title} className="border border-[#e3bdc7] bg-[#F9F9F9] p-4 sm:p-5 md:p-6">
-                  <h3 className="font-notoSerif text-base font-bold leading-tight text-[#1A1C1C] sm:text-lg md:text-xl">{item.title}</h3>
-                  <p className="mt-2 font-manrope text-[11px] leading-relaxed text-[#5E5E5E] sm:text-xs md:mt-3 md:text-sm">
-                    {item.description}
-                  </p>
-                </article>
-              ))}
+              <h1 className="font-manrope font-extrabold text-6xl md:text-8xl text-white tracking-tighter leading-[0.9] mb-8 uppercase italic">
+                Step Clean,
+                <br />
+                Dress Loud
+              </h1>
+              <p className="text-white text-base font-medium mb-10 max-w-sm opacity-90 leading-relaxed font-manrope">
+                The definitive curation of rare footwear and elite streetwear for the modern digital collector.
+              </p>
+              <div className="flex flex-wrap gap-4">
+                <Link
+                  to="/shop"
+                  className="bg-[#E8A811] text-black px-10 py-4 font-manrope font-black uppercase tracking-widest text-[10px] hover:bg-white transition-all shadow-xl"
+                >
+                  Shop The Selection
+                </Link>
+                <Link
+                  to="/shop"
+                  className="bg-white text-black px-10 py-4 font-manrope font-black uppercase tracking-widest text-[10px] hover:bg-zinc-100 transition-all shadow-xl"
+                >
+                  New Arrivals
+                </Link>
+              </div>
             </div>
           </div>
         </section>
 
-        {categoryTiles.length > 0 ? (
-          <section className="mx-auto max-w-[1536px] px-4 py-6 sm:px-8 md:py-8">
-            <div className="mb-8 flex items-end justify-between gap-4 md:mb-10">
-              <div>
-                <span className="font-manrope text-xs font-semibold uppercase tracking-[0.18em] text-[#B0004A]">
-                  Discover Collections
-                </span>
-                <h2 className="mt-2 font-notoSerif text-3xl font-bold text-[#1A1C1C] md:text-4xl lg:text-5xl">Shop by Category</h2>
+        {/* ── Trust Badges ── */}
+        <section className="bg-white py-12 border-b border-zinc-100">
+          <div className="max-w-[1440px] mx-auto px-8 grid grid-cols-1 md:grid-cols-3 gap-10 md:gap-12">
+            {TRUST_BADGES.map((badge) => (
+              <div key={badge.title} className="flex items-center gap-5">
+                <div className="w-12 h-12 flex items-center justify-center bg-zinc-50 rounded-full shrink-0">
+                  <span className="material-symbols-outlined text-black text-2xl">{badge.icon}</span>
+                </div>
+                <div>
+                  <h4 className="font-manrope font-black text-xs uppercase tracking-widest mb-1">
+                    {badge.title}
+                  </h4>
+                  <p className="text-[11px] text-zinc-500 font-medium uppercase tracking-wider font-manrope">
+                    {badge.description}
+                  </p>
+                </div>
               </div>
-              <Link
-                to="/shop"
-                className="font-manrope text-sm font-semibold text-[#B0004A] underline decoration-2 underline-offset-4 transition-colors hover:text-[#D81B60]"
-              >
-                View All Categories
-              </Link>
-            </div>
+            ))}
+          </div>
+        </section>
 
-            <div className="grid grid-cols-2 gap-4 md:hidden">
-              {categoryTiles.map((tile) => (
-                <Link key={`${tile.key}-mobile`} to={tile.to} className="group relative block cursor-pointer overflow-hidden">
+        {/* ── Category Tiles ── */}
+        {categoryTiles.length > 0 ? (
+          <section className="py-24 px-8 max-w-[1440px] mx-auto">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+              {categoryTiles.slice(0, 2).map((tile) => (
+                <Link
+                  key={tile.key}
+                  to={tile.to}
+                  className="group relative aspect-[16/9] overflow-hidden bg-zinc-100 block"
+                >
                   <img
                     src={tile.imageUrl}
                     alt={tile.imageAlt}
-                    className="aspect-[3/4] h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
+                    className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105"
                   />
-                  <div className="absolute inset-0 bg-black/10 transition-colors duration-500 group-hover:bg-[#D81B60]/20" />
-                  <div className="absolute bottom-6 left-5">
-                    <h3 className="font-notoSerif text-2xl font-bold text-white">{tile.title}</h3>
-                    <div className="mt-2 h-1 w-12 bg-[#D81B60] transition-all duration-500 group-hover:w-full" />
+                  <div className="absolute inset-0 bg-black/20 group-hover:bg-black/30 transition-colors" />
+                  <div className="absolute inset-0 flex flex-col justify-center items-center p-8 text-center">
+                    <h3 className="font-manrope text-4xl md:text-5xl text-white font-black uppercase italic tracking-tighter mb-4">
+                      {tile.title}
+                    </h3>
+                    <span className="bg-white text-black text-[10px] font-manrope font-black uppercase px-8 py-3 tracking-widest group-hover:bg-[#E8A811] transition-colors shadow-lg">
+                      Shop {tile.title}
+                    </span>
                   </div>
                 </Link>
               ))}
             </div>
 
-            <div
-              className="hidden gap-5 md:grid"
-              style={{
-                gridTemplateColumns:
-                  categoryTiles.length > 0 ? `repeat(${categoryTiles.length}, minmax(0, 1fr))` : undefined,
-              }}
-            >
-              {categoryTiles.map((tile) => (
-                <Link key={`${tile.key}-desktop`} to={tile.to} className="group relative block cursor-pointer overflow-hidden">
-                  <img
-                    src={tile.imageUrl}
-                    alt={tile.imageAlt}
-                    className="aspect-[3/4] h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
-                  />
-                  <div className="absolute inset-0 bg-black/10 transition-colors duration-500 group-hover:bg-[#D81B60]/20" />
-                  <div className="absolute bottom-8 left-8">
-                    <h3 className="font-notoSerif text-3xl font-bold text-white">{tile.title}</h3>
-                    <div className="mt-2 h-1 w-12 bg-[#D81B60] transition-all duration-500 group-hover:w-full" />
-                  </div>
-                </Link>
-              ))}
-            </div>
+            {/* Additional category tiles (3+) in a 3-col sub-grid */}
+            {categoryTiles.length > 2 ? (
+              <div className="grid grid-cols-2 md:grid-cols-3 gap-8 mt-8">
+                {categoryTiles.slice(2).map((tile) => (
+                  <Link
+                    key={tile.key}
+                    to={tile.to}
+                    className="group relative aspect-[16/9] overflow-hidden bg-zinc-100 block"
+                  >
+                    <img
+                      src={tile.imageUrl}
+                      alt={tile.imageAlt}
+                      className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105"
+                    />
+                    <div className="absolute inset-0 bg-black/20 group-hover:bg-black/30 transition-colors" />
+                    <div className="absolute inset-0 flex flex-col justify-center items-center p-6 text-center">
+                      <h3 className="font-manrope text-2xl md:text-3xl text-white font-black uppercase italic tracking-tighter mb-3">
+                        {tile.title}
+                      </h3>
+                      <span className="bg-white text-black text-[10px] font-manrope font-black uppercase px-6 py-2 tracking-widest group-hover:bg-[#E8A811] transition-colors shadow-lg">
+                        Shop Now
+                      </span>
+                    </div>
+                  </Link>
+                ))}
+              </div>
+            ) : null}
           </section>
         ) : null}
 
-        <section className="bg-[#FFFFFF] py-6 md:py-8">
-          <div className="mx-auto max-w-[1536px] px-4 sm:px-8">
-            <div className="mb-8 flex items-end justify-between gap-4 md:mb-10">
-              <div>
-                <span className="font-manrope text-xs font-semibold uppercase tracking-[0.18em] text-[#B0004A]">
-                  Curated Collection
-                </span>
-                <h2 className="mt-2 font-notoSerif text-3xl font-bold text-[#1A1C1C] md:text-4xl lg:text-5xl">New Arrivals</h2>
-              </div>
-              <Link
-                to="/shop"
-                className="font-manrope text-sm font-semibold text-[#B0004A] underline decoration-2 underline-offset-4 transition-colors hover:text-[#D81B60]"
-              >
-                View All Collection
-              </Link>
+        {/* ── Current Drops / New Arrivals ── */}
+        <section className="py-24 px-8 max-w-[1440px] mx-auto border-t border-zinc-100">
+          <div className="flex flex-col sm:flex-row justify-between items-end mb-12 gap-4">
+            <div className="max-w-md">
+              <h2 className="font-manrope text-4xl font-extrabold tracking-tighter uppercase italic">
+                Current Drops
+              </h2>
+              <p className="text-zinc-500 mt-2 text-sm uppercase tracking-wider font-medium font-manrope">
+                New arrivals from our curated brands, updated weekly.
+              </p>
             </div>
-
-            {newArrivals.length > 0 ? (
-              <div className="grid grid-cols-2 gap-4 md:grid-cols-2 lg:grid-cols-4 lg:gap-6">
-                {newArrivals.map((product) => (
-                  <StorefrontProductCard key={product.id} product={product} />
-                ))}
-              </div>
-            ) : (
-              <div className="border border-[#e3bdc7] bg-[#fff] px-6 py-10 text-center">
-                <p className="font-manrope text-sm text-[#5E5E5E]">No new arrivals available yet.</p>
-              </div>
-            )}
+            <Link
+              to="/shop"
+              className="font-manrope font-black text-[10px] uppercase tracking-widest border-b-2 border-black pb-1 hover:text-[#E8A811] hover:border-[#E8A811] transition-all whitespace-nowrap"
+            >
+              Explore Full Katalog
+            </Link>
           </div>
+
+          {newArrivals.length > 0 ? (
+            <div className="grid grid-cols-2 lg:grid-cols-4 gap-x-6 gap-y-12">
+              {newArrivals.map((product, index) => (
+                <StorefrontProductCard
+                  key={product.id}
+                  product={product}
+                  badgeLabel={index === 0 ? "Premium" : index === 1 ? "New Arrival" : undefined}
+                  badgeVariant={index === 1 ? "gold" : "dark"}
+                />
+              ))}
+            </div>
+          ) : (
+            <div className="py-12 text-center">
+              <p className="font-manrope text-sm text-zinc-400 uppercase tracking-widest">
+                No new arrivals available yet.
+              </p>
+            </div>
+          )}
         </section>
 
-        <section className="bg-[#F9F9F9] py-6 md:py-8">
-          <div className="mx-auto max-w-[1536px] px-4 sm:px-8">
-            <div className="mb-8 flex items-end justify-between gap-4 md:mb-10">
+        {/* ── Best Sellers ── */}
+        <section className="py-24 bg-zinc-50 border-y border-zinc-100">
+          <div className="max-w-[1440px] mx-auto px-8">
+            <div className="flex justify-between items-end mb-12">
               <div>
-                <span className="font-manrope text-xs font-semibold uppercase tracking-[0.18em] text-[#B0004A]">
-                  Most Loved
-                </span>
-                <h2 className="mt-2 font-notoSerif text-3xl font-bold text-[#1A1C1C] md:text-4xl lg:text-5xl">Best Sellers</h2>
+                <h2 className="font-manrope text-4xl font-extrabold tracking-tighter uppercase italic">
+                  Best Sellers
+                </h2>
+                <p className="text-zinc-500 mt-2 text-sm uppercase tracking-wider font-medium font-manrope">
+                  Most coveted pieces in the kolektion.
+                </p>
               </div>
               <Link
                 to="/shop"
-                className="font-manrope text-sm font-semibold text-[#B0004A] underline decoration-2 underline-offset-4 transition-colors hover:text-[#D81B60]"
+                className="font-manrope font-black text-[10px] uppercase tracking-widest border-b-2 border-black pb-1 hover:text-[#E8A811] hover:border-[#E8A811] transition-all whitespace-nowrap"
               >
                 Shop Best Sellers
               </Link>
             </div>
 
             {bestSellers.length > 0 ? (
-              <div className="grid grid-cols-2 gap-4 md:grid-cols-2 lg:grid-cols-4 lg:gap-6">
+              <div className="flex gap-6 overflow-x-auto pb-6 hide-scrollbar">
                 {bestSellers.map((product) => (
-                  <StorefrontProductCard key={product.id} product={product} actionLabel="View Product" />
+                  <BestSellerCard key={product.id} product={product} />
                 ))}
               </div>
             ) : (
-              <div className="border border-[#e3bdc7] bg-[#fff] px-6 py-10 text-center">
-                <p className="font-manrope text-sm text-[#5E5E5E]">No best sellers available yet.</p>
+              <div className="py-12 text-center">
+                <p className="font-manrope text-sm text-zinc-400 uppercase tracking-widest">
+                  No best sellers available yet.
+                </p>
               </div>
             )}
           </div>
         </section>
 
-        <section className="bg-[#F9F9F9] py-6 md:py-8">
-          <div className="mx-auto max-w-[1280px] px-4 sm:px-8">
-            <div className="grid grid-cols-1 items-center gap-10 lg:grid-cols-2 lg:gap-12">
-              <div className="relative">
-                <div className="absolute -left-10 -top-10 h-64 w-64 bg-[#e9ecef]/80 blur-3xl" />
-                <img
-                  src="https://lh3.googleusercontent.com/aida-public/AB6AXuBEpLhqUZzVZo7P9fGAgmXdUNjlST_StPhgD8GA_wSTggUVM-SQjKIhFwS2gAMIuNLc7IqhqLAXXkTX-ia8kUSOML4NL1bpHEN5L9v13ffnixOfizMRKJMz6TWblOtZa6A-z-ISdP5tJqRmYhEiRJFDgxo5xNGN1gH2OmSSy7bNSCsoHPnpV-ZGOL-I6mWsF1NfpFYy5GU7k2aoRW28Ull-M5vxvN5lfMkpvI8-G_IBUoYKNeiZFKabJzh0d3eTfUpOR3oSAcHj6Lk"
-                  alt="Luxury Showroom"
-                  className="relative z-10 w-full object-cover grayscale transition-all duration-1000 hover:grayscale-0"
-                />
+        {/* ── Curator's Choice / Trending ── */}
+        {newArrivals.length >= 4 ? (
+          <section className="py-24 px-8 max-w-[1440px] mx-auto">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+              {/* Left: Editorial Image */}
+              <div className="relative group">
+                <div className="aspect-[4/5] overflow-hidden bg-zinc-100">
+                  {getPrimaryImage(newArrivals[0]) ? (
+                    <img
+                      src={getPrimaryImage(newArrivals[0])!}
+                      alt="Featured look"
+                      className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105"
+                    />
+                  ) : (
+                    <div className="w-full h-full bg-zinc-100" />
+                  )}
+                </div>
+                {/* Floating card */}
+                <div className="absolute -bottom-6 -right-4 md:-bottom-8 md:-right-8 w-56 md:w-64 p-5 md:p-6 bg-white shadow-2xl border border-zinc-100 hidden sm:block">
+                  <p className="text-[9px] font-black uppercase tracking-[0.3em] text-[#E8A811] mb-2 font-manrope">
+                    Look of the Week
+                  </p>
+                  <h4 className="font-manrope font-bold text-sm uppercase italic mb-4 leading-tight">
+                    {newArrivals[0].name}
+                  </h4>
+                  <Link
+                    to={`/shop/${newArrivals[0].slug}`}
+                    className="text-[10px] font-black uppercase tracking-widest border-b border-black pb-1 hover:text-[#E8A811] hover:border-[#E8A811] transition-all font-manrope"
+                  >
+                    Shop the Look
+                  </Link>
+                </div>
               </div>
 
-              <div>
-                <h2 className="font-notoSerif text-3xl font-bold leading-tight text-[#1A1C1C] md:text-4xl lg:text-5xl">
-                  Elevating Ghanaian Fashion to New Heights
-                </h2>
+              {/* Right: Content + product mini-grid */}
+              <div className="space-y-10 lg:pl-8">
+                <div className="max-w-md">
+                  <span className="text-[#E8A811] font-manrope font-bold uppercase tracking-[0.4em] text-[10px] mb-4 block">
+                    Curator's Choice
+                  </span>
+                  <h2 className="font-manrope text-4xl md:text-5xl font-extrabold tracking-tighter uppercase italic leading-none mb-6">
+                    Trending Now
+                  </h2>
+                  <p className="text-zinc-500 text-base leading-relaxed font-inter">
+                    A curated selection of pieces that are defining the current subculture landscape.
+                    No noise, just elite craftsmanship.
+                  </p>
+                </div>
 
-                <div className="mt-6 space-y-4 text-base leading-relaxed text-[#5E5E5E] md:text-lg">
-                  <p>
-                    E&S Closet was created with the idea that great style should feel both beautiful and attainable. We believe fashion should inspire confidence, reflect individuality, and make every woman feel her best without compromise.
-                  </p>
-                  <p>
-                   Based in Ghana, our brand is built around carefully selected styles that bring together modern trends, elegance, and effortless sophistication. Each collection is chosen for women who appreciate fashion that feels refined, confident, and easy to wear.
-                  </p>
-                  <p>
-                    At E&S Closet, we are more than just a store. We are a destination for women who want to look polished, feel empowered, and enjoy fashion that fits both their taste and their lifestyle.
-                  </p>
-                  <div className="flex items-center gap-4 pt-4">
-                    <span className="h-[2px] w-12 bg-[#D81B60]" />
-                    <span className="font-manrope text-sm font-semibold uppercase tracking-[0.18em] text-[#B0004A]">
-                      Established 2026
-                    </span>
-                  </div>
+                <div className="grid grid-cols-2 gap-6">
+                  {newArrivals.slice(1, 3).map((product) => (
+                    <div
+                      key={product.id}
+                      className="group cursor-pointer"
+                      onClick={() => navigate(`/shop/${product.slug}`)}
+                      role="link"
+                      tabIndex={0}
+                      onKeyDown={(e) => {
+                        if (e.key === "Enter" || e.key === " ") navigate(`/shop/${product.slug}`);
+                      }}
+                      aria-label={`Open ${product.name}`}
+                    >
+                      <div className="aspect-[3/4] bg-zinc-50 mb-3 overflow-hidden border border-zinc-100">
+                        {getPrimaryImage(product) ? (
+                          <img
+                            src={getPrimaryImage(product)!}
+                            alt={product.name}
+                            className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
+                          />
+                        ) : (
+                          <div className="w-full h-full bg-zinc-100 flex items-center justify-center">
+                            <span className="material-symbols-outlined text-zinc-300 text-4xl">image</span>
+                          </div>
+                        )}
+                      </div>
+                      <h5 className="font-manrope font-bold text-xs uppercase tracking-tight group-hover:text-[#E8A811] transition-colors">
+                        {product.name}
+                      </h5>
+                      <p className="font-manrope font-black text-sm mt-1">{formatPrice(product.price)}</p>
+                    </div>
+                  ))}
                 </div>
               </div>
             </div>
+          </section>
+        ) : null}
+
+        {/* ── Newsletter ── */}
+        <section className="py-24 bg-black text-white overflow-hidden relative">
+          <div className="max-w-[1440px] mx-auto px-8 relative z-10 flex flex-col items-center text-center">
+            <h2 className="font-manrope text-5xl md:text-7xl font-extrabold tracking-tighter uppercase italic mb-6">
+              Join the Kolektion
+            </h2>
+            <p className="text-zinc-400 text-sm md:text-base uppercase tracking-[0.3em] font-medium mb-12 max-w-lg font-manrope">
+              Early access to limited drops and exclusive member-only pricing.
+            </p>
+            <div className="w-full max-w-md">
+              <form
+                onSubmit={handleNewsletterSubmit}
+                className="flex border-b border-white/30 pb-3 focus-within:border-[#E8A811] transition-colors"
+              >
+                <input
+                  type="email"
+                  value={newsletterEmail}
+                  onChange={(e) => setNewsletterEmail(e.target.value)}
+                  required
+                  placeholder="ENTER YOUR EMAIL ADDRESS"
+                  className="bg-transparent border-none focus:ring-0 focus:outline-none text-sm font-bold uppercase tracking-widest w-full p-0 placeholder:text-zinc-700 font-manrope"
+                />
+                <button
+                  type="submit"
+                  className="text-xs font-black uppercase tracking-widest ml-4 hover:text-[#E8A811] transition-colors whitespace-nowrap font-manrope"
+                >
+                  Join Now
+                </button>
+              </form>
+            </div>
+          </div>
+          {/* Decorative background text */}
+          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-[18vw] font-black text-white/5 uppercase italic pointer-events-none whitespace-nowrap font-manrope select-none">
+            KOLEKTION ELITE
           </div>
         </section>
       </main>
-
     </div>
   );
 };

@@ -7,18 +7,18 @@ describe("getEmailBrandSnapshot", () => {
       requestedPresetKey: "sandstone",
       fallbackPresetKey: "atelier",
       identity: {
-        storeName: "E & S closet",
+        storeName: "Eli's Kolektion",
         supportEmail: "hello@store.com",
-        siteUrl: "https://escloset.vestigh.com",
+        siteUrl: "https://eliskolektion.vestigh.com",
         instagramUrl: "https://instagram.com/example",
         tiktokUrl: "https://tiktok.com/@example",
         facebookUrl: "https://facebook.com/example",
-        unsubscribeUrl: "https://escloset.vestigh.com/unsubscribe",
+        unsubscribeUrl: "https://eliskolektion.vestigh.com/unsubscribe",
       },
     });
 
     expect(snapshot.presetKey).toBe("sandstone");
-    expect(snapshot.identity.storeName).toBe("E & S closet");
+    expect(snapshot.identity.storeName).toBe("Eli's Kolektion");
     expect(snapshot.colors.primary).toBe("#3B2A1F");
     expect(snapshot.typography.heading).toContain("Fraunces");
   });

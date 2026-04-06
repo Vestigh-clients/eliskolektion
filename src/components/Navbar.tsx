@@ -31,10 +31,7 @@ const Navbar = () => {
   }, [location.pathname, location.search]);
 
   useEffect(() => {
-    if (location.pathname !== "/shop") {
-      return;
-    }
-
+    if (location.pathname !== "/shop") return;
     setSearchValue(searchParams.get("q") ?? "");
   }, [location.pathname, searchParams]);
 
@@ -48,9 +45,7 @@ const Navbar = () => {
   }, [storefrontCategories]);
 
   const categoryItems = useMemo(() => {
-    const ordered = normalizedCategories.slice(0, CATEGORY_NAV_LIMIT);
-
-    return ordered.map<NavItem>((category) => ({
+    return normalizedCategories.slice(0, CATEGORY_NAV_LIMIT).map<NavItem>((category) => ({
       key: category.slug,
       label: category.label,
       to: `/shop?category=${encodeURIComponent(category.slug)}`,
@@ -61,6 +56,7 @@ const Navbar = () => {
 
   const navItems = useMemo<NavItem[]>(
     () => [
+      { key: "shop", label: "Shop All", to: "/shop", type: "page" },
       ...categoryItems,
       { key: "about", label: "About", to: "/about", type: "page" },
       { key: "contact", label: "Contact", to: "/contact", type: "page" },
@@ -71,103 +67,84 @@ const Navbar = () => {
   const activeCategory = (searchParams.get("category") ?? "").trim().toLowerCase();
 
   const isItemActive = (item: NavItem, index: number) => {
-    if (item.type === "page") {
-      return location.pathname === item.to;
-    }
-
-    if (location.pathname === "/" && index === 0) {
-      return true;
-    }
-
+    if (item.type === "page") return location.pathname === item.to;
+    if (location.pathname === "/" && index === 1) return true;
     return location.pathname === "/shop" && activeCategory === (item.categorySlug ?? "");
-  };
-
-  const getDesktopLinkClass = (item: NavItem, index: number) => {
-    const active = isItemActive(item, index);
-    return [
-      "whitespace-nowrap font-notoSerif text-sm tracking-wide uppercase border-b-2 pb-1 transition-colors leading-none",
-      active ? "border-[#D81B60] text-[#D81B60]" : "border-transparent text-on-surface-variant hover:text-[#D81B60]",
-    ].join(" ");
-  };
-
-  const getMobileLinkClass = (item: NavItem, index: number) => {
-    const active = isItemActive(item, index);
-    return [
-      "font-notoSerif text-sm tracking-wide uppercase transition-colors",
-      active ? "text-[#D81B60]" : "text-on-surface-variant hover:text-[#D81B60]",
-    ].join(" ");
   };
 
   const handleSearchSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-
     const nextParams = new URLSearchParams();
     const requestedCategory = (searchParams.get("category") ?? "").trim().toLowerCase();
     if (location.pathname === "/shop" && requestedCategory && categoryItems.some((item) => item.categorySlug === requestedCategory)) {
       nextParams.set("category", requestedCategory);
     }
-
     const normalizedSearch = searchValue.trim();
-    if (normalizedSearch.length > 0) {
-      nextParams.set("q", normalizedSearch);
-    }
-
+    if (normalizedSearch.length > 0) nextParams.set("q", normalizedSearch);
     const query = nextParams.toString();
     navigate(query ? `/shop?${query}` : "/shop");
   };
 
   const accountRoute = useMemo(() => {
-    if (isAuthenticated) {
-      return "/account";
-    }
-
-    const authSearch = buildAuthModalSearch(location.search, {
-      mode: "login",
-      redirect: "/account",
-    });
+    if (isAuthenticated) return "/account";
+    const authSearch = buildAuthModalSearch(location.search, { mode: "login", redirect: "/account" });
     return buildPathWithSearch(location.pathname, authSearch, location.hash);
   }, [isAuthenticated, location.hash, location.pathname, location.search]);
 
   return (
-    <header className="bg-surface/80 dark:bg-zinc-950/80 docked full-width sticky top-0 z-50 w-full shadow-sm backdrop-blur-xl dark:shadow-none">
-      <nav className="mx-auto flex w-full max-w-screen-2xl items-center justify-between px-6 py-4 md:px-8">
-        <div className="flex min-w-0 items-center gap-6 lg:gap-8">
-          <Link to="/" className="shrink-0 whitespace-nowrap font-notoSerif text-2xl italic font-bold text-on-background dark:text-white">
+    <header className="fixed top-0 left-0 right-0 z-50 bg-[#f9f9f9] border-b border-zinc-100">
+      <nav className="flex justify-between items-center w-full px-6 py-4 max-w-[1440px] mx-auto md:px-8">
+        {/* Left: Logo + Nav */}
+        <div className="flex items-center gap-8 lg:gap-12 min-w-0">
+          <Link
+            to="/"
+            className="shrink-0 text-xl font-black tracking-tighter text-black uppercase font-manrope"
+          >
             {storefrontConfig.storeName}
           </Link>
 
-          <div className="hidden md:flex items-center gap-5 lg:gap-6">
-            {navItems.map((item, index) => (
-              <Link key={item.key} to={item.to} className={getDesktopLinkClass(item, index)}>
-                {item.label}
-              </Link>
-            ))}
+          <div className="hidden md:flex items-center gap-6 lg:gap-8 font-manrope uppercase tracking-widest text-xs font-bold">
+            {navItems.map((item, index) => {
+              const active = isItemActive(item, index);
+              return (
+                <Link
+                  key={item.key}
+                  to={item.to}
+                  className={[
+                    "whitespace-nowrap pb-1 transition-colors border-b-2",
+                    active
+                      ? "text-[#E8A811] border-[#E8A811]"
+                      : "text-black border-transparent hover:text-[#E8A811]",
+                  ].join(" ")}
+                >
+                  {item.label}
+                </Link>
+              );
+            })}
           </div>
         </div>
 
+        {/* Right: Search + Icons */}
         <div className="flex shrink-0 items-center gap-4 sm:gap-6">
-          <form
-            onSubmit={handleSearchSubmit}
-            className="hidden lg:flex items-center gap-2 bg-surface-container-high px-4 py-2 rounded-lg"
-          >
-            <button type="submit" aria-label="Search products">
-              <span className="material-symbols-outlined text-sm text-on-surface-variant">search</span>
-            </button>
+          <form onSubmit={handleSearchSubmit} className="hidden lg:block relative">
+            <span className="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-zinc-400 text-sm">
+              search
+            </span>
             <input
               type="text"
               value={searchValue}
-              onChange={(event) => setSearchValue(event.target.value)}
-              placeholder="Search..."
-              className="w-32 bg-transparent border-none text-xs placeholder:text-on-surface-variant focus:ring-0 focus:outline-none"
+              onChange={(e) => setSearchValue(e.target.value)}
+              placeholder="Search curated items..."
+              className="bg-[#e8e8e8] border-none text-[10px] pl-10 pr-4 py-2 w-56 rounded-full focus:ring-1 focus:ring-[#E8A811] focus:outline-none uppercase font-bold tracking-widest font-manrope placeholder:text-zinc-500"
             />
           </form>
 
-          <div className="flex items-center gap-3 sm:gap-4 text-[#D81B60] dark:text-[#e9ecef]">
+          <div className="flex items-center gap-3 sm:gap-4 text-[#E8A811]">
             {isAdmin ? (
               <Link
                 to="/admin"
                 aria-label="Open admin panel"
-                className="hidden md:inline-flex items-center border border-[#D81B60] px-3 py-1.5 font-manrope text-[10px] font-semibold uppercase tracking-[0.12em] text-[#D81B60] transition-colors hover:bg-[#D81B60] hover:text-white"
+                className="hidden md:inline-flex items-center border border-[#E8A811] px-3 py-1.5 font-manrope text-[10px] font-black uppercase tracking-widest text-[#E8A811] transition-colors hover:bg-[#E8A811] hover:text-black"
               >
                 Admin
               </Link>
@@ -179,53 +156,71 @@ const Navbar = () => {
               aria-label="Open cart"
               className="relative inline-flex hover:opacity-80 transition-all duration-300 active:scale-95"
             >
-              <span className="material-symbols-outlined">shopping_bag</span>
+              <span className="material-symbols-outlined">shopping_cart</span>
               {totalItems > 0 ? (
-                <span className="absolute -right-2 -top-1.5 inline-flex min-w-[16px] justify-center rounded-full bg-[#B0004A] px-1.5 py-[1px] font-manrope text-[9px] font-semibold text-white">
+                <span className="absolute -right-2 -top-1.5 inline-flex min-w-[16px] justify-center rounded-full bg-black px-1.5 py-[1px] font-manrope text-[9px] font-black text-white">
                   {totalItems > 99 ? "99+" : totalItems}
                 </span>
               ) : null}
             </button>
 
-            <Link to={accountRoute} aria-label="Open account" className="inline-flex hover:opacity-80 transition-all duration-300 active:scale-95">
+            <Link
+              to={accountRoute}
+              aria-label="Open account"
+              className="inline-flex hover:opacity-80 transition-all duration-300 active:scale-95"
+            >
               <span className="material-symbols-outlined">person</span>
             </Link>
 
             <button
               type="button"
-              onClick={() => setIsMobileMenuOpen((previous) => !previous)}
+              onClick={() => setIsMobileMenuOpen((prev) => !prev)}
               aria-label="Toggle mobile menu"
-              className="md:hidden"
+              className="md:hidden text-black"
             >
-              <span className="material-symbols-outlined text-on-surface">menu</span>
+              <span className="material-symbols-outlined">{isMobileMenuOpen ? "close" : "menu"}</span>
             </button>
           </div>
         </div>
       </nav>
 
+      {/* Mobile Menu */}
       {isMobileMenuOpen ? (
-        <div className="md:hidden bg-surface-container-low px-4 pb-4 pt-1 sm:px-8">
-          <form onSubmit={handleSearchSubmit} className="mb-4 flex items-center gap-2 bg-surface-container-high px-4 py-2 rounded-lg">
-            <button type="submit" aria-label="Search products">
-              <span className="material-symbols-outlined text-sm text-on-surface-variant">search</span>
-            </button>
+        <div className="md:hidden bg-[#f9f9f9] border-t border-zinc-100 px-6 pb-6 pt-4">
+          <form onSubmit={handleSearchSubmit} className="mb-5 relative">
+            <span className="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-zinc-400 text-sm">
+              search
+            </span>
             <input
               type="text"
               value={searchValue}
-              onChange={(event) => setSearchValue(event.target.value)}
+              onChange={(e) => setSearchValue(e.target.value)}
               placeholder="Search..."
-              className="w-full bg-transparent border-none text-xs placeholder:text-on-surface-variant focus:ring-0 focus:outline-none"
+              className="bg-[#e8e8e8] border-none text-[10px] pl-10 pr-4 py-2 w-full rounded-full focus:ring-1 focus:ring-[#E8A811] focus:outline-none uppercase font-bold tracking-widest font-manrope placeholder:text-zinc-500"
             />
           </form>
 
-          <div className="flex flex-col gap-3">
-            {navItems.map((item, index) => (
-              <Link key={`mobile-${item.key}`} to={item.to} className={getMobileLinkClass(item, index)}>
-                {item.label}
-              </Link>
-            ))}
+          <div className="flex flex-col gap-4">
+            {navItems.map((item, index) => {
+              const active = isItemActive(item, index);
+              return (
+                <Link
+                  key={`mobile-${item.key}`}
+                  to={item.to}
+                  className={[
+                    "font-manrope text-xs font-bold uppercase tracking-widest transition-colors",
+                    active ? "text-[#E8A811]" : "text-black hover:text-[#E8A811]",
+                  ].join(" ")}
+                >
+                  {item.label}
+                </Link>
+              );
+            })}
             {isAdmin ? (
-              <Link to="/admin" className="font-notoSerif text-sm tracking-wide uppercase text-[#D81B60]">
+              <Link
+                to="/admin"
+                className="font-manrope text-xs font-bold uppercase tracking-widest text-[#E8A811]"
+              >
                 Admin
               </Link>
             ) : null}

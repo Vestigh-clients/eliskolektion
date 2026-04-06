@@ -17,57 +17,46 @@ const Footer = () => {
   const navigate = useNavigate();
   const [newsletterEmail, setNewsletterEmail] = useState("");
 
-  const quickLinks = useMemo<FooterLink[]>(() => {
+  const explorationLinks = useMemo<FooterLink[]>(() => {
     return storefrontCategories.slice(0, 6).map((category) => ({
       label: category.name.trim() || "Category",
       href: `/shop?category=${encodeURIComponent(category.slug)}`,
     }));
   }, [storefrontCategories]);
 
-  const companyLinks = useMemo<FooterLink[]>(() => {
+  const supportLinks = useMemo<FooterLink[]>(() => {
     const fromConfig = contentConfig.footer.companyLinks
       .map((link) => ({ label: link.label.trim(), href: link.href.trim() }))
       .filter((link) => Boolean(link.label) && Boolean(link.href));
 
-    const supportLinks: FooterLink[] = [];
-
+    const contactLinks: FooterLink[] = [];
     if (storefrontConfig.contact.whatsapp.trim()) {
-      supportLinks.push({
+      contactLinks.push({
         label: "WhatsApp Support",
         href: buildWhatsAppContactLink(storefrontConfig.storeName, storefrontConfig.contact.whatsapp),
       });
     }
-
     if (storefrontConfig.contact.email.trim()) {
-      supportLinks.push({
-        label: "Email Us",
-        href: `mailto:${storefrontConfig.contact.email.trim()}`,
-      });
+      contactLinks.push({ label: "Email Us", href: `mailto:${storefrontConfig.contact.email.trim()}` });
     }
-
     if (storefrontConfig.contact.phone.trim()) {
-      supportLinks.push({
-        label: "Call Us",
-        href: `tel:${storefrontConfig.contact.phone.trim()}`,
-      });
+      contactLinks.push({ label: "Call Us", href: `tel:${storefrontConfig.contact.phone.trim()}` });
     }
 
-    return [...fromConfig, ...supportLinks];
+    return [...fromConfig, ...contactLinks];
   }, [storefrontConfig.contact.email, storefrontConfig.contact.phone, storefrontConfig.contact.whatsapp, storefrontConfig.storeName]);
 
   const socialLinks = useMemo<FooterLink[]>(() => {
     const entries = [
-      { label: "Instagram", href: storefrontConfig.socials.instagram.trim(), icon: "photo_camera" },
-      { label: "Facebook", href: storefrontConfig.socials.facebook.trim(), icon: "thumb_up" },
-      { label: "Twitter", href: storefrontConfig.socials.twitter.trim(), icon: "alternate_email" },
-      { label: "TikTok", href: storefrontConfig.socials.tiktok.trim(), icon: "music_note" },
+      { label: "Instagram", href: storefrontConfig.socials.instagram.trim() },
+      { label: "Twitter / X", href: storefrontConfig.socials.twitter.trim() },
+      { label: "Facebook", href: storefrontConfig.socials.facebook.trim() },
+      { label: "TikTok", href: storefrontConfig.socials.tiktok.trim() },
     ].filter((item) => Boolean(item.href));
 
     const seen = new Set<string>();
     return entries.filter((item) => {
-      if (seen.has(item.href)) {
-        return false;
-      }
+      if (seen.has(item.href)) return false;
       seen.add(item.href);
       return true;
     });
@@ -75,20 +64,17 @@ const Footer = () => {
 
   const renderLink = (link: FooterLink, className: string) => {
     if (isAbsoluteUrl(link.href) || isSpecialProtocol(link.href)) {
-      const opensNewTab = isAbsoluteUrl(link.href);
-
       return (
         <a
           href={link.href}
           className={className}
-          target={opensNewTab ? "_blank" : undefined}
-          rel={opensNewTab ? "noopener noreferrer" : undefined}
+          target={isAbsoluteUrl(link.href) ? "_blank" : undefined}
+          rel={isAbsoluteUrl(link.href) ? "noopener noreferrer" : undefined}
         >
           {link.label}
         </a>
       );
     }
-
     return (
       <Link to={link.href.startsWith("/") ? link.href : `/${link.href}`} className={className}>
         {link.label}
@@ -98,106 +84,128 @@ const Footer = () => {
 
   const handleNewsletterSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-
     const normalizedEmail = newsletterEmail.trim();
-    if (!normalizedEmail) {
-      return;
-    }
-
+    if (!normalizedEmail) return;
     const supportEmail = storefrontConfig.contact.email.trim();
     if (!supportEmail) {
       navigate("/contact");
       return;
     }
-
     const subject = encodeURIComponent(`${storefrontConfig.storeName} newsletter signup`);
     const body = encodeURIComponent(`Please add this email to the newsletter list:\n\n${normalizedEmail}`);
     window.location.href = `mailto:${supportEmail}?subject=${subject}&body=${body}`;
     setNewsletterEmail("");
   };
 
+  const linkClass = "text-zinc-500 text-[10px] uppercase tracking-widest font-bold font-manrope hover:text-[#E8A811] transition-colors";
+  const headingClass = "text-[11px] font-black uppercase tracking-widest text-black mb-8 font-manrope";
+
   return (
-    <footer className="w-full bg-[#F3F3F4]">
-      <div className="grid w-full grid-cols-1 gap-12 px-6 py-16 md:grid-cols-4 md:px-12">
-        <div className="col-span-1">
-          <div className="mb-6 font-notoSerif text-lg font-bold text-[#D81B60]">{storefrontConfig.storeName}</div>
-          <p className="max-w-xs font-manrope text-xs font-light leading-relaxed text-[#5E5E5E]">{contentConfig.footer.description}</p>
-        </div>
-
-        <div>
-          <h5 className="mb-6 font-manrope text-xs font-semibold uppercase tracking-[0.18em] text-[#B0004A]">Quick Links</h5>
-          <ul className="space-y-4">
-            {quickLinks.map((link) => (
-              <li key={`${link.label}-${link.href}`}>
-                {renderLink(link, "font-manrope text-xs text-[#5E5E5E] transition-colors hover:text-[#D81B60]")}
-              </li>
-            ))}
-          </ul>
-        </div>
-
-        <div>
-          <h5 className="mb-6 font-manrope text-xs font-semibold uppercase tracking-[0.18em] text-[#B0004A]">Company</h5>
-          <ul className="space-y-4">
-            {companyLinks.map((link) => (
-              <li key={`${link.label}-${link.href}`}>
-                {renderLink(link, "font-manrope text-xs text-[#5E5E5E] transition-colors hover:text-[#D81B60]")}
-              </li>
-            ))}
-          </ul>
-        </div>
-
-        <div>
-          <h5 className="mb-6 font-manrope text-xs font-semibold uppercase tracking-[0.18em] text-[#B0004A]">Newsletter</h5>
-          <p className="mb-4 font-manrope text-xs font-light text-[#5E5E5E]">Join our inner circle for exclusive drops.</p>
-          <form onSubmit={handleNewsletterSubmit} className="flex flex-wrap items-end gap-3 sm:flex-nowrap">
-            <input
-              type="email"
-              value={newsletterEmail}
-              onChange={(event) => setNewsletterEmail(event.target.value)}
-              required
-              placeholder="Email Address"
-              className="min-w-0 flex-1 border-b border-[rgba(186,194,201,0.15)] bg-transparent pb-2 font-manrope text-xs text-[#1A1C1C] placeholder:text-[#8f6e78] focus:border-[#D81B60] focus:border-b-2 focus:outline-none"
-            />
-            <button
-              type="submit"
-              className="shrink-0 bg-[#D81B60] px-4 py-2 font-manrope text-xs font-semibold text-white transition-all duration-300 hover:-translate-y-1 hover:bg-[#B0004A]"
-            >
-              JOIN
-            </button>
-          </form>
-        </div>
-      </div>
-
-      <div className="px-6 pb-8 md:px-12">
-        <div className="flex flex-col items-center justify-between gap-4 md:flex-row">
-          <p className="font-manrope text-xs text-[#5E5E5E]">
-            &copy; {new Date().getFullYear()} {storefrontConfig.storeName}. All rights reserved.
-          </p>
-          {socialLinks.length > 0 ? (
-            <div className="flex gap-6">
-              {socialLinks.map((social) => (
-                <a
-                  key={`${social.label}-${social.href}`}
-                  href={social.href}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  aria-label={social.label}
-                  title={social.label}
-                  className="inline-flex text-[#5E5E5E] transition-colors hover:text-[#D81B60]"
-                >
-                  <span className="material-symbols-outlined">
-                    {social.label === "Instagram"
-                      ? "photo_camera"
-                      : social.label === "Facebook"
-                        ? "thumb_up"
-                        : social.label === "Twitter"
-                          ? "alternate_email"
-                          : "music_note"}
-                  </span>
-                </a>
-              ))}
+    <footer className="bg-white border-t border-zinc-100 pt-24 pb-12">
+      <div className="px-6 w-full max-w-[1440px] mx-auto md:px-8">
+        {/* Main grid */}
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-12 md:gap-16 mb-16 md:mb-24">
+          {/* Brand */}
+          <div>
+            <div className="text-xl font-black text-black uppercase mb-6 tracking-tighter italic font-manrope">
+              {storefrontConfig.storeName}
             </div>
-          ) : null}
+            <p className="text-zinc-400 text-[11px] max-w-xs leading-relaxed uppercase tracking-[0.2em] font-medium font-manrope">
+              {contentConfig.footer.description}
+            </p>
+          </div>
+
+          {/* Exploration */}
+          <div>
+            <h5 className={headingClass}>Exploration</h5>
+            <ul className="flex flex-col gap-5">
+              <li>
+                <Link to="/shop" className={linkClass}>Shop All</Link>
+              </li>
+              {explorationLinks.map((link) => (
+                <li key={`${link.label}-${link.href}`}>
+                  {renderLink(link, linkClass)}
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          {/* Support */}
+          <div>
+            <h5 className={headingClass}>Support</h5>
+            <ul className="flex flex-col gap-5">
+              {supportLinks.length > 0 ? (
+                supportLinks.map((link) => (
+                  <li key={`${link.label}-${link.href}`}>
+                    {renderLink(link, linkClass)}
+                  </li>
+                ))
+              ) : (
+                <>
+                  <li><Link to="/contact" className={linkClass}>Contact Us</Link></li>
+                  <li><Link to="/about" className={linkClass}>About Us</Link></li>
+                </>
+              )}
+            </ul>
+          </div>
+
+          {/* Newsletter + Social */}
+          <div>
+            <h5 className={headingClass}>Join the Kolektion</h5>
+            <p className="text-zinc-400 text-[10px] uppercase tracking-[0.2em] font-medium font-manrope mb-6">
+              Early access to drops and exclusive pricing.
+            </p>
+            <form onSubmit={handleNewsletterSubmit} className="mb-10">
+              <div className="flex border-b border-zinc-300 pb-3 focus-within:border-[#E8A811] transition-colors">
+                <input
+                  type="email"
+                  value={newsletterEmail}
+                  onChange={(e) => setNewsletterEmail(e.target.value)}
+                  required
+                  placeholder="ENTER YOUR EMAIL"
+                  className="bg-transparent border-none focus:ring-0 focus:outline-none text-[10px] font-bold uppercase tracking-widest w-full p-0 placeholder:text-zinc-400 font-manrope"
+                />
+                <button
+                  type="submit"
+                  className="text-[10px] font-black uppercase tracking-widest ml-4 hover:text-[#E8A811] transition-colors whitespace-nowrap font-manrope"
+                >
+                  Join Now
+                </button>
+              </div>
+            </form>
+
+            {socialLinks.length > 0 ? (
+              <div>
+                <h5 className={headingClass}>Social</h5>
+                <ul className="flex flex-col gap-4">
+                  {socialLinks.map((social) => (
+                    <li key={`${social.label}-${social.href}`}>
+                      <a
+                        href={social.href}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className={linkClass}
+                      >
+                        {social.label}
+                      </a>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            ) : null}
+          </div>
+        </div>
+
+        {/* Bottom bar */}
+        <div className="flex flex-col md:flex-row justify-between items-center gap-6 border-t border-zinc-100 pt-10">
+          <div className="text-[10px] text-zinc-400 uppercase tracking-[0.2em] font-bold font-manrope">
+            &copy; {new Date().getFullYear()} {storefrontConfig.storeName}. Crafted for the Digital Curator.
+          </div>
+          <div className="flex gap-6">
+            <span className="material-symbols-outlined text-zinc-300">payments</span>
+            <span className="material-symbols-outlined text-zinc-300">shopping_bag</span>
+            <span className="material-symbols-outlined text-zinc-300">shield</span>
+          </div>
         </div>
       </div>
     </footer>

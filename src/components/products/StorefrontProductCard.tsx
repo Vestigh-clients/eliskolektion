@@ -12,13 +12,17 @@ interface StorefrontProductCardProps {
   actionLabel?: string;
   actionHref?: string;
   onAction?: (product: Product) => void;
+  badgeLabel?: string;
+  badgeVariant?: "dark" | "gold";
 }
 
 const StorefrontProductCard = ({
   product,
-  actionLabel = "Add to Cart",
+  actionLabel = "Quick Shop",
   actionHref,
   onAction,
+  badgeLabel,
+  badgeVariant = "dark",
 }: StorefrontProductCardProps) => {
   const navigate = useNavigate();
   const [hasImageError, setHasImageError] = useState(false);
@@ -45,25 +49,17 @@ const StorefrontProductCard = ({
     });
   }, [product.id]);
 
-  const openProduct = () => {
-    navigate(productRoute);
-  };
+  const openProduct = () => navigate(productRoute);
 
   const handleFavoriteClick = (event: MouseEvent<HTMLButtonElement>) => {
     event.preventDefault();
     event.stopPropagation();
-
     const added = addProductToFavorites(product.id);
     if (added) {
-      toast(`${product.name} added to favorites`, {
-        duration: 2200,
-      });
+      toast(`${product.name} added to favorites`, { duration: 2200 });
     } else {
-      toast(`${product.name} is already in favorites`, {
-        duration: 2200,
-      });
+      toast(`${product.name} is already in favorites`, { duration: 2200 });
     }
-
     setIsFavorited(true);
   };
 
@@ -74,7 +70,6 @@ const StorefrontProductCard = ({
       onAction(product);
       return;
     }
-
     openProduct();
   };
 
@@ -92,66 +87,79 @@ const StorefrontProductCard = ({
       }}
       aria-label={`Open ${product.name}`}
     >
-      <div className="relative mb-4 overflow-hidden bg-[#F3F3F4]">
+      <div className="relative aspect-[3/4] mb-4 overflow-hidden bg-zinc-50 border border-zinc-100">
         {imageUrl && !hasImageError ? (
           <img
             src={imageUrl}
             alt={product.name}
-            className="aspect-[4/5] h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+            className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
             loading="lazy"
             onError={() => setHasImageError(true)}
           />
         ) : (
-          <ProductImagePlaceholder className="aspect-[4/5] h-full w-full" />
+          <ProductImagePlaceholder className="w-full h-full" />
         )}
 
+        {/* Badge */}
+        {badgeLabel ? (
+          <div className="absolute top-3 left-3">
+            <span
+              className={[
+                "px-2 py-1 text-[9px] font-black uppercase tracking-widest font-manrope",
+                badgeVariant === "gold"
+                  ? "bg-[#E8A811] text-black"
+                  : "bg-black text-white",
+              ].join(" ")}
+            >
+              {badgeLabel}
+            </span>
+          </div>
+        ) : null}
+
+        {/* Favorite */}
         <button
           type="button"
           onClick={handleFavoriteClick}
-          className={`absolute right-3 top-3 flex h-9 w-9 items-center justify-center rounded-full border bg-white/90 text-sm backdrop-blur transition-colors ${
+          className={[
+            "absolute right-3 top-3 flex h-8 w-8 items-center justify-center bg-white/90 text-sm backdrop-blur transition-colors",
             isFavorited
-              ? "border-[#D81B60] text-[#D81B60]"
-              : "border-outline-variant/50 text-[#5E5E5E] hover:border-[#D81B60] hover:text-[#D81B60]"
-          }`}
+              ? "text-[#E8A811]"
+              : "text-zinc-400 hover:text-[#E8A811]",
+          ].join(" ")}
           aria-label={isFavorited ? "Saved to favorites" : "Add to favorites"}
           title={isFavorited ? "Saved to favorites" : "Add to favorites"}
         >
-          <span className="material-symbols-outlined text-base" style={{ fontVariationSettings: isFavorited ? "'FILL' 1" : "'FILL' 0" }}>
+          <span
+            className="material-symbols-outlined text-base"
+            style={{ fontVariationSettings: isFavorited ? "'FILL' 1" : "'FILL' 0" }}
+          >
             favorite
           </span>
         </button>
 
-        {onAction ? (
+        {/* Quick Shop */}
+        {/* Slide-up action button */}
+        <div className="absolute bottom-0 left-0 w-full p-3 translate-y-full group-hover:translate-y-0 transition-transform duration-300 ease-out">
           <button
             type="button"
             onClick={handleActionClick}
             disabled={outOfStock}
-            className="absolute bottom-4 left-4 right-4 flex translate-y-0 items-center justify-center gap-2 bg-[#D81B60] py-3 font-manrope text-xs font-semibold uppercase tracking-[0.14em] text-white transition-all duration-300 md:translate-y-12 md:group-hover:translate-y-0 md:group-hover:-translate-y-1 md:group-hover:bg-[#B0004A] disabled:cursor-not-allowed disabled:translate-y-0 disabled:bg-[#8f6e78]"
+            className="w-full bg-black/90 text-white py-4 font-manrope font-black text-[10px] uppercase tracking-widest hover:bg-[#E8A811] hover:text-black transition-colors disabled:bg-zinc-400 disabled:cursor-not-allowed"
           >
-            <span className="material-symbols-outlined text-sm">
-              {outOfStock ? "block" : "add_shopping_cart"}
-            </span>
             {actionText}
           </button>
-        ) : (
-          <button
-            type="button"
-            onClick={handleActionClick}
-            className="absolute bottom-4 left-4 right-4 flex translate-y-0 items-center justify-center gap-2 bg-[#D81B60] py-3 font-manrope text-xs font-semibold uppercase tracking-[0.14em] text-white transition-all duration-300 md:translate-y-12 md:group-hover:translate-y-0 md:group-hover:-translate-y-1 md:group-hover:bg-[#B0004A]"
-          >
-            <span className="material-symbols-outlined text-sm">add_shopping_cart</span>
-            {actionLabel}
-          </button>
-        )}
+        </div>
       </div>
 
-      <h4 className="font-notoSerif text-lg font-bold text-[#1A1C1C] transition-colors group-hover:text-[#D81B60]">
-        {product.name}
-      </h4>
-      <p className="mt-1 font-manrope text-xs uppercase tracking-[0.1em] text-[#5E5E5E]">{categoryLabel}</p>
-      <p className="mt-1 font-manrope text-xs font-semibold uppercase tracking-[0.08em] text-[#B0004A]">
-        {formatPrice(product.price)}
-      </p>
+      <div className="flex justify-between items-start mt-1">
+        <div className="min-w-0 pr-2">
+          <h4 className="font-manrope font-bold text-base leading-tight text-zinc-900 group-hover:text-[#E8A811] transition-colors mb-1">
+            {product.name}
+          </h4>
+          <p className="text-zinc-400 text-sm font-manrope">{categoryLabel}</p>
+        </div>
+        <p className="font-manrope font-bold text-base shrink-0">{formatPrice(product.price)}</p>
+      </div>
     </article>
   );
 };
