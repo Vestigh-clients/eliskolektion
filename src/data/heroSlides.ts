@@ -40,7 +40,7 @@ export const heroSlides: HeroSlide[] = [
     cta2: { label: "View All Drops", to: "/shop" },
   },
   {
-    image: "/assets/homepage-hero.jpg",
+    image: "/assets/homepage-hero2.png",
     label: "Elite Selection",
     heading: ["Rare Finds,", "Bold Moves"],
     sub: "Authentic grails sourced from the world's most coveted brands. Verified, curated, delivered.",
