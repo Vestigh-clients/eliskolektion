@@ -58,8 +58,8 @@ const AuthInputField = ({
           htmlFor={id}
           className={`pointer-events-none absolute left-0 font-body transition-all duration-200 ${
             shouldFloatLabel
-              ? "top-[2px] text-[10px] uppercase tracking-[0.12em] text-[var(--color-accent)]"
-              : "top-[20px] text-[14px] text-[var(--color-muted)]"
+              ? "top-[2px] text-[10px] uppercase tracking-[0.12em] text-[#E8A811]"
+              : "top-[20px] text-[14px] text-zinc-500"
           }`}
         >
           {label}

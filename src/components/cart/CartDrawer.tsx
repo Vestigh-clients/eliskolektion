@@ -3,11 +3,10 @@ import { Link, useNavigate } from "react-router-dom";
 import { ShoppingBag, X } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
 import { useCart } from "@/contexts/CartContext";
+import { useStorefrontConfig } from "@/contexts/StorefrontConfigContext";
 import { getSession } from "@/services/authService";
 import ProductImagePlaceholder from "@/components/products/ProductImagePlaceholder";
 import { formatPrice } from "@/lib/price";
-
-const FREE_DELIVERY_THRESHOLD = 50000;
 
 const CartItemThumbnail = ({ src, alt }: { src: string; alt: string }) => {
   const [hasImageError, setHasImageError] = useState(false);
@@ -26,6 +25,8 @@ const CartItemThumbnail = ({ src, alt }: { src: string; alt: string }) => {
 const CartDrawer = () => {
   const navigate = useNavigate();
   const { isAuthenticated, isLoading: isAuthLoading } = useAuth();
+  const { publicSettings } = useStorefrontConfig();
+  const freeShippingThreshold = publicSettings?.freeShippingThreshold;
   const {
     items,
     totalItems,
@@ -97,7 +98,7 @@ const CartDrawer = () => {
           type="button"
           aria-label="Close cart drawer"
           onClick={closeCart}
-          className="absolute right-8 top-8 text-[var(--color-muted)] transition-colors hover:text-[var(--color-primary)]"
+          className="absolute right-8 top-8 text-zinc-500 transition-colors hover:text-[#E8A811]"
         >
           <X size={18} strokeWidth={1.5} />
         </button>
@@ -105,8 +106,8 @@ const CartDrawer = () => {
         <div className="flex h-full flex-col">
           <div className="mb-6 border-b border-[var(--color-border)] pb-4 pr-8">
             <div className="flex items-end justify-between gap-3">
-              <h2 className="font-display text-[28px] text-[var(--color-primary)]">Your Cart</h2>
-              <p className="font-body text-[11px] uppercase tracking-[0.14em] text-[var(--color-muted)]">
+              <h2 className="font-display text-xl font-bold tracking-tight uppercase text-zinc-900">Your Cart</h2>
+              <p className="font-body text-[11px] uppercase tracking-[0.14em] text-zinc-500">
                 {totalItems} {totalItems === 1 ? "ITEM" : "ITEMS"}
               </p>
             </div>
@@ -115,14 +116,14 @@ const CartDrawer = () => {
           {items.length === 0 ? (
             <div className="flex flex-1 flex-col items-center justify-center px-4 text-center">
               <ShoppingBag size={40} strokeWidth={1.35} className="mb-4 text-[var(--color-border)]" />
-              <p className="mb-2 font-display text-[24px] text-[var(--color-muted)]">Your cart is empty</p>
-              <p className="mb-6 font-body text-[13px] font-light text-[var(--color-muted-soft)]">
+              <p className="mb-2 font-display text-[24px] text-zinc-500">Your cart is empty</p>
+              <p className="mb-6 font-body text-[13px] font-light text-zinc-400">
                 Looks like you haven&apos;t added anything yet.
               </p>
               <Link
                 to="/shop"
                 onClick={closeCart}
-                className="font-body text-[11px] uppercase tracking-[0.15em] text-[var(--color-accent)] transition-colors hover:text-[var(--color-primary)]"
+                className="font-body text-[11px] uppercase tracking-[0.15em] text-[#E8A811] transition-colors hover:text-[#E8A811]"
               >
                 Continue Shopping
               </Link>
@@ -139,20 +140,20 @@ const CartDrawer = () => {
 
                       <div className="min-w-0 flex-1">
                         <Link to={`/shop/${item.slug}`} onClick={closeCart}>
-                          <p className="font-display text-[15px] leading-snug text-[var(--color-primary)]">{item.name}</p>
+                          <p className="font-display text-[15px] leading-snug text-zinc-900">{item.name}</p>
                         </Link>
 
-                        <p className="mt-1 font-body text-[10px] uppercase tracking-[0.1em] text-[var(--color-accent)]">{item.category}</p>
+                        <p className="mt-1 font-body text-[10px] uppercase tracking-[0.1em] text-[#E8A811]">{item.category}</p>
                         {item.variant_label ? (
-                          <p className="mt-[3px] mb-[6px] font-body text-[10px] tracking-[0.05em] text-[var(--color-muted)]">
+                          <p className="mt-[3px] mb-[6px] font-body text-[10px] tracking-[0.05em] text-zinc-500">
                             {item.variant_label}
                           </p>
                         ) : null}
 
-                        <div className="mt-2 flex items-center gap-2 font-body text-[12px] text-[var(--color-muted)]">
+                        <div className="mt-2 flex items-center gap-2 font-body text-[12px] text-zinc-500">
                           {item.compare_at_price !== null && item.compare_at_price > item.price ? (
                             <>
-                              <span className="text-[var(--color-muted-soft)] line-through">{formatPrice(item.compare_at_price)}</span>
+                              <span className="text-zinc-400 line-through">{formatPrice(item.compare_at_price)}</span>
                               <span>{formatPrice(item.price)}</span>
                             </>
                           ) : (
@@ -186,7 +187,7 @@ const CartDrawer = () => {
                           <button
                             type="button"
                             onClick={() => removeFromCart(item.product_id, item.variant_id)}
-                            className="font-body text-[10px] uppercase tracking-[0.1em] text-[var(--color-muted-soft)] transition-colors hover:text-[var(--color-danger)]"
+                            className="font-body text-[10px] uppercase tracking-[0.1em] text-zinc-400 transition-colors hover:text-[var(--color-danger)]"
                           >
                             Remove
                           </button>
@@ -199,15 +200,15 @@ const CartDrawer = () => {
 
               <div className="mt-4 border-t border-[var(--color-border)] pt-4">
                 {savings > 0 ? (
-                  <p className="mb-2 text-right font-body text-[11px] text-[var(--color-accent)]">You save {formatPrice(savings)}</p>
+                  <p className="mb-2 text-right font-body text-[11px] text-[#E8A811]">You save {formatPrice(savings)}</p>
                 ) : null}
 
-                <div className="mb-1 flex items-center justify-between font-body text-[13px] font-medium text-[var(--color-muted)]">
+                <div className="mb-1 flex items-center justify-between font-body text-[13px] font-medium text-zinc-500">
                   <span>Subtotal</span>
                   <span>{formatPrice(subtotal)}</span>
                 </div>
 
-                <div className="mb-6 flex items-center justify-between font-body text-[11px] text-[var(--color-muted-soft)]">
+                <div className="mb-6 flex items-center justify-between font-body text-[11px] text-zinc-400">
                   <span>Shipping</span>
                   <span>Calculated at checkout</span>
                 </div>
@@ -216,14 +217,16 @@ const CartDrawer = () => {
                   type="button"
                   onClick={handleProceedToCheckout}
                   disabled={isVerifying || items.length === 0}
-                  className="w-full rounded-[var(--border-radius)] bg-[var(--color-primary)] px-4 py-[18px] font-body text-[11px] uppercase tracking-[0.18em] text-[var(--color-secondary)] transition-colors duration-300 hover:bg-[var(--color-accent)] hover:text-[var(--color-secondary)] disabled:cursor-not-allowed disabled:opacity-60"
+                  className="w-full bg-[#E8A811] px-4 py-4 font-display font-black text-[10px] uppercase tracking-widest text-black transition-colors hover:bg-zinc-900 hover:text-white disabled:cursor-not-allowed disabled:opacity-60"
                 >
                   {isVerifying ? "Verifying..." : "Proceed to Checkout"}
                 </button>
 
-                <p className="mt-3 text-center font-body text-[11px] text-[var(--color-muted-soft)]">
-                  Free delivery on orders over {formatPrice(FREE_DELIVERY_THRESHOLD)}
-                </p>
+                {freeShippingThreshold ? (
+                  <p className="mt-3 text-center font-body text-[11px] text-zinc-400">
+                    Free delivery on orders over {formatPrice(freeShippingThreshold)}
+                  </p>
+                ) : null}
               </div>
             </>
           )}

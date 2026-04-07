@@ -85,33 +85,33 @@ const AccountOverview = () => {
 
   return (
     <div>
-      <h1 className="font-manrope text-lg font-bold tracking-tight uppercase text-zinc-900">Welcome back, {firstName}.</h1>
+      <h1 className="font-display text-lg font-bold tracking-tight uppercase text-zinc-900">Welcome back, {firstName}.</h1>
 
       <div className="mt-5 grid gap-4 md:grid-cols-3">
         <div className="border-b-2 border-[#E8A811] pb-3">
-          <p className="font-manrope text-2xl font-bold text-zinc-900">{totalOrders}</p>
+          <p className="font-display text-2xl font-bold text-zinc-900">{totalOrders}</p>
           <p className="mt-1 font-inter text-[10px] uppercase tracking-[0.12em] text-zinc-400">Total Orders</p>
         </div>
 
         <div className="border-b-2 border-[#E8A811] pb-3">
-          <p className="font-manrope text-2xl font-bold text-zinc-900">{formatPrice(totalSpent)}</p>
+          <p className="font-display text-2xl font-bold text-zinc-900">{formatPrice(totalSpent)}</p>
           <p className="mt-1 font-inter text-[10px] uppercase tracking-[0.12em] text-zinc-400">
             Total Spent (GH&#8373;)
           </p>
         </div>
 
         <div className="border-b-2 border-[#E8A811] pb-3">
-          <p className="font-manrope text-2xl font-bold text-zinc-900">{formatMemberSince(profile?.created_at)}</p>
+          <p className="font-display text-2xl font-bold text-zinc-900">{formatMemberSince(profile?.created_at)}</p>
           <p className="mt-1 font-inter text-[10px] uppercase tracking-[0.12em] text-zinc-400">Member Since</p>
         </div>
       </div>
 
       <section className="mt-8">
         <div className="mb-4 flex items-center justify-between gap-4">
-          <h2 className="font-manrope text-sm font-bold tracking-tight uppercase text-zinc-900">Recent Orders</h2>
+          <h2 className="font-display text-sm font-bold tracking-tight uppercase text-zinc-900">Recent Orders</h2>
           <Link
             to="/account/orders"
-            className="font-manrope font-black text-[10px] uppercase tracking-widest border-b-2 border-zinc-900 pb-1 hover:text-[#E8A811] hover:border-[#E8A811] transition-all whitespace-nowrap"
+            className="font-display font-black text-[10px] uppercase tracking-widest border-b-2 border-zinc-900 pb-1 hover:text-[#E8A811] hover:border-[#E8A811] transition-all whitespace-nowrap"
           >
             View All Orders
           </Link>
@@ -127,10 +127,10 @@ const AccountOverview = () => {
           <p className="font-inter text-[12px] text-red-600">{ordersError}</p>
         ) : recentOrders.length === 0 ? (
           <div className="border-t border-zinc-100 pt-8">
-            <p className="font-manrope text-sm font-medium text-zinc-400">You haven't placed any orders yet.</p>
+            <p className="font-display text-sm font-medium text-zinc-400">You haven't placed any orders yet.</p>
             <Link
               to="/shop"
-              className="mt-5 inline-block font-manrope font-black text-[10px] uppercase tracking-widest border-b-2 border-zinc-900 pb-1 hover:text-[#E8A811] hover:border-[#E8A811] transition-all"
+              className="mt-5 inline-block font-display font-black text-[10px] uppercase tracking-widest border-b-2 border-zinc-900 pb-1 hover:text-[#E8A811] hover:border-[#E8A811] transition-all"
             >
               Start Shopping
             </Link>

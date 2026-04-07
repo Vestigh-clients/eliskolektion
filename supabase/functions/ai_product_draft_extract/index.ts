@@ -130,6 +130,24 @@ const colorSwatches: Record<string, { label: string; hex: string | null }> = {
   maroon: { label: "Maroon", hex: "#800000" },
 }
 
+type StoreBrandOption = {
+  label: string
+  slug: string
+}
+
+const storeBrandOptions: StoreBrandOption[] = [
+  { label: "Nike", slug: "nike" },
+  { label: "Jordan", slug: "jordan" },
+  { label: "Adidas", slug: "adidas" },
+  { label: "Puma", slug: "puma" },
+  { label: "New Balance", slug: "new-balance" },
+  { label: "Converse", slug: "converse" },
+  { label: "Vans", slug: "vans" },
+  { label: "Reebok", slug: "reebok" },
+  { label: "ASICS", slug: "asics" },
+  { label: "Skechers", slug: "skechers" },
+]
+
 const jsonResponse = (status: number, payload: Record<string, unknown>) =>
   new Response(JSON.stringify(payload), {
     status,
@@ -166,6 +184,114 @@ const uniqueCaseInsensitive = (values: string[]) => {
   }
 
   return deduped
+}
+
+const BRAND_TAG_PREFIX = "brand:"
+const BRAND_TOKEN_SANITIZE_REGEX = /[^a-z0-9\s-]/g
+const knownBrandSlugSet = new Set(storeBrandOptions.map((brand) => brand.slug))
+const knownBrandLabelToSlug = new Map(storeBrandOptions.map((brand) => [brand.label.toLowerCase(), brand.slug]))
+const brandOptionsByLabelLength = [...storeBrandOptions].sort((a, b) => b.label.length - a.label.length)
+
+const toBrandSlug = (value: string) =>
+  value
+    .trim()
+    .toLowerCase()
+    .replace(BRAND_TOKEN_SANITIZE_REGEX, "")
+    .replace(/\s+/g, "-")
+    .replace(/-+/g, "-")
+    .replace(/^-+|-+$/g, "")
+
+const getBrandTag = (brandSlug: string) => {
+  const normalizedSlug = toBrandSlug(brandSlug)
+  return normalizedSlug ? `${BRAND_TAG_PREFIX}${normalizedSlug}` : ""
+}
+
+const parseBrandSlugFromTag = (tag: string): string | null => {
+  const normalized = tag.trim()
+  if (!normalized.toLowerCase().startsWith(BRAND_TAG_PREFIX)) return null
+  const slug = toBrandSlug(normalized.slice(BRAND_TAG_PREFIX.length))
+  return slug || null
+}
+
+const escapeRegex = (value: string) => value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")
+
+const parseBrandSlugFromLooseValue = (value: string): string | null => {
+  const normalized = normalizeWhitespace(value)
+  if (!normalized) return null
+
+  const explicitBrandSlug = parseBrandSlugFromTag(normalized)
+  if (explicitBrandSlug) return explicitBrandSlug
+
+  const byLabel = knownBrandLabelToSlug.get(normalized.toLowerCase())
+  if (byLabel) return byLabel
+
+  const slug = toBrandSlug(normalized)
+  return knownBrandSlugSet.has(slug) ? slug : null
+}
+
+const inferBrandSlugFromText = (value: string | null | undefined): string | null => {
+  const normalized = normalizeWhitespace(value ?? "").toLowerCase()
+  if (!normalized) return null
+
+  for (const brand of brandOptionsByLabelLength) {
+    const labelPattern = new RegExp(`(?:^|[^a-z0-9])${escapeRegex(brand.label.toLowerCase())}(?:[^a-z0-9]|$)`, "i")
+    const slugPattern = new RegExp(`(?:^|[^a-z0-9])${escapeRegex(brand.slug.toLowerCase())}(?:[^a-z0-9]|$)`, "i")
+    if (labelPattern.test(normalized) || slugPattern.test(normalized)) {
+      return brand.slug
+    }
+  }
+
+  return null
+}
+
+const getKnownBrandSlugFromTags = (tags: string[] | null | undefined): string | null => {
+  if (!Array.isArray(tags)) return null
+
+  for (const tag of tags) {
+    if (typeof tag !== "string") continue
+    const parsed = parseBrandSlugFromTag(tag)
+    if (parsed) return parsed
+  }
+
+  for (const tag of tags) {
+    if (typeof tag !== "string") continue
+    const parsed = parseBrandSlugFromLooseValue(tag)
+    if (parsed) return parsed
+  }
+
+  return null
+}
+
+const setBrandTagInTags = (tags: string[], brandSlug: string | null) => {
+  const normalizedBrandSlug = brandSlug ? toBrandSlug(brandSlug) : ""
+  const nonBrandTags = uniqueCaseInsensitive(
+    tags
+      .map((tag) => (typeof tag === "string" ? normalizeWhitespace(tag) : ""))
+      .filter((tag) => tag.length > 0 && !tag.toLowerCase().startsWith(BRAND_TAG_PREFIX)),
+  )
+
+  if (!normalizedBrandSlug) {
+    return nonBrandTags
+  }
+
+  return [getBrandTag(normalizedBrandSlug), ...nonBrandTags]
+}
+
+const normalizeTagsWithBrand = (tags: string[], fallbackBrandSlug: string | null = null) => {
+  const dedupedTags = uniqueCaseInsensitive(tags)
+  const selectedBrandSlug = getKnownBrandSlugFromTags(dedupedTags) ?? fallbackBrandSlug
+  const withBrandTag = setBrandTagInTags(dedupedTags, selectedBrandSlug)
+  if (!selectedBrandSlug) return withBrandTag
+
+  const normalizedBrandTag = getBrandTag(selectedBrandSlug).toLowerCase()
+  const selectedBrandLabel = storeBrandOptions.find((brand) => brand.slug === selectedBrandSlug)?.label.toLowerCase() ?? ""
+
+  return withBrandTag.filter((tag) => {
+    if (tag.toLowerCase() === normalizedBrandTag) return true
+    const normalizedTag = normalizeWhitespace(tag).toLowerCase()
+    if (normalizedTag === selectedBrandLabel) return false
+    return toBrandSlug(normalizedTag) !== selectedBrandSlug
+  })
 }
 
 const normalizeColorOptionValue = (value: string, colorHex?: string | null): OptionValue => {
@@ -607,6 +733,14 @@ const deterministicExtract = (rawInput: string): DeterministicResult => {
         continue
       }
 
+      if (key.includes("brand")) {
+        const explicitBrandSlug = parseBrandSlugFromLooseValue(value)
+        if (explicitBrandSlug) {
+          tags.push(getBrandTag(explicitBrandSlug))
+        }
+        continue
+      }
+
       if (key.includes("sku")) {
         skuSuggestion = value.toUpperCase()
         continue
@@ -681,7 +815,7 @@ const deterministicExtract = (rawInput: string): DeterministicResult => {
       full_description: fullDescription,
       meta_title: metaTitle,
       meta_description: metaDescription,
-      tags: uniqueCaseInsensitive(tags),
+      tags: normalizeTagsWithBrand(tags, inferBrandSlugFromText(rawInput)),
       benefits: [],
       sku_suggestion: skuSuggestion,
     },
@@ -805,10 +939,14 @@ const mergeDeterministicWithEnrichment = (deterministic: DeterministicResult, en
       .slice(0, 6)
     : []
 
-  const mergedTags = uniqueCaseInsensitive([
+  const mergedTagsRaw = uniqueCaseInsensitive([
     ...deterministic.core_fields.tags,
     ...(Array.isArray(source.tags) ? source.tags : []),
   ])
+  const inferredBrandSlug = inferBrandSlugFromText(
+    [explicitName, inferredName, ...mergedTagsRaw].filter(Boolean).join(" "),
+  )
+  const mergedTags = normalizeTagsWithBrand(mergedTagsRaw, inferredBrandSlug)
 
   return {
     ...deterministic,
@@ -909,11 +1047,15 @@ serve(async (req) => {
       )
       .slice(0, 4)
 
+    const brandTagGuidance = storeBrandOptions
+      .map((brand) => `${brand.label}=brand:${brand.slug}`)
+      .join(", ")
+
     const parts: Array<Record<string, unknown>> = [
       {
         text: `You help an e-commerce admin create a product draft.
 Use deterministic extraction as the highest-priority source for explicit fields.
-Always improve the product name for storefront clarity, SEO, and slug quality, even if a deterministic name exists.
+If deterministic name is clear, keep the same product identity and only make minor clarity/SEO improvements.
 Do not override deterministic price if explicitly set.
 Interpret conversational phrasing naturally. Examples:
 - "From S-L" should become size values S, M, L.
@@ -922,8 +1064,16 @@ Interpret conversational phrasing naturally. Examples:
 - "stock is 12" should set stock_quantity to 12.
 - If the admin asks to use colors from the uploaded images, infer Color options from the images and create variants.
 When useful, infer option_types from text + images even when no strict format is used.
+Brand tag rules (strict):
+- A brand tag is optional. Do not force one.
+- Only include a brand tag when the brand is explicitly named in text or clearly visible as logo/text in the image.
+- If uncertain, return no brand tag.
+- If included, return exactly one tag in format brand:slug using this mapping:
+${brandTagGuidance}
+- Do not invent unknown slugs.
+- Do not return plain brand names as tags.
 
-Return valid JSON only.
+Return one valid JSON object only (no markdown, no prose).
 
 Raw input:
 ${rawInput}
@@ -934,7 +1084,7 @@ ${category || "Not provided"}
 Deterministic extraction:
 ${JSON.stringify(deterministic, null, 2)}
 
-Return JSON with keys:
+Return JSON with keys (always include all keys; use null or [] when unknown):
 - name (string | null)
 - price (number | null)
 - stock_quantity (number | null)

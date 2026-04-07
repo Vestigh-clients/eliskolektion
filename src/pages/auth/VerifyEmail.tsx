@@ -87,10 +87,10 @@ const VerifyEmail = () => {
   return (
     <AuthPageLayout>
       <div className="text-center">
-        <Mail className="mx-auto h-12 w-12 text-[var(--color-accent)]" strokeWidth={1.35} />
+        <Mail className="mx-auto h-12 w-12 text-[#E8A811]" strokeWidth={1.35} />
 
-        <h1 className="mt-8 font-manrope text-[42px]  leading-none text-[var(--color-primary)]">Check your email</h1>
-        <p className="mt-4 font-inter text-[14px] font-light leading-[1.8] text-[var(--color-muted)]">
+        <h1 className="mt-8 font-display text-[42px]  leading-none text-zinc-900">Check your email</h1>
+        <p className="mt-4 font-inter text-[14px] font-light leading-[1.8] text-zinc-500">
           We sent a verification link to {emailLabel}. Click the link to activate your account.
         </p>
 
@@ -98,14 +98,14 @@ const VerifyEmail = () => {
           type="button"
           onClick={() => void handleResend()}
           disabled={countdown > 0 || isResending || !email}
-          className="mt-8 font-inter text-[11px] uppercase tracking-[0.15em] text-[var(--color-accent)] transition-opacity hover:opacity-80 disabled:cursor-not-allowed disabled:opacity-55"
+          className="mt-8 font-inter text-[11px] uppercase tracking-[0.15em] text-[#E8A811] transition-opacity hover:opacity-80 disabled:cursor-not-allowed disabled:opacity-55"
         >
           {isResending ? "Sending..." : countdown > 0 ? `Resend in ${countdown}s` : "Resend email"}
         </button>
 
-        {message ? <p className="mt-3 font-inter text-[11px] text-[var(--color-muted)]">{message}</p> : null}
+        {message ? <p className="mt-3 font-inter text-[11px] text-zinc-500">{message}</p> : null}
 
-        <p className="mt-8 font-inter text-[12px] text-[var(--color-muted)]">
+        <p className="mt-8 font-inter text-[12px] text-zinc-500">
           Wrong email?{" "}
           <Link
             to={buildPathWithSearch(
@@ -115,7 +115,7 @@ const VerifyEmail = () => {
               }),
               location.hash,
             )}
-            className="text-[var(--color-primary)] transition-colors hover:text-[var(--color-accent)]"
+            className="text-zinc-900 transition-colors hover:text-[#E8A811]"
           >
             Go back
           </Link>

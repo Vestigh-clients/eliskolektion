@@ -12,6 +12,7 @@ export const commerceConfig: CommerceConfig = {
   payments: {
     // "subaccount" = Tier 1 (Vestigh-managed split), "own_account" = Tier 2 (client keeps 100%)
     mode: "subaccount" as PaymentMode,
+    storeId: import.meta.env.VITE_STORE_ID ?? "",
     paystack: {
       // Safe for the frontend. For Tier 1 this is Vestigh's key; for Tier 2 this is the client's key.
       publicKey: import.meta.env.VITE_PAYSTACK_PUBLIC_KEY ?? "",

@@ -274,20 +274,20 @@ const FilterPanel = ({
   toggleVariationFilterOption,
   variationFilterTypes,
 }: FilterPanelProps) => {
-  const heading = "text-xs font-black tracking-widest uppercase mb-5 text-zinc-400 font-manrope";
+  const heading = "text-xs font-black tracking-widest uppercase mb-5 text-zinc-400 font-display";
 
   return (
     <div className="space-y-10">
       {/* Filter header */}
       <div className="flex items-center justify-between">
-        <span className="text-xs font-black tracking-widest uppercase text-zinc-400 font-manrope">
+        <span className="text-xs font-black tracking-widest uppercase text-zinc-400 font-display">
           Filters{activeFilterCount > 0 ? ` (${activeFilterCount})` : ""}
         </span>
         {activeFilterCount > 0 ? (
           <button
             type="button"
             onClick={clearAllFilters}
-            className="text-[10px] font-black uppercase tracking-widest text-zinc-400 hover:text-black transition-colors font-manrope"
+            className="text-[10px] font-black uppercase tracking-widest text-zinc-400 hover:text-black transition-colors font-display"
           >
             Clear All
           </button>
@@ -307,7 +307,7 @@ const FilterPanel = ({
               >
                 <span
                   className={[
-                    "text-sm font-bold font-manrope transition-colors",
+                    "text-sm font-bold font-display transition-colors",
                     activeFilter === "all" ? "text-[#E8A811]" : "text-zinc-500 group-hover:text-black",
                   ].join(" ")}
                 >
@@ -315,7 +315,7 @@ const FilterPanel = ({
                 </span>
                 <span
                   className={[
-                    "text-xs font-manrope",
+                    "text-xs font-display",
                     activeFilter === "all" ? "text-[#E8A811]" : "text-zinc-300",
                   ].join(" ")}
                 >
@@ -334,7 +334,7 @@ const FilterPanel = ({
                   >
                     <span
                       className={[
-                        "text-sm font-bold font-manrope transition-colors",
+                        "text-sm font-bold font-display transition-colors",
                         isActive ? "text-[#E8A811]" : "text-zinc-500 group-hover:text-black",
                       ].join(" ")}
                     >
@@ -342,7 +342,7 @@ const FilterPanel = ({
                     </span>
                     <span
                       className={[
-                        "text-xs font-manrope",
+                        "text-xs font-display",
                         isActive ? "text-[#E8A811]" : "text-zinc-300",
                       ].join(" ")}
                     >
@@ -365,7 +365,7 @@ const FilterPanel = ({
               type="button"
               onClick={() => setActiveBrandFilter("all")}
               className={[
-                "rounded-none border px-3 py-2 text-xs font-black uppercase tracking-[0.08em] font-manrope transition-colors",
+                "rounded-none border px-3 py-2 text-xs font-black uppercase tracking-[0.08em] font-display transition-colors",
                 activeBrandFilter === "all"
                   ? "border-black bg-black text-white"
                   : "border-zinc-300 bg-white text-zinc-500 hover:border-black hover:text-black",
@@ -381,7 +381,7 @@ const FilterPanel = ({
                   type="button"
                   onClick={() => setActiveBrandFilter(isActive ? "all" : brand.slug)}
                   className={[
-                    "rounded-none border px-3 py-2 text-xs font-black uppercase tracking-[0.08em] font-manrope transition-colors",
+                    "rounded-none border px-3 py-2 text-xs font-black uppercase tracking-[0.08em] font-display transition-colors",
                     isActive
                       ? "border-black bg-black text-white"
                       : "border-zinc-300 bg-white text-zinc-500 hover:border-black hover:text-black",
@@ -443,7 +443,7 @@ const FilterPanel = ({
                       onClick={() => toggleVariationFilterOption(variationType.id, option.id)}
                       title={`${option.label} (${option.count})`}
                       className={[
-                        "h-10 text-xs font-black font-manrope transition-all",
+                        "h-10 text-xs font-black font-display transition-all",
                         isSelected
                           ? "bg-black text-white"
                           : "bg-zinc-50 border border-transparent hover:border-black",
@@ -471,7 +471,7 @@ const FilterPanel = ({
             onChange={(e) => setPriceLimit(Number(e.target.value))}
             className="w-full h-1 cursor-pointer appearance-none bg-zinc-200 accent-[#E8A811]"
           />
-          <div className="flex justify-between text-xs font-bold font-manrope">
+          <div className="flex justify-between text-xs font-bold font-display">
             <span>{formatPrice(0)}</span>
             <span>{formatPrice(priceLimit)}</span>
           </div>
@@ -819,14 +819,14 @@ const Shop = () => {
   }
 
   return (
-    <div className="bg-[#f9f9f9] font-inter text-[#1a1c1c]">
+    <div className="bg-[#f9f9f9] font-inter text-zinc-900">
       <main className="max-w-[1440px] mx-auto px-8 pt-12 pb-24">
 
         {/* ── Editorial Header ── */}
-        <section className="mb-16">
+        <section className="mb-8">
           <div className="flex flex-col md:flex-row md:items-end justify-between gap-8 border-b border-zinc-200 pb-8">
             <div className="max-w-2xl">
-              <h1 className="font-manrope font-extrabold text-5xl md:text-6xl tracking-tighter leading-none mb-6 uppercase">
+              <h1 className="font-display font-bold text-4xl md:text-5xl tracking-tight leading-none mb-6 uppercase">
                 All Pieces
               </h1>
               <p className="text-zinc-500 text-lg leading-relaxed">
@@ -837,13 +837,13 @@ const Shop = () => {
 
             {/* Sort — desktop */}
             <div className="hidden md:flex items-center gap-4 shrink-0">
-              <span className="text-xs font-semibold tracking-widest uppercase text-zinc-400 font-manrope">
+              <span className="text-xs font-semibold tracking-widest uppercase text-zinc-400 font-display">
                 Sort by:
               </span>
               <select
                 value={sortBy}
                 onChange={(e) => setSortBy(e.target.value as SortKey)}
-                className="text-sm font-bold border-0 border-b border-black bg-transparent pb-1 focus:ring-0 cursor-pointer font-manrope pr-6 appearance-none"
+                className="text-sm font-bold border-0 border-b border-black bg-transparent pb-1 focus:ring-0 cursor-pointer font-display pr-6 appearance-none"
               >
                 <option value="newest">Newest Arrivals</option>
                 <option value="price-low">Price: Low to High</option>
@@ -863,19 +863,19 @@ const Shop = () => {
           <button
             type="button"
             onClick={() => setIsMobileFilterOpen(true)}
-            className="flex items-center gap-2 text-xs font-black uppercase tracking-widest border-b border-black pb-1 font-manrope"
+            className="flex items-center gap-2 text-xs font-black uppercase tracking-widest border-b border-black pb-1 font-display"
           >
             <span className="material-symbols-outlined text-sm">tune</span>
             Filters{activeFilterCount > 0 ? ` (${activeFilterCount})` : ""}
           </button>
           <div className="flex items-center gap-3">
-            <span className="text-xs text-zinc-400 font-manrope uppercase tracking-widest">
+            <span className="text-xs text-zinc-400 font-display uppercase tracking-widest">
               {loading ? "—" : filteredProducts.length} pieces
             </span>
             <select
               value={sortBy}
               onChange={(e) => setSortBy(e.target.value as SortKey)}
-              className="text-xs font-bold border-0 bg-transparent focus:ring-0 cursor-pointer font-manrope"
+              className="text-xs font-bold border-0 bg-transparent focus:ring-0 cursor-pointer font-display"
             >
               <option value="newest">Newest</option>
               <option value="price-low">Price ↑</option>
@@ -885,7 +885,7 @@ const Shop = () => {
           </div>
         </div>
 
-        <div className="flex flex-col lg:flex-row gap-12">
+        <div className="flex flex-col lg:flex-row gap-6">
 
           {/* ── Sidebar ── */}
           <aside className="w-full lg:w-64 flex-shrink-0">
@@ -899,7 +899,7 @@ const Shop = () => {
           <section className="flex-1 min-w-0">
             {/* Count bar */}
             <div className="mb-8">
-              <p className="text-xs font-manrope uppercase tracking-widest text-zinc-400">
+              <p className="text-xs font-display uppercase tracking-widest text-zinc-400">
                 {loading
                   ? "Loading pieces..."
                   : `Showing ${visibleProducts.length} of ${filteredProducts.length} pieces`}
@@ -929,7 +929,7 @@ const Shop = () => {
               </div>
             ) : (
               <div className="py-16 text-center">
-                <p className="font-manrope text-sm text-zinc-400 uppercase tracking-widest">
+                <p className="font-display text-sm text-zinc-400 uppercase tracking-widest">
                   No products match the selected filters.
                 </p>
               </div>
@@ -939,7 +939,7 @@ const Shop = () => {
             {!loading && visibleProducts.length > 0 ? (
               <div className="mt-16 border-t border-zinc-200 pt-8">
                 <div ref={loadMoreRef} className="h-1 w-full" aria-hidden />
-                <p className="text-center font-manrope text-xs uppercase tracking-widest text-zinc-400">
+                <p className="text-center font-display text-xs uppercase tracking-widest text-zinc-400">
                   {hasMoreProducts ? "Loading more as you scroll..." : "You've seen all pieces"}
                 </p>
               </div>
@@ -953,7 +953,7 @@ const Shop = () => {
         <DrawerContent className="max-h-[88vh] bg-[#f9f9f9] border-zinc-200">
           <DrawerHeader className="border-b border-zinc-200 pb-4">
             <div className="flex items-center justify-between">
-              <DrawerTitle className="font-manrope font-black text-lg uppercase tracking-tighter">
+              <DrawerTitle className="font-display font-black text-lg uppercase tracking-tighter">
                 Filter Pieces
               </DrawerTitle>
               <button
@@ -972,7 +972,7 @@ const Shop = () => {
             <button
               type="button"
               onClick={() => setIsMobileFilterOpen(false)}
-              className="mt-8 w-full bg-black text-white py-4 font-manrope font-black text-xs uppercase tracking-widest hover:bg-[#E8A811] hover:text-black transition-colors"
+              className="mt-8 w-full bg-[#E8A811] text-black py-4 font-display font-black text-xs uppercase tracking-widest hover:bg-zinc-900 hover:text-white transition-colors"
             >
               Show {filteredProducts.length} Pieces
             </button>

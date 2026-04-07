@@ -144,8 +144,8 @@ const ResetPassword = () => {
   if (!isLoading && !canResetPassword) {
     return (
       <AuthPageLayout>
-        <h1 className="font-manrope text-[42px]  leading-none text-[var(--color-primary)]">Invalid reset link</h1>
-        <p className="mt-4 font-inter text-[13px] font-light leading-[1.8] text-[var(--color-muted)]">
+        <h1 className="font-display text-[42px]  leading-none text-zinc-900">Invalid reset link</h1>
+        <p className="mt-4 font-display text-[13px] font-light leading-[1.8] text-zinc-500">
           This link is invalid or has expired. Request a new password reset email.
         </p>
         <Link
@@ -156,7 +156,7 @@ const ResetPassword = () => {
             }),
             location.hash,
           )}
-          className="mt-8 inline-flex font-inter text-[11px] uppercase tracking-[0.15em] text-[var(--color-primary)] transition-colors hover:text-[var(--color-accent)]"
+          className="mt-8 inline-flex font-display text-[11px] uppercase tracking-[0.15em] text-zinc-900 transition-colors hover:text-[#E8A811]"
         >
           Request New Link
         </Link>
@@ -166,8 +166,8 @@ const ResetPassword = () => {
 
   return (
     <AuthPageLayout>
-      <h1 className="font-manrope text-[42px]  leading-none text-[var(--color-primary)]">Reset password</h1>
-      <p className="mt-3 font-inter text-[13px] font-light leading-[1.8] text-[var(--color-muted)]">
+      <h1 className="font-display text-[42px]  leading-none text-zinc-900">Reset password</h1>
+      <p className="mt-3 font-display text-[13px] font-light leading-[1.8] text-zinc-500">
         Set a new password for your account.
       </p>
 
@@ -188,7 +188,7 @@ const ResetPassword = () => {
               <button
                 type="button"
                 onClick={() => setShowNewPassword((previous) => !previous)}
-                className="inline-flex text-[var(--color-muted)] transition-colors hover:text-[var(--color-primary)]"
+                className="inline-flex text-zinc-500 transition-colors hover:text-zinc-900"
                 aria-label={showNewPassword ? "Hide password" : "Show password"}
               >
                 {showNewPassword ? <EyeOff size={16} strokeWidth={1.35} /> : <Eye size={16} strokeWidth={1.35} />}
@@ -211,7 +211,7 @@ const ResetPassword = () => {
               <button
                 type="button"
                 onClick={() => setShowConfirmPassword((previous) => !previous)}
-                className="inline-flex text-[var(--color-muted)] transition-colors hover:text-[var(--color-primary)]"
+                className="inline-flex text-zinc-500 transition-colors hover:text-zinc-900"
                 aria-label={showConfirmPassword ? "Hide confirm password" : "Show confirm password"}
               >
                 {showConfirmPassword ? <EyeOff size={16} strokeWidth={1.35} /> : <Eye size={16} strokeWidth={1.35} />}
@@ -219,20 +219,20 @@ const ResetPassword = () => {
             }
           />
 
-          {generalError ? <p className="mt-4 font-inter text-[11px] text-[var(--color-danger)]">{generalError}</p> : null}
+          {generalError ? <p className="mt-4 font-display text-[11px] text-[var(--color-danger)]">{generalError}</p> : null}
 
           <button
             type="submit"
             disabled={isSubmitting || isLoading}
-            className="mt-8 w-full rounded-[var(--border-radius)] bg-[var(--color-primary)] px-4 py-[18px] font-inter text-[11px] uppercase tracking-[0.18em] text-[var(--color-secondary)] transition-colors duration-300 hover:bg-[var(--color-accent)] hover:text-[var(--color-secondary)] disabled:cursor-not-allowed disabled:opacity-65"
+            className="mt-8 w-full bg-[#E8A811] px-4 py-[18px] font-display font-black text-[11px] uppercase tracking-widest text-black transition-colors hover:bg-zinc-900 hover:text-white disabled:cursor-not-allowed disabled:opacity-65"
           >
             {isSubmitting ? "Please wait..." : "Update Password"}
           </button>
         </form>
       ) : (
         <div className="mt-8">
-          <p className="font-inter text-[13px] text-[var(--color-muted)]">Password updated successfully.</p>
-          <p className="mt-3 font-inter text-[12px] text-[var(--color-muted)]">Redirecting in {countdown}s</p>
+          <p className="font-display text-[13px] text-zinc-500">Password updated successfully.</p>
+          <p className="mt-3 font-display text-[12px] text-zinc-500">Redirecting in {countdown}s</p>
         </div>
       )}
     </AuthPageLayout>

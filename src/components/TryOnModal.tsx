@@ -219,11 +219,11 @@ const TryOnModal = ({ product, isOpen, onClose }: TryOnModalProps) => {
         </button>
 
         <h2 className="mb-1 font-headline text-[28px] font-extrabold tracking-tight text-black">Try it On</h2>
-        <p className="mb-8 font-manrope text-[12px] text-zinc-500">{product.name}</p>
+        <p className="mb-8 font-display text-[12px] text-zinc-500">{product.name}</p>
 
         {tryOnState === "upload" ? (
           <div>
-            <p className="mb-4 font-manrope text-[10px] uppercase tracking-[0.2em] text-zinc-500">Your Photo</p>
+            <p className="mb-4 font-display text-[10px] uppercase tracking-[0.2em] text-zinc-500">Your Photo</p>
 
             {!modelPreview ? (
               <button
@@ -232,8 +232,8 @@ const TryOnModal = ({ product, isOpen, onClose }: TryOnModalProps) => {
                 className="w-full rounded-[var(--border-radius)] border-2 border-dashed border-[var(--color-border)] px-6 py-10 text-center transition-colors duration-200 hover:border-[var(--color-primary)]"
               >
                 <Camera size={32} strokeWidth={1.25} className="mx-auto mb-3 text-[var(--color-border)]" />
-                <p className="font-body text-[13px] text-[var(--color-muted)]">Upload a photo of yourself</p>
-                <p className="mt-2 font-body text-[10px] text-[var(--color-muted-soft)]">JPG or PNG - Max 5MB</p>
+                <p className="font-body text-[13px] text-zinc-500">Upload a photo of yourself</p>
+                <p className="mt-2 font-body text-[10px] text-zinc-400">JPG or PNG - Max 5MB</p>
               </button>
             ) : (
               <div>
@@ -241,7 +241,7 @@ const TryOnModal = ({ product, isOpen, onClose }: TryOnModalProps) => {
                 <button
                   type="button"
                   onClick={() => fileInputRef.current?.click()}
-                  className="mt-3 font-manrope text-[10px] uppercase tracking-[0.15em] text-black transition-colors hover:text-zinc-700"
+                  className="mt-3 font-display text-[10px] uppercase tracking-[0.15em] text-black transition-colors hover:text-zinc-700"
                 >
                   Change photo
                 </button>
@@ -258,7 +258,7 @@ const TryOnModal = ({ product, isOpen, onClose }: TryOnModalProps) => {
 
             <div className="my-6 border-b border-[var(--color-border)]" />
 
-            <p className="mb-3 font-manrope text-[10px] uppercase tracking-[0.2em] text-zinc-500">Trying On</p>
+            <p className="mb-3 font-display text-[10px] uppercase tracking-[0.2em] text-zinc-500">Trying On</p>
 
             <div className="flex items-start gap-4">
               <img
@@ -267,8 +267,8 @@ const TryOnModal = ({ product, isOpen, onClose }: TryOnModalProps) => {
                 className="h-[85px] w-[64px] rounded-[var(--border-radius)] object-cover"
               />
               <div>
-                <p className="font-manrope text-[12px] text-black">{product.name}</p>
-                <p className="mt-1 font-manrope text-[10px] uppercase tracking-[0.15em] text-zinc-500">{product.categories.name}</p>
+                <p className="font-display text-[12px] text-black">{product.name}</p>
+                <p className="mt-1 font-display text-[10px] uppercase tracking-[0.15em] text-zinc-500">{product.categories.name}</p>
               </div>
             </div>
 
@@ -276,7 +276,7 @@ const TryOnModal = ({ product, isOpen, onClose }: TryOnModalProps) => {
               type="button"
               onClick={handleStartTryOn}
               disabled={!modelFile}
-              className="mt-6 w-full rounded-[var(--border-radius)] bg-black px-4 py-[18px] font-manrope text-[11px] font-bold uppercase tracking-[0.18em] text-white transition-colors duration-300 hover:bg-zinc-800 disabled:cursor-not-allowed disabled:opacity-40"
+              className="mt-6 w-full rounded-[var(--border-radius)] bg-black px-4 py-[18px] font-display text-[11px] font-bold uppercase tracking-[0.18em] text-white transition-colors duration-300 hover:bg-zinc-800 disabled:cursor-not-allowed disabled:opacity-40"
             >
               Start Try-On
             </button>
@@ -305,7 +305,7 @@ const TryOnModal = ({ product, isOpen, onClose }: TryOnModalProps) => {
             </div>
 
             {isRetrying ? (
-              <p className="mt-4 text-center font-manrope text-[11px] text-zinc-500">
+              <p className="mt-4 text-center font-display text-[11px] text-zinc-500">
                 {`Retrying (${retryCount}): ${retryReason ?? "request retry in progress"}`}
               </p>
             ) : null}
@@ -314,7 +314,7 @@ const TryOnModal = ({ product, isOpen, onClose }: TryOnModalProps) => {
 
         {tryOnState === "result" ? (
           <div>
-            <p className="mb-4 font-manrope text-[10px] uppercase tracking-[0.2em] text-zinc-500">Try-On Complete</p>
+            <p className="mb-4 font-display text-[10px] uppercase tracking-[0.2em] text-zinc-500">Try-On Complete</p>
 
             {resultImage ? (
               <img
@@ -337,7 +337,7 @@ const TryOnModal = ({ product, isOpen, onClose }: TryOnModalProps) => {
                   link.download = `${normalizedStoreName}-tryon-${product.slug}.png`;
                   link.click();
                 }}
-                className="flex-1 rounded-[var(--border-radius)] bg-black px-4 py-4 font-manrope text-[11px] font-bold uppercase tracking-[0.18em] text-white transition-colors duration-300 hover:bg-zinc-800"
+                className="flex-1 rounded-[var(--border-radius)] bg-black px-4 py-4 font-display text-[11px] font-bold uppercase tracking-[0.18em] text-white transition-colors duration-300 hover:bg-zinc-800"
               >
                 Download Photo
               </button>
@@ -345,7 +345,7 @@ const TryOnModal = ({ product, isOpen, onClose }: TryOnModalProps) => {
               <button
                 type="button"
                 onClick={resetTryOn}
-                className="flex-1 rounded-[var(--border-radius)] border border-zinc-300 bg-transparent px-4 py-4 font-manrope text-[11px] font-bold uppercase tracking-[0.18em] text-black transition-colors duration-300 hover:border-black hover:bg-black hover:text-white"
+                className="flex-1 rounded-[var(--border-radius)] border border-zinc-300 bg-transparent px-4 py-4 font-display text-[11px] font-bold uppercase tracking-[0.18em] text-black transition-colors duration-300 hover:border-black hover:bg-black hover:text-white"
               >
                 Try Another Photo
               </button>
@@ -363,7 +363,7 @@ const TryOnModal = ({ product, isOpen, onClose }: TryOnModalProps) => {
             <button
               type="button"
               onClick={resetTryOn}
-              className="w-full rounded-[var(--border-radius)] bg-black px-4 py-4 font-manrope text-[11px] font-bold uppercase tracking-[0.18em] text-white transition-colors duration-300 hover:bg-zinc-800"
+              className="w-full rounded-[var(--border-radius)] bg-black px-4 py-4 font-display text-[11px] font-bold uppercase tracking-[0.18em] text-white transition-colors duration-300 hover:bg-zinc-800"
             >
               Try Again
             </button>

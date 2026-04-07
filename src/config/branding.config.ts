@@ -2,14 +2,14 @@ import type { BrandingConfig } from "./store.types.ts";
 
 export const brandingConfig: BrandingConfig = {
   storeName: "Eli's Kolektion",
-  storeTagline: "Your store tagline",
-  logoUrl: "assets/vicky_logo_white.png",
+  storeTagline: "Step clean Dress Loud",
+  logoUrl: "",
   faviconUrl: "/favicon.ico",
   defaultThemePreset: "atelier",
   contact: {
-    email: "hello@store.com",
-    phone: "",
-    whatsapp: "",
+    email: "godwineli111@gmail.com",
+    phone: "+2330246520053",
+    whatsapp: "+2330246520053",
     address: "",
     city: "",
     country: "Ghana",

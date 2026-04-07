@@ -137,12 +137,12 @@ const Navbar = () => {
         <div className="flex items-center gap-8 lg:gap-12 min-w-0">
           <Link
             to="/"
-            className="shrink-0 text-xl font-black tracking-tighter text-black uppercase font-manrope"
+            className="shrink-0 text-xl font-black tracking-tighter text-zinc-900 uppercase font-display"
           >
             {storefrontConfig.storeName}
           </Link>
 
-          <div className="hidden md:flex items-center gap-6 lg:gap-8 font-manrope uppercase tracking-widest text-xs font-bold">
+          <div className="hidden md:flex items-center gap-6 lg:gap-8 font-display uppercase tracking-widest text-xs font-bold">
             {navItems.map((item, index) => {
               const active = isItemActive(item, index);
               return (
@@ -153,7 +153,7 @@ const Navbar = () => {
                     "whitespace-nowrap pb-1 transition-colors border-b-2",
                     active
                       ? "text-[#E8A811] border-[#E8A811]"
-                      : "text-black border-transparent hover:text-[#E8A811]",
+                      : "text-zinc-900 border-transparent hover:text-[#E8A811]",
                   ].join(" ")}
                 >
                   {item.label}
@@ -174,7 +174,7 @@ const Navbar = () => {
               value={searchValue}
               onChange={(e) => setSearchValue(e.target.value)}
               placeholder="Search curated items..."
-              className="bg-[#e8e8e8] border-none text-[10px] pl-10 pr-4 py-2 w-56 rounded-full focus:ring-1 focus:ring-[#E8A811] focus:outline-none uppercase font-bold tracking-widest font-manrope placeholder:text-zinc-500"
+              className="bg-[#e8e8e8] border-none text-[10px] pl-10 pr-4 py-2 w-56 rounded-full focus:ring-1 focus:ring-[#E8A811] focus:outline-none uppercase font-bold tracking-widest font-display placeholder:text-zinc-500"
             />
           </form>
 
@@ -183,7 +183,7 @@ const Navbar = () => {
               <Link
                 to="/admin"
                 aria-label="Open admin panel"
-                className="hidden md:inline-flex items-center border border-[#E8A811] px-3 py-1.5 font-manrope text-[10px] font-black uppercase tracking-widest text-[#E8A811] transition-colors hover:bg-[#E8A811] hover:text-black"
+                className="hidden md:inline-flex items-center border border-[#E8A811] px-3 py-1.5 font-display text-[10px] font-black uppercase tracking-widest text-[#E8A811] transition-colors hover:bg-[#E8A811] hover:text-black"
               >
                 Admin
               </Link>
@@ -197,7 +197,7 @@ const Navbar = () => {
             >
               <span className="material-symbols-outlined">shopping_cart</span>
               {totalItems > 0 ? (
-                <span className="absolute -right-2 -top-1.5 inline-flex min-w-[16px] justify-center rounded-full bg-black px-1.5 py-[1px] font-manrope text-[9px] font-black text-white">
+                <span className="absolute -right-2 -top-1.5 inline-flex min-w-[16px] justify-center rounded-full bg-black px-1.5 py-[1px] font-display text-[9px] font-black text-white">
                   {totalItems > 99 ? "99+" : totalItems}
                 </span>
               ) : null}
@@ -235,7 +235,7 @@ const Navbar = () => {
               value={searchValue}
               onChange={(e) => setSearchValue(e.target.value)}
               placeholder="Search..."
-              className="bg-[#e8e8e8] border-none text-[10px] pl-10 pr-4 py-2 w-full rounded-full focus:ring-1 focus:ring-[#E8A811] focus:outline-none uppercase font-bold tracking-widest font-manrope placeholder:text-zinc-500"
+              className="bg-[#e8e8e8] border-none text-[10px] pl-10 pr-4 py-2 w-full rounded-full focus:ring-1 focus:ring-[#E8A811] focus:outline-none uppercase font-bold tracking-widest font-display placeholder:text-zinc-500"
             />
           </form>
 
@@ -247,7 +247,7 @@ const Navbar = () => {
                   key={`mobile-${item.key}`}
                   to={item.to}
                   className={[
-                    "font-manrope text-xs font-bold uppercase tracking-widest transition-colors",
+                    "font-display text-xs font-bold uppercase tracking-widest transition-colors",
                     active ? "text-[#E8A811]" : "text-black hover:text-[#E8A811]",
                   ].join(" ")}
                 >
@@ -258,7 +258,7 @@ const Navbar = () => {
             {isAdmin ? (
               <Link
                 to="/admin"
-                className="font-manrope text-xs font-bold uppercase tracking-widest text-[#E8A811]"
+                className="font-display text-xs font-bold uppercase tracking-widest text-[#E8A811]"
               >
                 Admin
               </Link>

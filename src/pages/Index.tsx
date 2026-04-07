@@ -1,4 +1,4 @@
-import { FormEvent, useEffect, useMemo, useState } from "react";
+import { FormEvent, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import StorefrontProductCard from "@/components/products/StorefrontProductCard";
 import { useStorefrontConfig } from "@/contexts/StorefrontConfigContext";
@@ -6,6 +6,8 @@ import { getAllProducts, getTopSellingProductIds } from "@/services/productServi
 import { formatPrice } from "@/lib/price";
 import { getPrimaryImage } from "@/types/product";
 import { type Product } from "@/types/product";
+import { heroSlides as HERO_SLIDES } from "@/data/heroSlides";
+
 
 const TRUST_BADGES = [
   {
@@ -41,22 +43,22 @@ const BestSellerCard = ({ product }: { product: Product }) => {
       }}
       aria-label={`Open ${product.name}`}
     >
-      <div className="aspect-square bg-white border border-zinc-100 mb-4 p-6 flex items-center justify-center overflow-hidden">
+      <div className="aspect-square bg-white border border-zinc-100 mb-4 overflow-hidden">
         {imageUrl ? (
           <img
             src={imageUrl}
             alt={product.name}
-            className="w-full h-auto object-contain transition-transform duration-700 group-hover:rotate-6 group-hover:scale-110"
+            className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
             loading="lazy"
           />
         ) : (
           <span className="material-symbols-outlined text-zinc-300 text-5xl">image</span>
         )}
       </div>
-      <h4 className="font-manrope font-bold text-sm uppercase tracking-tight text-zinc-900 group-hover:text-[#E8A811] transition-colors truncate">
+      <h4 className="font-display font-bold text-sm uppercase tracking-tight text-zinc-900 group-hover:text-[#E8A811] transition-colors truncate">
         {product.name}
       </h4>
-      <p className="font-manrope font-black text-sm mt-1">{formatPrice(product.price)}</p>
+      <p className="font-display font-black text-sm mt-1">{formatPrice(product.price)}</p>
     </div>
   );
 };
@@ -67,6 +69,19 @@ const Index = () => {
   const [newArrivals, setNewArrivals] = useState<Product[]>([]);
   const [bestSellers, setBestSellers] = useState<Product[]>([]);
   const [newsletterEmail, setNewsletterEmail] = useState("");
+  const [currentSlide, setCurrentSlide] = useState(0);
+  const slideTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  const goToSlide = (index: number) => setCurrentSlide(index);
+  const nextSlide = useCallback(() => setCurrentSlide((s) => (s + 1) % HERO_SLIDES.length), []);
+  const prevSlideBtn = () => setCurrentSlide((s) => (s - 1 + HERO_SLIDES.length) % HERO_SLIDES.length);
+
+  useEffect(() => {
+    slideTimerRef.current = setTimeout(nextSlide, 5500);
+    return () => {
+      if (slideTimerRef.current) clearTimeout(slideTimerRef.current);
+    };
+  }, [currentSlide, nextSlide]);
 
   useEffect(() => {
     let isMounted = true;
@@ -131,48 +146,103 @@ const Index = () => {
   };
 
   return (
-    <div className="bg-white text-[#1a1c1c] font-inter">
+    <div className="bg-white text-zinc-900 font-body">
       <main>
-        {/* ── Hero ── */}
-        <section className="relative min-h-[500px] md:h-[700px] flex items-center bg-zinc-900 overflow-hidden">
-          <div className="absolute inset-0 z-0">
-            <img
-              src="/assets/homepage-hero1.png"
-              alt="Hero Collection"
-              className="w-full h-full object-cover"
-            />
-            <div className="absolute inset-0 bg-gradient-to-r from-black/70 via-black/40 to-transparent" />
+        {/* ── Hero Slideshow ── */}
+        <section
+          className="relative min-h-[500px] md:h-[700px] flex items-center bg-zinc-900 overflow-hidden"
+          onMouseEnter={() => { if (slideTimerRef.current) clearTimeout(slideTimerRef.current); }}
+          onMouseLeave={() => { slideTimerRef.current = setTimeout(nextSlide, 5500); }}
+        >
+          {/* Slide images — GPU-composited crossfade + Ken Burns zoom */}
+          {HERO_SLIDES.map((slide, i) => (
+            <div
+              key={slide.image}
+              className="absolute inset-0"
+              style={{
+                opacity: i === currentSlide ? 1 : 0,
+                zIndex: i === currentSlide ? 1 : 0,
+                transition: "opacity 1200ms cubic-bezier(0.4, 0, 0.2, 1)",
+                willChange: "opacity",
+              }}
+            >
+              <img
+                src={slide.image}
+                alt={slide.heading.join(" ")}
+                className="w-full h-full object-cover"
+                style={{
+                  transform: i === currentSlide ? "scale(1.06)" : "scale(1)",
+                  transition: i === currentSlide ? "transform 6000ms ease-out" : "transform 1200ms cubic-bezier(0.4, 0, 0.2, 1)",
+                  willChange: "transform",
+                }}
+              />
+              <div className="absolute inset-0 bg-gradient-to-r from-black/70 via-black/40 to-transparent" />
+            </div>
+          ))}
+
+          {/* Slide content */}
+          <div className="relative z-10 w-full">
+            {HERO_SLIDES.map((slide, i) => (
+              <div
+                key={`content-${i}`}
+                className="absolute inset-0 flex items-center px-6 lg:px-16"
+                style={{
+                  opacity: i === currentSlide ? 1 : 0,
+                  transform: i === currentSlide ? "translateY(0)" : "translateY(16px)",
+                  transition: "opacity 1000ms cubic-bezier(0.4, 0, 0.2, 1), transform 1000ms cubic-bezier(0.4, 0, 0.2, 1)",
+                  willChange: "opacity, transform",
+                  pointerEvents: i === currentSlide ? "auto" : "none",
+                  zIndex: i === currentSlide ? 2 : 0,
+                }}
+              >
+                <div className="max-w-[1440px] mx-auto w-full py-16 md:py-0">
+                  <div className="max-w-xl">
+                    <span className="text-[#E8A811] font-display font-bold uppercase tracking-[0.4em] text-[10px] mb-4 md:mb-6 block">
+                      {slide.label}
+                    </span>
+                    <h1 className="font-display font-extrabold text-4xl sm:text-6xl md:text-8xl text-white tracking-tighter leading-[0.9] mb-6 md:mb-8 uppercase italic">
+                      {slide.heading[0]}
+                      <br />
+                      {slide.heading[1]}
+                    </h1>
+                    <p className="text-white text-sm md:text-base font-medium mb-8 md:mb-10 max-w-sm opacity-90 leading-relaxed font-display">
+                      {slide.sub}
+                    </p>
+                    <div className="flex flex-wrap gap-4">
+                      <Link
+                        to={slide.cta.to}
+                        className="bg-[#E8A811] text-black px-10 py-4 font-display font-black uppercase tracking-widest text-[10px] hover:bg-zinc-900 hover:text-white transition-colors"
+                      >
+                        {slide.cta.label}
+                      </Link>
+                      <Link
+                        to={slide.cta2.to}
+                        className="bg-white text-black px-10 py-4 font-display font-black uppercase tracking-widest text-[10px] hover:bg-zinc-100 transition-all shadow-xl"
+                      >
+                        {slide.cta2.label}
+                      </Link>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            ))}
           </div>
 
-          <div className="relative z-10 px-6 lg:px-16 w-full max-w-[1440px] mx-auto py-16 md:py-0">
-            <div className="max-w-xl">
-              <span className="text-[#E8A811] font-manrope font-bold uppercase tracking-[0.4em] text-[10px] mb-4 md:mb-6 block">
-                Season Drop 2024
-              </span>
-              <h1 className="font-manrope font-extrabold text-4xl sm:text-6xl md:text-8xl text-white tracking-tighter leading-[0.9] mb-6 md:mb-8 uppercase italic">
-                Step Clean,
-                <br />
-                Dress Loud
-              </h1>
-              <p className="text-white text-sm md:text-base font-medium mb-8 md:mb-10 max-w-sm opacity-90 leading-relaxed font-manrope">
-                The definitive curation of rare footwear and elite streetwear for the modern digital collector.
-              </p>
-              <div className="flex flex-wrap gap-4">
-                <Link
-                  to="/shop"
-                  className="bg-[#E8A811] text-black px-10 py-4 font-manrope font-black uppercase tracking-widest text-[10px] hover:bg-white transition-all shadow-xl"
-                >
-                  Shop The Selection
-                </Link>
-                <Link
-                  to="/shop"
-                  className="bg-white text-black px-10 py-4 font-manrope font-black uppercase tracking-widest text-[10px] hover:bg-zinc-100 transition-all shadow-xl"
-                >
-                  New Arrivals
-                </Link>
-              </div>
-            </div>
-          </div>
+          {/* Prev / Next arrows — desktop only */}
+          <button
+            onClick={prevSlideBtn}
+            aria-label="Previous slide"
+            className="hidden md:flex absolute left-8 top-1/2 -translate-y-1/2 z-20 w-12 h-12 items-center justify-center bg-black/30 hover:bg-[#E8A811] text-white hover:text-black transition-all duration-200 backdrop-blur-sm"
+          >
+            <span className="material-symbols-outlined text-xl">chevron_left</span>
+          </button>
+          <button
+            onClick={nextSlide}
+            aria-label="Next slide"
+            className="hidden md:flex absolute right-8 top-1/2 -translate-y-1/2 z-20 w-12 h-12 items-center justify-center bg-black/30 hover:bg-[#E8A811] text-white hover:text-black transition-all duration-200 backdrop-blur-sm"
+          >
+            <span className="material-symbols-outlined text-xl">chevron_right</span>
+          </button>
         </section>
 
         {/* ── Category Tiles ── */}
@@ -192,10 +262,10 @@ const Index = () => {
                   />
                   <div className="absolute inset-0 bg-black/30 group-hover:bg-black/40 transition-colors" />
                   <div className="absolute inset-0 flex flex-col justify-center items-center p-4 md:p-8 text-center">
-                    <h3 className="font-manrope text-xl sm:text-3xl md:text-5xl text-white font-black uppercase italic tracking-tighter mb-2 md:mb-4">
+                    <h3 className="font-display text-xl sm:text-3xl md:text-5xl text-white font-black uppercase italic tracking-tighter mb-2 md:mb-4">
                       {tile.title}
                     </h3>
-                    <span className="bg-white text-black text-[9px] md:text-[10px] font-manrope font-black uppercase px-4 md:px-8 py-2 md:py-3 tracking-widest group-hover:bg-[#E8A811] transition-colors shadow-lg">
+                    <span className="bg-white text-black text-[9px] md:text-[10px] font-display font-black uppercase px-4 md:px-8 py-2 md:py-3 tracking-widest group-hover:bg-[#E8A811] transition-colors shadow-lg">
                       Shop {tile.title}
                     </span>
                   </div>
@@ -225,10 +295,10 @@ const Index = () => {
                         />
                         <div className="absolute inset-0 bg-black/30 group-hover:bg-black/40 transition-colors" />
                         <div className="absolute inset-0 flex flex-col justify-center items-center p-4 md:p-6 text-center">
-                          <h3 className="font-manrope text-lg sm:text-2xl md:text-3xl text-white font-black uppercase italic tracking-tighter mb-2 md:mb-3">
+                          <h3 className="font-display text-lg sm:text-2xl md:text-3xl text-white font-black uppercase italic tracking-tighter mb-2 md:mb-3">
                             {tile.title}
                           </h3>
-                          <span className="bg-white text-black text-[9px] md:text-[10px] font-manrope font-black uppercase px-4 md:px-6 py-2 tracking-widest group-hover:bg-[#E8A811] transition-colors shadow-lg">
+                          <span className="bg-white text-black text-[9px] md:text-[10px] font-display font-black uppercase px-4 md:px-6 py-2 tracking-widest group-hover:bg-[#E8A811] transition-colors shadow-lg">
                             Shop Now
                           </span>
                         </div>
@@ -248,10 +318,10 @@ const Index = () => {
                       />
                       <div className="absolute inset-0 bg-black/30 group-hover:bg-black/40 transition-colors" />
                       <div className="absolute inset-0 flex flex-col justify-center items-center p-4 md:p-6 text-center">
-                        <h3 className="font-manrope text-2xl sm:text-3xl md:text-4xl text-white font-black uppercase italic tracking-tighter mb-2 md:mb-3">
+                        <h3 className="font-display text-2xl sm:text-3xl md:text-4xl text-white font-black uppercase italic tracking-tighter mb-2 md:mb-3">
                           {lastTile.title}
                         </h3>
-                        <span className="bg-white text-black text-[9px] md:text-[10px] font-manrope font-black uppercase px-6 md:px-8 py-2 md:py-3 tracking-widest group-hover:bg-[#E8A811] transition-colors shadow-lg">
+                        <span className="bg-white text-black text-[9px] md:text-[10px] font-display font-black uppercase px-6 md:px-8 py-2 md:py-3 tracking-widest group-hover:bg-[#E8A811] transition-colors shadow-lg">
                           Shop Now
                         </span>
                       </div>
@@ -267,16 +337,16 @@ const Index = () => {
         <section className="py-6 md:py-8 px-6 md:px-8 max-w-[1440px] mx-auto border-t border-zinc-100">
           <div className="flex flex-col sm:flex-row justify-between items-end mb-8 md:mb-12 gap-4">
             <div className="max-w-md">
-              <h2 className="font-manrope text-4xl font-extrabold tracking-tighter uppercase italic">
+              <h2 className="font-display text-4xl font-bold tracking-tight uppercase italic">
                 Current Drops
               </h2>
-              <p className="text-zinc-500 mt-2 text-sm uppercase tracking-wider font-medium font-manrope">
+              <p className="text-zinc-500 mt-2 text-sm uppercase tracking-wider font-medium font-display">
                 New arrivals from our curated brands, updated weekly.
               </p>
             </div>
             <Link
               to="/shop"
-              className="font-manrope font-black text-[10px] uppercase tracking-widest border-b-2 border-black pb-1 hover:text-[#E8A811] hover:border-[#E8A811] transition-all whitespace-nowrap"
+              className="font-display font-black text-[10px] uppercase tracking-widest border-b-2 border-black pb-1 hover:text-[#E8A811] hover:border-[#E8A811] transition-all whitespace-nowrap"
             >
               Explore Full Katalog
             </Link>
@@ -295,7 +365,7 @@ const Index = () => {
             </div>
           ) : (
             <div className="py-12 text-center">
-              <p className="font-manrope text-sm text-zinc-400 uppercase tracking-widest">
+              <p className="font-display text-sm text-zinc-400 uppercase tracking-widest">
                 No new arrivals available yet.
               </p>
             </div>
@@ -307,16 +377,16 @@ const Index = () => {
           <div className="max-w-[1440px] mx-auto px-6 md:px-8">
             <div className="flex justify-between items-end mb-8 md:mb-12">
               <div>
-                <h2 className="font-manrope text-3xl md:text-4xl font-extrabold tracking-tighter uppercase italic">
+                <h2 className="font-display text-3xl md:text-4xl font-bold tracking-tight uppercase italic">
                   Best Sellers
                 </h2>
-                <p className="text-zinc-500 mt-2 text-xs md:text-sm uppercase tracking-wider font-medium font-manrope">
+                <p className="text-zinc-500 mt-2 text-xs md:text-sm uppercase tracking-wider font-medium font-display">
                   Most coveted pieces in the kolektion.
                 </p>
               </div>
               <Link
                 to="/shop"
-                className="font-manrope font-black text-[10px] uppercase tracking-widest border-b-2 border-black pb-1 hover:text-[#E8A811] hover:border-[#E8A811] transition-all whitespace-nowrap"
+                className="font-display font-black text-[10px] uppercase tracking-widest border-b-2 border-black pb-1 hover:text-[#E8A811] hover:border-[#E8A811] transition-all whitespace-nowrap"
               >
                 Shop Best Sellers
               </Link>
@@ -330,7 +400,7 @@ const Index = () => {
               </div>
             ) : (
               <div className="py-12 text-center">
-                <p className="font-manrope text-sm text-zinc-400 uppercase tracking-widest">
+                <p className="font-display text-sm text-zinc-400 uppercase tracking-widest">
                   No best sellers available yet.
                 </p>
               </div>
@@ -357,15 +427,15 @@ const Index = () => {
                 </div>
                 {/* Floating card */}
                 <div className="absolute -bottom-6 -right-4 md:-bottom-8 md:-right-8 w-56 md:w-64 p-5 md:p-6 bg-white shadow-2xl border border-zinc-100 hidden sm:block">
-                  <p className="text-[9px] font-black uppercase tracking-[0.3em] text-[#E8A811] mb-2 font-manrope">
+                  <p className="text-[9px] font-black uppercase tracking-[0.3em] text-[#E8A811] mb-2 font-display">
                     Look of the Week
                   </p>
-                  <h4 className="font-manrope font-bold text-sm uppercase italic mb-4 leading-tight">
+                  <h4 className="font-display font-bold text-sm uppercase italic mb-4 leading-tight">
                     {newArrivals[0].name}
                   </h4>
                   <Link
                     to={`/shop/${newArrivals[0].slug}`}
-                    className="text-[10px] font-black uppercase tracking-widest border-b border-black pb-1 hover:text-[#E8A811] hover:border-[#E8A811] transition-all font-manrope"
+                    className="text-[10px] font-black uppercase tracking-widest border-b border-black pb-1 hover:text-[#E8A811] hover:border-[#E8A811] transition-all font-display"
                   >
                     Shop the Look
                   </Link>
@@ -375,10 +445,10 @@ const Index = () => {
               {/* Right: Content + product mini-grid */}
               <div className="space-y-10 lg:pl-8">
                 <div className="max-w-md">
-                  <span className="text-[#E8A811] font-manrope font-bold uppercase tracking-[0.4em] text-[10px] mb-4 block">
+                  <span className="text-[#E8A811] font-display font-bold uppercase tracking-[0.4em] text-[10px] mb-4 block">
                     Curator's Choice
                   </span>
-                  <h2 className="font-manrope text-4xl md:text-5xl font-extrabold tracking-tighter uppercase italic leading-none mb-6">
+                  <h2 className="font-display text-4xl md:text-5xl font-bold tracking-tight uppercase italic leading-none mb-6">
                     Trending Now
                   </h2>
                   <p className="text-zinc-500 text-base leading-relaxed font-inter">
@@ -386,6 +456,7 @@ const Index = () => {
                     No noise, just elite craftsmanship.
                   </p>
                 </div>
+
 
                 <div className="grid grid-cols-2 gap-6">
                   {newArrivals.slice(1, 3).map((product) => (
@@ -413,10 +484,10 @@ const Index = () => {
                           </div>
                         )}
                       </div>
-                      <h5 className="font-manrope font-bold text-xs uppercase tracking-tight group-hover:text-[#E8A811] transition-colors">
+                      <h5 className="font-display font-bold text-xs uppercase tracking-tight group-hover:text-[#E8A811] transition-colors">
                         {product.name}
                       </h5>
-                      <p className="font-manrope font-black text-sm mt-1">{formatPrice(product.price)}</p>
+                      <p className="font-display font-black text-sm mt-1">{formatPrice(product.price)}</p>
                     </div>
                   ))}
                 </div>
@@ -428,10 +499,10 @@ const Index = () => {
         {/* ── Newsletter ── */}
         <section className="py-16 md:py-24 bg-black text-white overflow-hidden relative">
           <div className="max-w-[1440px] mx-auto px-6 md:px-8 relative z-10 flex flex-col items-center text-center">
-            <h2 className="font-manrope text-4xl md:text-7xl font-extrabold tracking-tighter uppercase italic mb-4 md:mb-6">
+            <h2 className="font-display text-4xl md:text-7xl font-bold tracking-tight uppercase italic mb-4 md:mb-6">
               Join the Kolektion
             </h2>
-            <p className="text-zinc-400 text-sm md:text-base uppercase tracking-[0.3em] font-medium mb-8 md:mb-12 max-w-lg font-manrope">
+            <p className="text-zinc-400 text-sm md:text-base uppercase tracking-[0.3em] font-medium mb-8 md:mb-12 max-w-lg font-display">
               Early access to limited drops and exclusive member-only pricing.
             </p>
             <div className="w-full max-w-md">
@@ -445,11 +516,11 @@ const Index = () => {
                   onChange={(e) => setNewsletterEmail(e.target.value)}
                   required
                   placeholder="ENTER YOUR EMAIL ADDRESS"
-                  className="bg-transparent border-none focus:ring-0 focus:outline-none text-sm font-bold uppercase tracking-widest w-full p-0 placeholder:text-zinc-700 font-manrope"
+                  className="bg-transparent border-none focus:ring-0 focus:outline-none text-sm font-bold uppercase tracking-widest w-full p-0 placeholder:text-zinc-700 font-display"
                 />
                 <button
                   type="submit"
-                  className="text-xs font-black uppercase tracking-widest ml-4 hover:text-[#E8A811] transition-colors whitespace-nowrap font-manrope"
+                  className="text-xs font-black uppercase tracking-widest ml-4 hover:text-[#E8A811] transition-colors whitespace-nowrap font-display"
                 >
                   Join Now
                 </button>
@@ -457,7 +528,7 @@ const Index = () => {
             </div>
           </div>
           {/* Decorative background text */}
-          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-[18vw] font-black text-white/5 uppercase italic pointer-events-none whitespace-nowrap font-manrope select-none">
+          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-[18vw] font-black text-white/5 uppercase italic pointer-events-none whitespace-nowrap font-display select-none">
             KOLEKTION ELITE
           </div>
         </section>
@@ -471,10 +542,10 @@ const Index = () => {
                   <span className="material-symbols-outlined text-black text-xl md:text-2xl">{badge.icon}</span>
                 </div>
                 <div>
-                  <h4 className="font-manrope font-black text-xs uppercase tracking-widest mb-1">
+                  <h4 className="font-display font-black text-xs uppercase tracking-widest mb-1">
                     {badge.title}
                   </h4>
-                  <p className="text-[11px] text-zinc-500 font-medium uppercase tracking-wider font-manrope">
+                  <p className="text-[11px] text-zinc-500 font-medium uppercase tracking-wider font-display">
                     {badge.description}
                   </p>
                 </div>

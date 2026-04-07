@@ -58,7 +58,7 @@ const AccountOrderList = ({ orders }: AccountOrderListProps) => {
         >
           <div className="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
             <div className="min-w-0">
-              <p className="font-manrope font-black text-[12px] uppercase tracking-[0.1em] text-[#E8A811]">{order.order_number}</p>
+              <p className="font-display font-black text-[12px] uppercase tracking-[0.1em] text-[#E8A811]">{order.order_number}</p>
               <p className="mt-1 font-inter text-[11px] text-zinc-400">{formatOrderDate(order.created_at)}</p>
 
               <span
@@ -71,7 +71,7 @@ const AccountOrderList = ({ orders }: AccountOrderListProps) => {
 
               <Link
                 to={`/orders/${order.order_number}`}
-                className="mt-4 inline-block font-manrope font-black text-[10px] uppercase tracking-widest border-b-2 border-zinc-900 pb-[2px] hover:text-[#E8A811] hover:border-[#E8A811] transition-all"
+                className="mt-4 inline-block font-display font-black text-[10px] uppercase tracking-widest border-b-2 border-zinc-900 pb-[2px] hover:text-[#E8A811] hover:border-[#E8A811] transition-all"
               >
                 View Order
               </Link>
@@ -79,7 +79,7 @@ const AccountOrderList = ({ orders }: AccountOrderListProps) => {
 
             <div className="md:text-right">
               <p className="font-inter text-[10px] uppercase tracking-[0.12em] text-zinc-400">Order Total</p>
-              <p className="mt-1 font-manrope font-bold text-[13px] text-zinc-900">{formatPrice(order.total)}</p>
+              <p className="mt-1 font-display font-bold text-[13px] text-zinc-900">{formatPrice(order.total)}</p>
             </div>
           </div>
         </article>

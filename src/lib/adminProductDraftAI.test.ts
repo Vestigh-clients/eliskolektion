@@ -83,6 +83,16 @@ describe("extractDeterministicDraftInput", () => {
     expect(conversationalPerVariantParsed.core_fields.stock_per_variant).toBe(5);
     expect(conversationalPerVariantParsed.core_fields.stock_quantity).toBeNull();
   });
+
+  it("extracts brand tag from explicit brand fields", () => {
+    const parsed = extractDeterministicDraftInput(`
+      name: Air Runner
+      brand: New Balance
+      price: 220gh
+    `);
+
+    expect(parsed.core_fields.tags).toContain("brand:new-balance");
+  });
 });
 
 describe("parseSizeValues", () => {
@@ -210,5 +220,21 @@ describe("mergeDeterministicWithEnrichment", () => {
     expect(colorType?.values.map((entry) => entry.value)).toEqual(["Yellow", "Wine", "Cream"]);
     expect(sizeType?.values.map((entry) => entry.value)).toEqual(["S", "M", "L"]);
     expect(merged.variant_preview.length).toBe(9);
+  });
+
+  it("normalizes known brand tags into brand:slug format", () => {
+    const deterministic = extractDeterministicDraftInput(`
+      name=Runner Tee
+      tags=casual
+    `);
+
+    const merged = mergeDeterministicWithEnrichment(deterministic, {
+      name: "Nike Runner Tee",
+      tags: ["Nike", "streetwear"],
+    });
+
+    expect(merged.core_fields.tags[0]).toBe("brand:nike");
+    expect(merged.core_fields.tags).toContain("streetwear");
+    expect(merged.core_fields.tags).not.toContain("Nike");
   });
 });

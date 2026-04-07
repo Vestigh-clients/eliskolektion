@@ -1,6 +1,7 @@
 import { type KeyboardEvent, useEffect, useMemo, useRef, useState } from "react";
 import { ArrowLeft, ArrowUp, ImagePlus, Loader2, Sparkles, X } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
+import { getBrandSlugFromTags, setBrandTagInTags, storeBrandOptions } from "@/config/brands.config";
 import { supabase } from "@/integrations/supabase/client";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import {
@@ -208,6 +209,8 @@ const AdminAddWithAIPage = () => {
 
   const [categories, setCategories] = useState<Array<{ id: string; name: string; slug: string }>>([]);
   const [categoryId, setCategoryId] = useState("");
+  const [selectedBrandSlug, setSelectedBrandSlug] = useState("");
+  const [hasBrandSelectionOverride, setHasBrandSelectionOverride] = useState(false);
   const [rawInput, setRawInput] = useState("");
   const [files, setFiles] = useState<File[]>([]);
   const [isLoadingCategories, setIsLoadingCategories] = useState(true);
@@ -247,11 +250,20 @@ const AdminAddWithAIPage = () => {
     () => categories.find((category) => category.id === categoryId)?.name ?? "",
     [categories, categoryId],
   );
+  const selectedBrandName = useMemo(
+    () => storeBrandOptions.find((brand) => brand.slug === selectedBrandSlug)?.label ?? "",
+    [selectedBrandSlug],
+  );
 
   const categorySelectWidthCh = useMemo(() => {
     const label = selectedCategoryName || (isLoadingCategories ? "Loading..." : "Category");
     return Math.min(24, Math.max(14, label.length + 5));
   }, [isLoadingCategories, selectedCategoryName]);
+
+  const brandSelectWidthCh = useMemo(() => {
+    const label = selectedBrandName || "Brand";
+    return Math.min(22, Math.max(12, label.length + 5));
+  }, [selectedBrandName]);
 
   const onSelectFiles = (inputFiles: FileList | null) => {
     if (!inputFiles?.length) return;
@@ -320,6 +332,13 @@ const AdminAddWithAIPage = () => {
         typeof extraction.core_fields.stock_per_variant === "number" && Number.isFinite(extraction.core_fields.stock_per_variant)
           ? Math.max(0, Math.trunc(extraction.core_fields.stock_per_variant)) : null;
       const hasVariants = extraction.option_types.length > 0;
+      const extractedTags = Array.isArray(extraction.core_fields.tags) ? extraction.core_fields.tags : [];
+      const extractedBrandSlug = getBrandSlugFromTags(extractedTags);
+      const brandSlugForDraft = hasBrandSelectionOverride ? selectedBrandSlug || null : extractedBrandSlug;
+      const normalizedTags = setBrandTagInTags(
+        extractedTags,
+        brandSlugForDraft,
+      );
       const variantCount = Math.max(1, extraction.variant_preview.length || 0);
       const variantStockQuantity = hasVariants ? extractedStockPerVariant ?? extractedStockQuantity ?? 0 : 0;
       const initialProductStock = hasVariants
@@ -344,7 +363,7 @@ const AdminAddWithAIPage = () => {
         is_featured: false,
         images: [],
         benefits: normalizeBenefits(extraction.core_fields.benefits),
-        tags: extraction.core_fields.tags,
+        tags: normalizedTags,
         weight_grams: null,
         meta_title: extraction.core_fields.meta_title || null,
         meta_description: extraction.core_fields.meta_description || null,
@@ -558,6 +577,51 @@ const AdminAddWithAIPage = () => {
                         className="rounded-[12px] py-2 pl-8 pr-3 font-inter text-[12px] text-[var(--color-navbar-solid-foreground)] focus:bg-[rgba(var(--color-primary-rgb),0.08)] focus:text-[var(--color-primary)]"
                       >
                         {category.name}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+
+              {/* Brand dropdown */}
+              <div className="min-w-0 flex-shrink-0">
+                <Select
+                  value={selectedBrandSlug}
+                  onValueChange={(value) => {
+                    setHasBrandSelectionOverride(true);
+                    setSelectedBrandSlug(value === "__none" ? "" : value);
+                  }}
+                  disabled={isSubmitting}
+                >
+                  <SelectTrigger
+                    aria-label="Brand"
+                    style={{
+                      width: `${brandSelectWidthCh}ch`,
+                      minWidth: "12ch",
+                      borderColor: "rgba(var(--color-primary-rgb),0.20)",
+                      color: "var(--color-primary)",
+                    }}
+                    className="h-10 max-w-[44vw] rounded-full border bg-white pl-4 pr-3 font-inter text-[12px] outline-none transition-colors focus:border-[var(--color-primary)] data-[placeholder]:text-[var(--color-primary)] disabled:cursor-not-allowed disabled:opacity-50 sm:max-w-none [&>svg]:text-[var(--color-primary)] [&>svg]:opacity-100"
+                  >
+                    <SelectValue placeholder="Brand" />
+                  </SelectTrigger>
+                  <SelectContent
+                    position="popper"
+                    className="z-[240] max-h-[300px] rounded-[20px] border border-[rgba(var(--color-primary-rgb),0.14)] bg-white p-1 shadow-[0_20px_60px_rgba(26,28,28,0.14)]"
+                  >
+                    <SelectItem
+                      value="__none"
+                      className="rounded-[12px] py-2 pl-8 pr-3 font-inter text-[12px] text-[var(--color-navbar-solid-foreground)] focus:bg-[rgba(var(--color-primary-rgb),0.08)] focus:text-[var(--color-primary)]"
+                    >
+                      No brand
+                    </SelectItem>
+                    {storeBrandOptions.map((brand) => (
+                      <SelectItem
+                        key={brand.slug}
+                        value={brand.slug}
+                        className="rounded-[12px] py-2 pl-8 pr-3 font-inter text-[12px] text-[var(--color-navbar-solid-foreground)] focus:bg-[rgba(var(--color-primary-rgb),0.08)] focus:text-[var(--color-primary)]"
+                      >
+                        {brand.label}
                       </SelectItem>
                     ))}
                   </SelectContent>

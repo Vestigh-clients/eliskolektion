@@ -156,8 +156,8 @@ const Register = () => {
 
   return (
     <AuthPageLayout showPanelImage={false}>
-      <h1 className="font-manrope text-[42px]  leading-none text-[var(--color-primary)]">Create your account</h1>
-      <p className="mt-3 font-inter text-[13px] font-light leading-[1.8] text-[var(--color-muted)]">
+      <h1 className="font-display text-[42px]  leading-none text-zinc-900">Create your account</h1>
+      <p className="mt-3 font-display text-[13px] font-light leading-[1.8] text-zinc-500">
         Sign up to save your details, check out faster, and track your orders.
       </p>
 
@@ -227,7 +227,7 @@ const Register = () => {
             <button
               type="button"
               onClick={() => setShowPassword((previous) => !previous)}
-              className="inline-flex text-[var(--color-muted)] transition-colors hover:text-[var(--color-primary)]"
+              className="inline-flex text-zinc-500 transition-colors hover:text-zinc-900"
               aria-label={showPassword ? "Hide password" : "Show password"}
             >
               {showPassword ? <EyeOff size={16} strokeWidth={1.35} /> : <Eye size={16} strokeWidth={1.35} />}
@@ -250,7 +250,7 @@ const Register = () => {
             <button
               type="button"
               onClick={() => setShowConfirmPassword((previous) => !previous)}
-              className="inline-flex text-[var(--color-muted)] transition-colors hover:text-[var(--color-primary)]"
+              className="inline-flex text-zinc-500 transition-colors hover:text-zinc-900"
               aria-label={showConfirmPassword ? "Hide confirm password" : "Show confirm password"}
             >
               {showConfirmPassword ? <EyeOff size={16} strokeWidth={1.35} /> : <Eye size={16} strokeWidth={1.35} />}
@@ -265,18 +265,18 @@ const Register = () => {
           label="Send me updates on new arrivals and offers"
         />
 
-        {generalError ? <p className="mt-4 font-inter text-[11px] text-[var(--color-danger)]">{generalError}</p> : null}
+        {generalError ? <p className="mt-4 font-display text-[11px] text-[var(--color-danger)]">{generalError}</p> : null}
 
         <button
           type="submit"
           disabled={isSubmitting}
-          className="mt-8 w-full rounded-[var(--border-radius)] bg-[var(--color-primary)] px-4 py-[18px] font-inter text-[11px] uppercase tracking-[0.18em] text-[var(--color-secondary)] transition-colors duration-300 hover:bg-[var(--color-accent)] hover:text-[var(--color-secondary)] disabled:cursor-not-allowed disabled:opacity-65"
+          className="mt-8 w-full bg-[#E8A811] px-4 py-[18px] font-display font-black text-[11px] uppercase tracking-widest text-black transition-colors hover:bg-zinc-900 hover:text-white disabled:cursor-not-allowed disabled:opacity-65"
         >
           {isSubmitting ? "Please wait..." : "Create Account"}
         </button>
       </form>
 
-      <p className="mt-6 font-inter text-[12px] text-[var(--color-muted)]">
+      <p className="mt-6 font-display text-[12px] text-zinc-500">
         Already have an account?{" "}
         <Link
           to={buildPathWithSearch(
@@ -288,7 +288,7 @@ const Register = () => {
             }),
             location.hash,
           )}
-          className="text-[var(--color-primary)] transition-colors hover:text-[var(--color-accent)]"
+          className="text-zinc-900 transition-colors hover:text-[#E8A811]"
         >
           Sign in
         </Link>

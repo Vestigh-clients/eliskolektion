@@ -49,8 +49,8 @@ const ForgotPassword = () => {
 
   return (
     <AuthPageLayout>
-      <h1 className="font-manrope text-[42px]  leading-none text-[var(--color-primary)]">Forgot password?</h1>
-      <p className="mt-3 font-inter text-[13px] font-light leading-[1.8] text-[var(--color-muted)]">
+      <h1 className="font-display text-[42px]  leading-none text-zinc-900">Forgot password?</h1>
+      <p className="mt-3 font-display text-[13px] font-light leading-[1.8] text-zinc-500">
         Enter your email and we&apos;ll send a link to reset your password.
       </p>
 
@@ -71,15 +71,15 @@ const ForgotPassword = () => {
         <button
           type="submit"
           disabled={isSubmitting}
-          className="mt-8 w-full rounded-[var(--border-radius)] bg-[var(--color-primary)] px-4 py-[18px] font-inter text-[11px] uppercase tracking-[0.18em] text-[var(--color-secondary)] transition-colors duration-300 hover:bg-[var(--color-accent)] hover:text-[var(--color-secondary)] disabled:cursor-not-allowed disabled:opacity-65"
+          className="mt-8 w-full bg-[#E8A811] px-4 py-[18px] font-display font-black text-[11px] uppercase tracking-widest text-black transition-colors hover:bg-zinc-900 hover:text-white disabled:cursor-not-allowed disabled:opacity-65"
         >
           {isSubmitting ? "Please wait..." : "Send Reset Link"}
         </button>
       </form>
 
-      {successMessage ? <p className="mt-6 font-inter text-[13px] text-[var(--color-muted)]">{successMessage}</p> : null}
+      {successMessage ? <p className="mt-6 font-display text-[13px] text-zinc-500">{successMessage}</p> : null}
 
-      <p className="mt-6 font-inter text-[12px] text-[var(--color-muted)]">
+      <p className="mt-6 font-display text-[12px] text-zinc-500">
         Remembered your password?{" "}
         <Link
           to={buildPathWithSearch(
@@ -89,7 +89,7 @@ const ForgotPassword = () => {
             }),
             location.hash,
           )}
-          className="text-[var(--color-primary)] transition-colors hover:text-[var(--color-accent)]"
+          className="text-zinc-900 transition-colors hover:text-[#E8A811]"
         >
           Sign in
         </Link>

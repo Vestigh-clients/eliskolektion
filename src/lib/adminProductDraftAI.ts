@@ -1,3 +1,5 @@
+import { getBrandTag, getBrandSlugFromTags as getBrandSlugFromBrandTags, setBrandTagInTags, storeBrandOptions } from "@/config/brands.config";
+
 export interface AiDraftBenefit {
   icon: string;
   label: string;
@@ -142,6 +144,83 @@ const uniqueCaseInsensitive = (values: string[]) => {
   }
 
   return deduped;
+};
+
+const BRAND_TOKEN_SANITIZE_REGEX = /[^a-z0-9\s-]/g;
+
+const knownBrandSlugSet = new Set(storeBrandOptions.map((brand) => brand.slug));
+const knownBrandLabelToSlug = new Map(storeBrandOptions.map((brand) => [brand.label.toLowerCase(), brand.slug]));
+const brandOptionsByLabelLength = [...storeBrandOptions].sort((a, b) => b.label.length - a.label.length);
+
+const toBrandSlug = (value: string) =>
+  value
+    .trim()
+    .toLowerCase()
+    .replace(BRAND_TOKEN_SANITIZE_REGEX, "")
+    .replace(/\s+/g, "-")
+    .replace(/-+/g, "-")
+    .replace(/^-+|-+$/g, "");
+
+const escapeRegex = (value: string) => value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+
+const parseBrandSlugFromLooseValue = (value: string): string | null => {
+  const normalized = normalizeWhitespace(value);
+  if (!normalized) return null;
+
+  const explicitBrandSlug = getBrandSlugFromBrandTags([normalized]);
+  if (explicitBrandSlug) return explicitBrandSlug;
+
+  const byLabel = knownBrandLabelToSlug.get(normalized.toLowerCase());
+  if (byLabel) return byLabel;
+
+  const slug = toBrandSlug(normalized);
+  return knownBrandSlugSet.has(slug) ? slug : null;
+};
+
+const inferBrandSlugFromText = (value: string | null | undefined): string | null => {
+  const normalized = normalizeWhitespace(value ?? "").toLowerCase();
+  if (!normalized) return null;
+
+  for (const brand of brandOptionsByLabelLength) {
+    const labelPattern = new RegExp(`(?:^|[^a-z0-9])${escapeRegex(brand.label.toLowerCase())}(?:[^a-z0-9]|$)`, "i");
+    const slugPattern = new RegExp(`(?:^|[^a-z0-9])${escapeRegex(brand.slug.toLowerCase())}(?:[^a-z0-9]|$)`, "i");
+    if (labelPattern.test(normalized) || slugPattern.test(normalized)) {
+      return brand.slug;
+    }
+  }
+
+  return null;
+};
+
+const getKnownBrandSlugFromTags = (tags: string[] | null | undefined): string | null => {
+  const explicitBrandSlug = getBrandSlugFromBrandTags(tags);
+  if (explicitBrandSlug) return explicitBrandSlug;
+  if (!Array.isArray(tags)) return null;
+
+  for (const tag of tags) {
+    if (typeof tag !== "string") continue;
+    const parsed = parseBrandSlugFromLooseValue(tag);
+    if (parsed) return parsed;
+  }
+
+  return null;
+};
+
+const normalizeTagsWithBrand = (tags: string[], fallbackBrandSlug: string | null = null) => {
+  const dedupedTags = uniqueCaseInsensitive(tags);
+  const selectedBrandSlug = getKnownBrandSlugFromTags(dedupedTags) ?? fallbackBrandSlug;
+  const withBrandTag = setBrandTagInTags(dedupedTags, selectedBrandSlug);
+  if (!selectedBrandSlug) return withBrandTag;
+
+  const normalizedBrandTag = getBrandTag(selectedBrandSlug).toLowerCase();
+  const selectedBrandLabel = storeBrandOptions.find((brand) => brand.slug === selectedBrandSlug)?.label.toLowerCase() ?? "";
+
+  return withBrandTag.filter((tag) => {
+    if (tag.toLowerCase() === normalizedBrandTag) return true;
+    const normalizedTag = normalizeWhitespace(tag).toLowerCase();
+    if (normalizedTag === selectedBrandLabel) return false;
+    return toBrandSlug(normalizedTag) !== selectedBrandSlug;
+  });
 };
 
 const normalizeColorOptionValue = (value: string, colorHex?: string | null): AiDraftOptionValue => {
@@ -613,6 +692,14 @@ export const extractDeterministicDraftInput = (rawInput: string): AiDraftExtract
         continue;
       }
 
+      if (normalizedKey.includes("brand")) {
+        const explicitBrandSlug = parseBrandSlugFromLooseValue(normalizedValue);
+        if (explicitBrandSlug) {
+          tags.push(getBrandTag(explicitBrandSlug));
+        }
+        continue;
+      }
+
       if (normalizedKey.includes("short") && normalizedKey.includes("description")) {
         shortDescription = normalizedValue;
         continue;
@@ -708,7 +795,7 @@ export const extractDeterministicDraftInput = (rawInput: string): AiDraftExtract
       full_description: fullDescription,
       meta_title: metaTitle,
       meta_description: metaDescription,
-      tags: uniqueCaseInsensitive(tags),
+      tags: normalizeTagsWithBrand(tags, inferBrandSlugFromText(rawInput)),
       benefits: [],
       sku_suggestion: skuSuggestion,
     },
@@ -753,10 +840,14 @@ export const mergeDeterministicWithEnrichment = (
       ? Math.max(0, Math.trunc(source.stock_per_variant))
       : null;
 
-  const mergedTags = uniqueCaseInsensitive([
+  const mergedTagsRaw = uniqueCaseInsensitive([
     ...(deterministic.core_fields.tags ?? []),
     ...(Array.isArray(source.tags) ? source.tags : []),
   ]);
+  const inferredBrandSlug = inferBrandSlugFromText(
+    [explicitName, enrichedName, ...mergedTagsRaw].filter(Boolean).join(" "),
+  );
+  const mergedTags = normalizeTagsWithBrand(mergedTagsRaw, inferredBrandSlug);
   const mergedOptionTypes = mergeOptionTypes(deterministic.option_types ?? [], source.option_types);
   const mergedVariantPreview = buildVariantPreview(mergedOptionTypes);
 

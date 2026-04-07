@@ -325,7 +325,7 @@ const AccountAddresses = () => {
 
   return (
     <div>
-      <h1 className="font-manrope text-lg font-bold tracking-tight uppercase text-zinc-900">Saved Addresses</h1>
+      <h1 className="font-display text-lg font-bold tracking-tight uppercase text-zinc-900">Saved Addresses</h1>
 
       {loadError ? <p className="mt-5 font-inter text-[11px] text-red-600">{loadError}</p> : null}
 
@@ -453,7 +453,7 @@ const AccountAddresses = () => {
         }`}
       >
         <div className="border border-zinc-100 p-4 sm:p-5">
-          <h2 className="font-manrope text-sm font-bold tracking-tight uppercase text-zinc-900">
+          <h2 className="font-display text-sm font-bold tracking-tight uppercase text-zinc-900">
             {formMode === "edit" ? "Edit Address" : "Add New Address"}
           </h2>
 
@@ -577,7 +577,7 @@ const AccountAddresses = () => {
               <button
                 type="submit"
                 disabled={isSaving}
-                className="bg-zinc-900 px-8 py-3 font-manrope font-black text-[11px] uppercase tracking-widest text-white transition-colors hover:bg-[#E8A811] hover:text-black disabled:cursor-not-allowed disabled:opacity-65"
+                className="bg-[#E8A811] text-black px-8 py-3 font-display font-black text-[11px] uppercase tracking-widest transition-colors hover:bg-zinc-900 hover:text-white disabled:cursor-not-allowed disabled:opacity-65"
               >
                 {isSaving ? "Saving..." : "Save Address"}
               </button>

@@ -16,7 +16,7 @@ const OrderSummaryDetails = ({ order, deliveryWindow }: OrderSummaryDetailsProps
   return (
     <section className="min-w-0">
       <div className="mb-6 flex min-w-0 flex-wrap items-end justify-between gap-2 sm:gap-3">
-        <p className="font-body text-[10px] uppercase tracking-[0.2em] text-[var(--color-accent)]">Order Summary</p>
+        <p className="font-body text-[10px] uppercase tracking-[0.2em] text-[#E8A811]">Order Summary</p>
         <p className="w-full font-body text-[10px] uppercase tracking-[0.1em] text-[var(--color-muted-soft)] [overflow-wrap:anywhere] sm:w-auto">
           {order.order_items.length} {order.order_items.length === 1 ? "product" : "products"} {"\u00B7"} {totalUnits}{" "}
           {totalUnits === 1 ? "unit" : "units"}
@@ -43,14 +43,14 @@ const OrderSummaryDetails = ({ order, deliveryWindow }: OrderSummaryDetailsProps
                     {item.product_name}
                   </p>
                   {item.variant_label ? (
-                    <p className="mt-[3px] mb-[6px] font-body text-[10px] tracking-[0.05em] text-[var(--color-muted)] [overflow-wrap:anywhere]">
+                    <p className="mt-[3px] mb-[6px] font-body text-[10px] tracking-[0.05em] text-zinc-500 [overflow-wrap:anywhere]">
                       {item.variant_label}
                     </p>
                   ) : null}
-                  <p className="mt-1 font-body text-[10px] uppercase tracking-[0.1em] text-[var(--color-accent)]">
+                  <p className="mt-1 font-body text-[10px] uppercase tracking-[0.1em] text-[#E8A811]">
                     {getItemCategoryLabel(item)}
                   </p>
-                  <p className="mt-1 font-body text-[11px] text-[var(--color-muted)]">Qty: {item.quantity}</p>
+                  <p className="mt-1 font-body text-[11px] text-zinc-500">Qty: {item.quantity}</p>
                 </div>
 
                 <p className="whitespace-nowrap text-left font-body text-[13px] text-[var(--color-primary)] sm:text-right">
@@ -64,18 +64,18 @@ const OrderSummaryDetails = ({ order, deliveryWindow }: OrderSummaryDetailsProps
 
       <div className="mt-5 rounded-[var(--border-radius)] border border-[var(--color-border)] px-4 py-4 sm:px-5">
         <div className="space-y-2">
-          <div className="flex items-center justify-between font-body text-[12px] text-[var(--color-muted)]">
+          <div className="flex items-center justify-between font-body text-[12px] text-zinc-500">
             <span>Subtotal</span>
             <span>{formatPrice(order.subtotal)}</span>
           </div>
 
-          <div className="flex items-center justify-between font-body text-[12px] text-[var(--color-muted)]">
+          <div className="flex items-center justify-between font-body text-[12px] text-zinc-500">
             <span>Shipping</span>
             <span>{formatPrice(order.shipping_fee)}</span>
           </div>
 
           {discountAmount > 0 ? (
-            <div className="flex items-center justify-between font-body text-[12px] text-[var(--color-accent)]">
+            <div className="flex items-center justify-between font-body text-[12px] text-[#E8A811]">
               <span>Discount</span>
               <span>- {formatPrice(discountAmount)}</span>
             </div>
@@ -92,8 +92,8 @@ const OrderSummaryDetails = ({ order, deliveryWindow }: OrderSummaryDetailsProps
 
       <div className="mt-5 grid gap-4 md:grid-cols-2">
         <div className="rounded-[var(--border-radius)] border border-[var(--color-border)] px-4 py-4 sm:px-5">
-          <p className="mb-3 font-body text-[10px] uppercase tracking-[0.2em] text-[var(--color-accent)]">Delivering To</p>
-          <div className="space-y-[2px] font-body text-[13px] font-light leading-[1.8] text-[var(--color-muted)] [overflow-wrap:anywhere]">
+          <p className="mb-3 font-body text-[10px] uppercase tracking-[0.2em] text-[#E8A811]">Delivering To</p>
+          <div className="space-y-[2px] font-body text-[13px] font-light leading-[1.8] text-zinc-500 [overflow-wrap:anywhere]">
             {addressLines.length > 0 ? (
               addressLines.map((line) => <p key={line}>{line}</p>)
             ) : (
@@ -106,8 +106,8 @@ const OrderSummaryDetails = ({ order, deliveryWindow }: OrderSummaryDetailsProps
         </div>
 
         <div className="rounded-[var(--border-radius)] border border-[var(--color-border)] px-4 py-4 sm:px-5">
-          <p className="mb-3 font-body text-[10px] uppercase tracking-[0.2em] text-[var(--color-accent)]">Payment</p>
-          <p className="font-body text-[13px] font-light text-[var(--color-muted)]">{paymentLabel}</p>
+          <p className="mb-3 font-body text-[10px] uppercase tracking-[0.2em] text-[#E8A811]">Payment</p>
+          <p className="font-body text-[13px] font-light text-zinc-500">{paymentLabel}</p>
           {order.payment_method === "mobile_money" && order.mobile_money_number ? (
             <p className="mt-1 font-body text-[12px] text-[var(--color-muted-soft)]">{order.mobile_money_number}</p>
           ) : null}

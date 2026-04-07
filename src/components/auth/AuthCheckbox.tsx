@@ -19,12 +19,12 @@ const AuthCheckbox = ({ id, checked, label, onChange }: AuthCheckboxProps) => {
       />
       <span
         className={`mt-[2px] flex h-4 w-4 items-center justify-center border ${
-          checked ? "border-[var(--color-primary)] bg-[var(--color-primary)]" : "border-[var(--color-border)] bg-transparent"
+          checked ? "border-[#E8A811] bg-[#E8A811]" : "border-[var(--color-border)] bg-transparent"
         }`}
       >
         {checked ? <Check className="h-3 w-3 text-white" /> : null}
       </span>
-      <span className="font-body text-[12px] text-[var(--color-muted)]">{label}</span>
+      <span className="font-body text-[12px] text-zinc-500">{label}</span>
     </label>
   );
 };

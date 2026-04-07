@@ -97,7 +97,7 @@ const AccountLayout = () => {
               {avatarInitial}
             </div>
             <div>
-              <p className="font-manrope text-[18px] font-bold text-zinc-900">{fullName || "My Account"}</p>
+              <p className="font-display text-[18px] font-bold text-zinc-900">{fullName || "My Account"}</p>
               <p className="font-inter text-[11px] text-zinc-500">{email}</p>
             </div>
           </div>
@@ -139,7 +139,7 @@ const AccountLayout = () => {
               {avatarInitial}
             </div>
             <div>
-              <p className="font-manrope text-[18px] font-bold text-zinc-900">{fullName || "My Account"}</p>
+              <p className="font-display text-[18px] font-bold text-zinc-900">{fullName || "My Account"}</p>
               <p className="font-inter text-[11px] text-zinc-500">{email}</p>
             </div>
           </div>

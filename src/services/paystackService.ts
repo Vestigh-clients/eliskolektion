@@ -7,11 +7,16 @@ export type PaymentMode = StorePaymentMode;
 export type PaystackConfig = {
   mode: PaymentMode;
   publicKey: string;
+  storeId: string;
   subaccountCode: string | null;
   platformFeePercent: number;
   bearer: PaystackChargeBearer;
   isSubaccountMode: boolean;
   isOwnAccountMode: boolean;
+};
+
+export type PaystackMetadata = {
+  store_id: string;
 };
 
 export type SubaccountData = {
@@ -117,8 +122,20 @@ const normalizeOwnAccountData = (value: unknown, publicKey: string): OwnAccountD
   };
 };
 
+const UUID_PATTERN = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+
+const resolveStoreId = (configuredId: string): string => {
+  if (UUID_PATTERN.test(configuredId.trim())) {
+    return configuredId.trim();
+  }
+  // Subdomain fallback: use the first hostname segment (e.g. "eliskolektion" from "eliskolektion.vestigh.com")
+  const hostname = typeof window !== "undefined" ? window.location.hostname : "";
+  const parts = hostname.split(".");
+  return parts.length >= 3 ? parts[0] : hostname;
+};
+
 export function getPaystackConfig(): PaystackConfig {
-  const { mode, paystack } = storeConfig.payments;
+  const { mode, paystack, storeId: rawStoreId } = storeConfig.payments;
   const publicKey = normalizeConfigValue(paystack.publicKey);
   const subaccountCode =
     mode === "subaccount" ? normalizeConfigValue(paystack.subaccount.code) || null : null;
@@ -126,12 +143,17 @@ export function getPaystackConfig(): PaystackConfig {
   return {
     mode,
     publicKey,
+    storeId: resolveStoreId(rawStoreId),
     subaccountCode,
     platformFeePercent: mode === "subaccount" ? paystack.subaccount.platformFeePercent : 0,
     bearer: mode === "subaccount" ? paystack.subaccount.bearer : "account",
     isSubaccountMode: mode === "subaccount",
     isOwnAccountMode: mode === "own_account",
   };
+}
+
+export function getPaystackMetadata(): PaystackMetadata {
+  return { store_id: getPaystackConfig().storeId };
 }
 
 export async function fetchSubaccountData(): Promise<SubaccountData | null> {

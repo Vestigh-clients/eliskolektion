@@ -53,7 +53,7 @@ const ShopProductCard = ({ product, size = "regular" }: ShopProductCardProps) =>
 
   const imageHoverOverlay = (
     <div className="pointer-events-none absolute inset-x-0 bottom-0 flex h-12 translate-y-full items-center justify-center bg-[rgba(var(--color-navbar-solid-foreground-rgb),0.88)] transition-transform duration-300 ease-in-out group-hover:translate-y-0">
-      <span className="font-body text-[11px] uppercase tracking-[0.15em] text-[var(--color-secondary)]">Add to Cart</span>
+      <span className="font-body text-[11px] uppercase tracking-[0.15em] text-black">Add to Cart</span>
     </div>
   );
 
@@ -78,7 +78,7 @@ const ShopProductCard = ({ product, size = "regular" }: ShopProductCardProps) =>
           </div>
 
           <div className="flex h-full flex-col justify-center bg-[var(--color-secondary)] p-12">
-            <p className="mb-3 font-body text-[10px] font-medium uppercase tracking-[0.2em] text-[var(--color-accent)]">
+            <p className="mb-3 font-body text-[10px] font-medium uppercase tracking-[0.2em] text-[#E8A811]">
               {categoryLabel}
             </p>
 
@@ -86,7 +86,7 @@ const ShopProductCard = ({ product, size = "regular" }: ShopProductCardProps) =>
               <h3 className="font-display text-[24px] font-normal italic leading-[1.2] text-[var(--color-primary)]">{product.name}</h3>
             </Link>
 
-            <p className="mb-7 font-body text-[13px] font-light text-[var(--color-muted)]">{formatPrice(product.price)}</p>
+            <p className="mb-7 font-body text-[13px] font-light text-zinc-500">{formatPrice(product.price)}</p>
             {isOutOfStock ? (
               <p className="mb-6 font-body text-[10px] uppercase tracking-[0.08em] text-[var(--color-muted-soft)]">Out of Stock</p>
             ) : null}
@@ -95,7 +95,7 @@ const ShopProductCard = ({ product, size = "regular" }: ShopProductCardProps) =>
               type="button"
               onClick={handleAddToCart}
               disabled={isOutOfStock}
-              className="w-fit rounded-[var(--border-radius)] bg-[var(--color-primary)] px-8 py-[14px] font-body text-[11px] uppercase tracking-[0.15em] text-[var(--color-secondary)] transition-colors duration-300 hover:bg-[var(--color-accent)] hover:text-[var(--color-secondary)] disabled:cursor-not-allowed disabled:bg-[var(--color-border)] disabled:text-[var(--color-muted)]"
+              className="w-fit rounded-[var(--border-radius)] bg-[#E8A811] px-8 py-[14px] font-body text-[11px] uppercase tracking-[0.15em] text-black transition-colors duration-300 hover:bg-zinc-900 hover:text-black disabled:cursor-not-allowed disabled:bg-zinc-200 disabled:text-zinc-500"
             >
               {isOutOfStock ? "Out of Stock" : requiresVariantSelection ? "Select Options" : "Add to Cart"}
             </button>
@@ -128,7 +128,7 @@ const ShopProductCard = ({ product, size = "regular" }: ShopProductCardProps) =>
         <Link to={`/shop/${product.slug}`}>
           <h3 className="font-display text-[15px] font-normal italic leading-snug text-[var(--color-primary)]">{product.name}</h3>
         </Link>
-        <p className="mt-1 font-body text-[12px] font-light text-[var(--color-muted)]">{formatPrice(product.price)}</p>
+        <p className="mt-1 font-body text-[12px] font-light text-zinc-500">{formatPrice(product.price)}</p>
         {isOutOfStock ? (
           <p className="mt-1 font-body text-[10px] uppercase tracking-[0.08em] text-[var(--color-muted-soft)]">Out of Stock</p>
         ) : null}

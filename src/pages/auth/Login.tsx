@@ -165,13 +165,13 @@ const Login = () => {
 
   return (
     <AuthPageLayout showPanelImage={false}>
-      <h1 className="font-manrope text-[42px]  leading-none text-[var(--color-primary)]">Welcome back</h1>
-      <p className="mt-3 font-inter text-[13px] font-light leading-[1.8] text-[var(--color-muted)]">
+      <h1 className="font-display text-2xl font-bold tracking-tight leading-none text-[#E8A811]">Welcome back</h1>
+      <p className="mt-3 font-body text-[13px] font-light leading-[1.8] text-zinc-500">
         Sign in to continue checkout, manage your account, and track orders.
       </p>
 
       {locationState?.justRegistered || searchParams.get(AUTH_MODAL_REGISTERED_QUERY_PARAM) === "1" ? (
-        <p className="mt-4 font-inter text-[11px] text-[var(--color-success)]">
+        <p className="mt-4 font-body text-[11px] text-[var(--color-success)]">
           Account created successfully
           {locationState?.email || searchParams.get(AUTH_MODAL_EMAIL_QUERY_PARAM)
             ? ` for ${locationState?.email ?? searchParams.get(AUTH_MODAL_EMAIL_QUERY_PARAM) ?? ""}`
@@ -209,7 +209,7 @@ const Login = () => {
             <button
               type="button"
               onClick={() => setShowPassword((previous) => !previous)}
-              className="inline-flex text-[var(--color-muted)] transition-colors hover:text-[var(--color-primary)]"
+              className="inline-flex text-zinc-500 transition-colors hover:text-zinc-900"
               aria-label={showPassword ? "Hide password" : "Show password"}
             >
               {showPassword ? <EyeOff size={16} strokeWidth={1.35} /> : <Eye size={16} strokeWidth={1.35} />}
@@ -226,21 +226,21 @@ const Login = () => {
               }),
               location.hash,
             )}
-            className="font-inter text-[11px] text-[var(--color-muted)] transition-colors hover:text-[var(--color-primary)]"
+            className="font-body text-[11px] text-zinc-500 transition-colors hover:text-zinc-900"
           >
             Forgot your password?
           </Link>
         </div>
 
         {generalError ? (
-          <p className="mt-4 font-inter text-[11px] text-[var(--color-danger)]">
+          <p className="mt-4 font-body text-[11px] text-[var(--color-danger)]">
             {generalError}{" "}
             {isEmailNotVerified ? (
               <button
                 type="button"
                 onClick={() => void handleResendVerification()}
                 disabled={isResendingEmail}
-                className="underline transition-colors hover:text-[var(--color-primary)] disabled:cursor-not-allowed disabled:opacity-65"
+                className="underline transition-colors hover:text-zinc-900 disabled:cursor-not-allowed disabled:opacity-65"
               >
                 {isResendingEmail ? "Resending..." : "Resend verification email?"}
               </button>
@@ -248,18 +248,18 @@ const Login = () => {
           </p>
         ) : null}
 
-        {resendMessage ? <p className="mt-3 font-inter text-[11px] text-[var(--color-muted)]">{resendMessage}</p> : null}
+        {resendMessage ? <p className="mt-3 font-body text-[11px] text-zinc-500">{resendMessage}</p> : null}
 
         <button
           type="submit"
           disabled={isSubmitting}
-          className="mt-8 w-full rounded-[var(--border-radius)] bg-[var(--color-primary)] px-4 py-[18px] font-inter text-[11px] uppercase tracking-[0.18em] text-[var(--color-secondary)] transition-colors duration-300 hover:bg-[var(--color-accent)] hover:text-[var(--color-secondary)] disabled:cursor-not-allowed disabled:opacity-65"
+          className="mt-8 w-full bg-[#E8A811] px-8 py-3 font-display font-black text-[11px] uppercase tracking-widest text-black transition-colors hover:bg-zinc-900 hover:text-white disabled:cursor-not-allowed disabled:opacity-65"
         >
           {isSubmitting ? "Please wait..." : "Sign In"}
         </button>
       </form>
 
-      <p className="mt-6 font-inter text-[12px] text-[var(--color-muted)]">
+      <p className="mt-6 font-body text-[12px] text-zinc-500">
         Don&apos;t have an account?{" "}
         <Link
           to={buildPathWithSearch(
@@ -271,7 +271,7 @@ const Login = () => {
             }),
             location.hash,
           )}
-          className="text-[var(--color-primary)] transition-colors hover:text-[var(--color-accent)]"
+          className="text-zinc-900 transition-colors hover:text-[#E8A811]"
         >
           Create account
         </Link>

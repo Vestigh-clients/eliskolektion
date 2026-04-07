@@ -8,6 +8,7 @@ const PUBLIC_SITE_SETTING_KEYS = [
   "whatsapp_number",
   "site_theme_preset",
   "review_moderation_required",
+  "free_shipping_threshold",
 ] as const;
 
 export interface PublicSiteSettings {
@@ -18,6 +19,7 @@ export interface PublicSiteSettings {
   whatsappNumber?: string;
   siteThemePreset?: string;
   reviewModerationRequired?: boolean;
+  freeShippingThreshold?: number;
 }
 
 const BOOLEAN_TRUE_VALUES = new Set(["true", "1", "yes", "on"]);
@@ -42,5 +44,10 @@ export const fetchPublicSiteSettings = async (): Promise<PublicSiteSettings> => 
     whatsappNumber: values.get("whatsapp_number") || undefined,
     siteThemePreset: values.get("site_theme_preset") || undefined,
     reviewModerationRequired: BOOLEAN_TRUE_VALUES.has((values.get("review_moderation_required") || "").toLowerCase()),
+    freeShippingThreshold: (() => {
+      const raw = values.get("free_shipping_threshold");
+      const parsed = raw ? parseFloat(raw) : NaN;
+      return !isNaN(parsed) && parsed > 0 ? parsed : undefined;
+    })(),
   };
 };

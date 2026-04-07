@@ -28,7 +28,7 @@ import {
   triggerOrderConfirmationEmail,
   triggerNewOrderAdminNotification,
 } from "@/services/orderService";
-import { getPaystackConfig, getTransactionCharge, isPaymentConfigured } from "@/services/paystackService";
+import { getPaystackConfig, getPaystackMetadata, getTransactionCharge, isPaymentConfigured } from "@/services/paystackService";
 import { getPaymentSettings, type PaymentSettings } from "@/services/paymentSettingsService";
 import { storeConfig, storeKeyPrefix } from "@/config/store.config";
 import { REDIRECT_AFTER_LOGIN_KEY } from "@/services/authService";
@@ -748,15 +748,15 @@ const FloatingInput = ({
             setIsFocused(false);
             onBlur();
           }}
-          className={`w-full border-0 border-b ${borderClass} bg-transparent pb-[10px] pt-[16px] font-inter text-[16px] text-[var(--color-primary)] transition-colors duration-200 placeholder:text-transparent focus:placeholder:text-[var(--color-muted-soft)] focus:border-[var(--color-primary)] focus:outline-none md:text-[14px]`}
+          className={`w-full border-0 border-b ${borderClass} bg-transparent pb-[10px] pt-[16px] font-display text-[16px] text-zinc-900 transition-colors duration-200 placeholder:text-transparent focus:placeholder:text-zinc-400 focus:border-[#E8A811] focus:outline-none md:text-[14px]`}
         />
 
         <label
           htmlFor={id}
-          className={`pointer-events-none absolute left-0 font-inter transition-all duration-200 ${
+          className={`pointer-events-none absolute left-0 font-display transition-all duration-200 ${
             shouldFloatLabel
-              ? "top-[2px] text-[10px] uppercase tracking-[0.12em] text-[var(--color-accent)]"
-              : "top-[20px] text-[14px] text-[var(--color-muted)]"
+              ? "top-[2px] text-[10px] uppercase tracking-[0.12em] text-[#E8A811]"
+              : "top-[20px] text-[14px] text-zinc-500"
           }`}
         >
           {label}
@@ -764,8 +764,8 @@ const FloatingInput = ({
         </label>
       </div>
 
-      {helperText ? <p className="mt-[6px] font-inter text-[11px] text-[var(--color-muted-soft)]">{helperText}</p> : null}
-      {error ? <p className="mt-[6px] font-inter text-[11px] text-[var(--color-danger)]">{error}</p> : null}
+      {helperText ? <p className="mt-[6px] font-display text-[11px] text-zinc-400">{helperText}</p> : null}
+      {error ? <p className="mt-[6px] font-display text-[11px] text-[var(--color-danger)]">{error}</p> : null}
     </div>
   );
 };
@@ -803,16 +803,16 @@ const FloatingTextarea = ({
             setIsFocused(false);
             onBlur();
           }}
-          className={`w-full resize-none border-0 border-b ${borderClass} bg-transparent pb-[10px] pt-[20px] font-inter text-[16px] text-[var(--color-primary)] transition-colors duration-200 placeholder:text-transparent focus:placeholder:text-[var(--color-muted-soft)] focus:border-[var(--color-primary)] focus:outline-none md:text-[14px]`}
+          className={`w-full resize-none border-0 border-b ${borderClass} bg-transparent pb-[10px] pt-[20px] font-display text-[16px] text-zinc-900 transition-colors duration-200 placeholder:text-transparent focus:placeholder:text-zinc-400 focus:border-[#E8A811] focus:outline-none md:text-[14px]`}
           rows={4}
         />
 
         <label
           htmlFor={id}
-          className={`pointer-events-none absolute left-0 font-inter transition-all duration-200 ${
+          className={`pointer-events-none absolute left-0 font-display transition-all duration-200 ${
             shouldFloatLabel
-              ? "top-[2px] text-[10px] uppercase tracking-[0.12em] text-[var(--color-accent)]"
-              : "top-[22px] text-[14px] text-[var(--color-muted)]"
+              ? "top-[2px] text-[10px] uppercase tracking-[0.12em] text-[#E8A811]"
+              : "top-[22px] text-[14px] text-zinc-500"
           }`}
         >
           {label}
@@ -821,12 +821,12 @@ const FloatingTextarea = ({
       </div>
 
       {showCharacterCount && typeof maxLength === "number" ? (
-        <p className="mt-[6px] text-right font-inter text-[10px] text-[var(--color-muted-soft)]">
+        <p className="mt-[6px] text-right font-display text-[10px] text-zinc-400">
           {value.length}/{maxLength}
         </p>
       ) : null}
 
-      {error ? <p className="mt-[6px] font-inter text-[11px] text-[var(--color-danger)]">{error}</p> : null}
+      {error ? <p className="mt-[6px] font-display text-[11px] text-[var(--color-danger)]">{error}</p> : null}
     </div>
   );
 };
@@ -861,7 +861,7 @@ const FloatingSelect = ({
             setIsFocused(false);
             onBlur();
           }}
-          className={`w-full appearance-none border-0 border-b ${borderClass} bg-transparent pb-[10px] pt-[16px] font-inter text-[16px] text-[var(--color-primary)] transition-colors duration-200 focus:border-[var(--color-primary)] focus:outline-none md:text-[14px]`}
+          className={`w-full appearance-none border-0 border-b ${borderClass} bg-transparent pb-[10px] pt-[16px] font-display text-[16px] text-zinc-900 transition-colors duration-200 focus:border-[#E8A811] focus:outline-none md:text-[14px]`}
         >
           <option value="" disabled>
             Select an option
@@ -873,14 +873,14 @@ const FloatingSelect = ({
           ))}
         </select>
 
-        <ChevronDown className="pointer-events-none absolute right-0 top-[31px] h-4 w-4 text-[var(--color-muted)]" />
+        <ChevronDown className="pointer-events-none absolute right-0 top-[31px] h-4 w-4 text-zinc-500" />
 
         <label
           htmlFor={id}
-          className={`pointer-events-none absolute left-0 font-inter transition-all duration-200 ${
+          className={`pointer-events-none absolute left-0 font-display transition-all duration-200 ${
             shouldFloatLabel
-              ? "top-[2px] text-[10px] uppercase tracking-[0.12em] text-[var(--color-accent)]"
-              : "top-[20px] text-[14px] text-[var(--color-muted)]"
+              ? "top-[2px] text-[10px] uppercase tracking-[0.12em] text-[#E8A811]"
+              : "top-[20px] text-[14px] text-zinc-500"
           }`}
         >
           {label}
@@ -888,7 +888,7 @@ const FloatingSelect = ({
         </label>
       </div>
 
-      {error ? <p className="mt-[6px] font-inter text-[11px] text-[var(--color-danger)]">{error}</p> : null}
+      {error ? <p className="mt-[6px] font-display text-[11px] text-[var(--color-danger)]">{error}</p> : null}
     </div>
   );
 };
@@ -928,10 +928,10 @@ const SearchableStateField = ({
           <PopoverTrigger asChild>
             <button
               type="button"
-              className={`flex w-full items-center justify-between border-0 border-b ${borderClass} bg-transparent pb-[10px] pt-[16px] text-left font-inter text-[16px] text-[var(--color-primary)] transition-colors duration-200 focus:border-[var(--color-primary)] focus:outline-none md:text-[14px]`}
+              className={`flex w-full items-center justify-between border-0 border-b ${borderClass} bg-transparent pb-[10px] pt-[16px] text-left font-display text-[16px] text-zinc-900 transition-colors duration-200 focus:border-[#E8A811] focus:outline-none md:text-[14px]`}
             >
               <span className="truncate">{value || " "}</span>
-              <ChevronDown className="h-4 w-4 text-[var(--color-muted)]" />
+              <ChevronDown className="h-4 w-4 text-zinc-500" />
             </button>
           </PopoverTrigger>
           <PopoverContent
@@ -942,10 +942,10 @@ const SearchableStateField = ({
             <Command className="bg-[var(--color-secondary)]">
               <CommandInput
                 placeholder="Search region..."
-                className="font-inter text-[13px] placeholder:text-[var(--color-muted-soft)] focus:ring-0"
+                className="font-display text-[13px] placeholder:text-zinc-400 focus:ring-0"
               />
               <CommandList>
-                <CommandEmpty className="font-inter text-[12px] text-[var(--color-muted)]">No region found.</CommandEmpty>
+                <CommandEmpty className="font-display text-[12px] text-zinc-500">No region found.</CommandEmpty>
                 <CommandGroup>
                   {options.map((stateName) => (
                     <CommandItem
@@ -957,7 +957,7 @@ const SearchableStateField = ({
                         setIsFocused(false);
                         onBlur();
                       }}
-                      className="font-inter text-[12px] text-[var(--color-primary)] data-[selected=true]:bg-[var(--color-surface)] data-[selected=true]:text-[var(--color-primary)]"
+                      className="font-display text-[12px] text-zinc-900 data-[selected=true]:bg-[var(--color-surface)] data-[selected=true]:text-zinc-900"
                     >
                       <span className="flex-1">{stateName}</span>
                       <Check className={`h-3.5 w-3.5 ${value === stateName ? "opacity-100" : "opacity-0"}`} />
@@ -970,10 +970,10 @@ const SearchableStateField = ({
         </Popover>
 
         <p
-          className={`pointer-events-none absolute left-0 font-inter transition-all duration-200 ${
+          className={`pointer-events-none absolute left-0 font-display transition-all duration-200 ${
             shouldFloatLabel
-              ? "top-[2px] text-[10px] uppercase tracking-[0.12em] text-[var(--color-accent)]"
-              : "top-[20px] text-[14px] text-[var(--color-muted)]"
+              ? "top-[2px] text-[10px] uppercase tracking-[0.12em] text-[#E8A811]"
+              : "top-[20px] text-[14px] text-zinc-500"
           }`}
         >
           {label}
@@ -981,7 +981,7 @@ const SearchableStateField = ({
         </p>
       </div>
 
-      {error ? <p className="mt-[6px] font-inter text-[11px] text-[var(--color-danger)]">{error}</p> : null}
+      {error ? <p className="mt-[6px] font-display text-[11px] text-[var(--color-danger)]">{error}</p> : null}
     </div>
   );
 };
@@ -2401,6 +2401,7 @@ const Checkout = () => {
         amount: totalAmountInPesewas,
         currency: "GHS",
         ref: orderNumberForCheckout,
+        metadata: getPaystackMetadata(),
         ...(paystackConfig.isSubaccountMode && paystackConfig.subaccountCode
           ? {
               subaccount: paystackConfig.subaccountCode,
@@ -2498,7 +2499,7 @@ const Checkout = () => {
 
   const renderOrderSummary = (isMobile: boolean) => (
     <div className={`${isMobile ? "" : "sticky top-[112px]"}`}>
-      <h3 className="mb-6 font-manrope text-[22px]  text-[var(--color-primary)]">Order Summary</h3>
+      <h3 className="mb-6 font-display text-[22px]  text-zinc-900">Order Summary</h3>
 
       <div className="space-y-3 border-b border-[var(--color-border)] pb-4">
         {items.map((item) => (
@@ -2515,16 +2516,16 @@ const Checkout = () => {
               />
 
               <div className="min-w-0 flex-1">
-                <p className="truncate font-manrope text-[14px]  text-[var(--color-muted)]">{item.name}</p>
+                <p className="truncate font-display text-[14px]  text-zinc-500">{item.name}</p>
                 {item.variant_label ? (
-                  <p className="mt-[3px] mb-[6px] font-inter text-[10px] tracking-[0.05em] text-[var(--color-muted)]">
+                  <p className="mt-[3px] mb-[6px] font-display text-[10px] tracking-[0.05em] text-zinc-500">
                     {item.variant_label}
                   </p>
                 ) : null}
-                <p className="font-inter text-[11px] text-[var(--color-muted)]">Qty: {item.quantity}</p>
+                <p className="font-display text-[11px] text-zinc-500">Qty: {item.quantity}</p>
               </div>
 
-              <p className="text-right font-inter text-[12px] text-[var(--color-primary)]">
+              <p className="text-right font-display text-[12px] text-zinc-900">
                 {formatPrice(item.price * item.quantity)}
               </p>
             </div>
@@ -2533,26 +2534,26 @@ const Checkout = () => {
         ))}
       </div>
 
-      <div className="mt-4 space-y-2 font-inter text-[12px]">
-        <div className="flex items-center justify-between text-[var(--color-muted)]">
+      <div className="mt-4 space-y-2 font-display text-[12px]">
+        <div className="flex items-center justify-between text-zinc-500">
           <span>Subtotal</span>
           <span>{formatPrice(subtotal)}</span>
         </div>
 
-        <div className="flex items-center justify-between text-[var(--color-muted)]">
+        <div className="flex items-center justify-between text-zinc-500">
           <span>Shipping</span>
           <span>{shippingSidebarValue}</span>
         </div>
 
         {isDiscountCodesEnabled && appliedDiscount ? (
-          <div className="flex items-center justify-between text-[var(--color-accent)]">
+          <div className="flex items-center justify-between text-[#E8A811]">
             <span>Discount</span>
             <span>- {formatPrice(discountAmount)}</span>
           </div>
         ) : null}
 
         {isPaystackBuyerFeeApplicable ? (
-          <div className="flex items-center justify-between text-[var(--color-muted)]">
+          <div className="flex items-center justify-between text-zinc-500">
             <span>Paystack Fee ({PAYSTACK_BUYER_FEE_PERCENT}%)</span>
             <span>{formatPrice(paystackBuyerFee)}</span>
           </div>
@@ -2561,7 +2562,7 @@ const Checkout = () => {
 
       <div className="my-4 border-b border-[var(--color-border)]" />
 
-      <div className="flex items-center justify-between font-inter text-[14px] font-medium text-[var(--color-primary)]">
+      <div className="flex items-center justify-between font-display text-[14px] font-medium text-zinc-900">
         <span>Order Total</span>
         <span>{formatPrice(orderTotal)}</span>
       </div>
@@ -2578,14 +2579,14 @@ const Checkout = () => {
                 setDiscountSuccess(null);
               }}
               placeholder=" "
-              className="w-full border-0 border-b border-[var(--color-border)] bg-transparent pb-[10px] pt-[16px] font-inter text-[16px] text-[var(--color-primary)] transition-colors duration-200 placeholder:text-transparent focus:border-[var(--color-primary)] focus:outline-none md:text-[14px]"
+              className="w-full border-0 border-b border-[var(--color-border)] bg-transparent pb-[10px] pt-[16px] font-display text-[16px] text-zinc-900 transition-colors duration-200 placeholder:text-transparent focus:border-[#E8A811] focus:outline-none md:text-[14px]"
             />
             <label
               htmlFor={isMobile ? "discount-mobile" : "discount-desktop"}
-              className={`pointer-events-none absolute left-0 font-inter transition-all duration-200 ${
+              className={`pointer-events-none absolute left-0 font-display transition-all duration-200 ${
                 discountInput.trim().length > 0
-                  ? "top-[2px] text-[10px] uppercase tracking-[0.12em] text-[var(--color-accent)]"
-                  : "top-[20px] text-[14px] text-[var(--color-muted)]"
+                  ? "top-[2px] text-[10px] uppercase tracking-[0.12em] text-[#E8A811]"
+                  : "top-[20px] text-[14px] text-zinc-500"
               }`}
             >
               Discount code
@@ -2596,18 +2597,18 @@ const Checkout = () => {
             type="button"
             onClick={() => void handleApplyDiscount()}
             disabled={isApplyingDiscount}
-            className="mt-2 ml-auto block font-inter text-[11px] uppercase tracking-[0.12em] text-[var(--color-accent)] transition-colors hover:text-[var(--color-primary)] disabled:opacity-60"
+            className="mt-2 ml-auto block font-display text-[11px] uppercase tracking-[0.12em] text-[#E8A811] transition-colors hover:text-zinc-900 disabled:opacity-60"
           >
             {isApplyingDiscount ? "Applying..." : "Apply"}
           </button>
 
-          {discountSuccess ? <p className="mt-2 font-inter text-[11px] text-[var(--color-success)]">{discountSuccess}</p> : null}
-          {discountError ? <p className="mt-2 font-inter text-[11px] text-[var(--color-danger)]">{discountError}</p> : null}
+          {discountSuccess ? <p className="mt-2 font-display text-[11px] text-[var(--color-success)]">{discountSuccess}</p> : null}
+          {discountError ? <p className="mt-2 font-display text-[11px] text-[var(--color-danger)]">{discountError}</p> : null}
         </div>
       ) : null}
 
       {isValidating ? (
-        <p className="mt-5 font-inter text-[11px] text-[var(--color-muted)]">Verifying latest prices and stock...</p>
+        <p className="mt-5 font-display text-[11px] text-zinc-500">Verifying latest prices and stock...</p>
       ) : null}
     </div>
   );
@@ -2622,12 +2623,12 @@ const Checkout = () => {
         <button
           type="button"
           onClick={() => setIsMobileSummaryOpen(true)}
-          className="sticky top-[72px] z-30 mb-6 flex h-[52px] w-full items-center justify-between bg-[var(--color-primary)] px-4 lg:hidden"
+          className="sticky top-[72px] z-30 mb-6 flex h-[52px] w-full items-center justify-between bg-[#E8A811] px-4 lg:hidden"
         >
-          <span className="font-inter text-[12px] text-[var(--color-secondary)]">
+          <span className="font-display text-[12px] text-black">
             {orderItemCountLabel} {"\u00B7"} {formatPrice(subtotal)}
           </span>
-          <ChevronDown className="h-4 w-4 text-[var(--color-secondary)]" />
+          <ChevronDown className="h-4 w-4 text-black" />
         </button>
 
         <div className="grid gap-10 lg:grid-cols-[minmax(0,3fr)_minmax(0,2fr)]">
@@ -2653,18 +2654,18 @@ const Checkout = () => {
                         <span
                           className={`flex h-6 w-6 items-center justify-center rounded-full border text-[11px] font-medium ${
                             isActive
-                              ? "border-[var(--color-primary)] bg-[var(--color-primary)] text-[var(--color-secondary)]"
+                              ? "border-[#E8A811] bg-[#E8A811] text-black"
                               : isCompleted
-                                ? "border-[var(--color-accent)] bg-[var(--color-accent)] text-[var(--color-secondary)]"
-                                : "border-[var(--color-border)] bg-transparent text-[var(--color-muted-soft)]"
+                                ? "border-[var(--color-accent)] bg-[var(--color-accent)] text-black"
+                                : "border-[var(--color-border)] bg-transparent text-zinc-400"
                           }`}
                         >
                           {isCompleted && !isActive ? <Check className="h-3.5 w-3.5" /> : index + 1}
                         </span>
 
                         <span
-                          className={`mt-2 font-inter text-[10px] uppercase tracking-[0.12em] ${
-                            isActive ? "text-[var(--color-primary)]" : isCompleted ? "text-[var(--color-accent)]" : "text-[var(--color-muted-soft)]"
+                          className={`mt-2 font-display text-[10px] uppercase tracking-[0.12em] ${
+                            isActive ? "text-zinc-900" : isCompleted ? "text-[#E8A811]" : "text-zinc-400"
                           }`}
                         >
                           {STEP_LABEL[step]}
@@ -2685,24 +2686,24 @@ const Checkout = () => {
             </div>
 
             <div className="mb-8 flex items-center justify-between md:hidden">
-              <p className="font-inter text-[10px] uppercase tracking-[0.12em] text-[var(--color-primary)]">
+              <p className="font-display text-[10px] uppercase tracking-[0.12em] text-zinc-900">
                 {STEP_LABEL[currentStep]}
               </p>
-              <p className="font-inter text-[10px] uppercase tracking-[0.12em] text-[var(--color-muted)]">
+              <p className="font-display text-[10px] uppercase tracking-[0.12em] text-zinc-500">
                 Step {currentStepIndex + 1} of {CHECKOUT_STEPS.length}
               </p>
             </div>
 
             {currentStep === "contact" ? (
               <div>
-                <h1 className="font-manrope text-[32px]  text-[var(--color-primary)]">Contact Information</h1>
+                <h1 className="font-display text-[32px]  text-zinc-900">Contact Information</h1>
                 {isGuestCheckout ? (
-                  <p className="mt-2 font-inter text-[11px] text-[var(--color-muted-soft)]">
+                  <p className="mt-2 font-display text-[11px] text-zinc-400">
                     Checking out as guest &#183;{" "}
                     <Link
                       to={signInModalPath}
                       onClick={handleSignInInstead}
-                      className="text-[var(--color-accent)] transition-colors hover:text-[var(--color-primary)]"
+                      className="text-[#E8A811] transition-colors hover:text-zinc-900"
                     >
                       Sign in instead
                     </Link>
@@ -2715,7 +2716,7 @@ const Checkout = () => {
                       <svg
                         viewBox="0 0 24 24"
                         aria-hidden="true"
-                        className="h-4 w-4 shrink-0 text-[var(--color-accent)]"
+                        className="h-4 w-4 shrink-0 text-[#E8A811]"
                         fill="none"
                         stroke="currentColor"
                         strokeWidth="1.75"
@@ -2726,14 +2727,14 @@ const Checkout = () => {
                         <circle cx="12" cy="9.25" r="2.25" />
                         <path d="M8.9 16.4c.9-1.5 2.03-2.25 3.1-2.25s2.2.75 3.1 2.25" />
                       </svg>
-                      <p className="ml-2 font-inter text-[12px] text-[var(--color-primary)]">Use your saved details?</p>
+                      <p className="ml-2 font-display text-[12px] text-zinc-900">Use your saved details?</p>
                     </div>
 
                     <div className="ml-auto flex items-center">
                       <button
                         type="button"
                         onClick={handleUseSavedDetails}
-                        className="rounded-[var(--border-radius)] bg-[var(--color-primary)] px-5 py-2 font-inter text-[10px] uppercase tracking-[0.15em] text-[var(--color-secondary)] transition-all duration-200 ease-in-out hover:bg-[var(--color-accent)] hover:text-[var(--color-secondary)]"
+                        className="bg-[#E8A811] px-5 py-2 font-display font-black text-[10px] uppercase tracking-widest text-black transition-colors hover:bg-zinc-900 hover:text-white"
                       >
                         Use Saved Details
                       </button>
@@ -2741,7 +2742,7 @@ const Checkout = () => {
                       <button
                         type="button"
                         onClick={handleDismissSavedDetails}
-                        className="ml-4 font-inter text-[10px] uppercase tracking-[0.15em] text-[var(--color-muted-soft)] transition-colors duration-200 hover:text-[var(--color-primary)]"
+                        className="ml-4 font-display text-[10px] uppercase tracking-[0.15em] text-zinc-400 transition-colors duration-200 hover:text-zinc-900"
                       >
                         No thanks
                       </button>
@@ -2751,7 +2752,7 @@ const Checkout = () => {
 
                 {isSavedDetailsConfirmationVisible ? (
                   <p
-                    className={`mb-8 font-inter text-[10px] text-[var(--color-accent)] transition-opacity duration-700 ${
+                    className={`mb-8 font-display text-[10px] text-[#E8A811] transition-opacity duration-700 ${
                       isSavedDetailsConfirmationFading ? "opacity-0" : "opacity-100"
                     }`}
                   >
@@ -2851,26 +2852,26 @@ const Checkout = () => {
                   />
                   <span
                     className={`mt-[2px] flex h-4 w-4 items-center justify-center border ${
-                      contactValues.marketingOptIn ? "border-[var(--color-primary)] bg-[var(--color-primary)]" : "border-[var(--color-border)] bg-transparent"
+                      contactValues.marketingOptIn ? "border-[#E8A811] bg-[#E8A811]" : "border-[var(--color-border)] bg-transparent"
                     }`}
                   >
                     {contactValues.marketingOptIn ? <Check className="h-3 w-3 text-white" /> : null}
                   </span>
-                  <span className="font-inter text-[12px] text-[var(--color-muted)]">
+                  <span className="font-display text-[12px] text-zinc-500">
                     Send me updates on new arrivals and offers
                   </span>
                 </label>
 
                 <div className="mt-10">
                   {stepAdvanceError ? (
-                    <p className="mb-3 font-inter text-[12px] text-[var(--color-danger)]">{stepAdvanceError}</p>
+                    <p className="mb-3 font-display text-[12px] text-[var(--color-danger)]">{stepAdvanceError}</p>
                   ) : null}
 
                   <div className="flex flex-col-reverse gap-3 md:flex-row md:items-center md:justify-between">
                     <button
                       type="button"
                       onClick={handleBack}
-                      className="self-start font-inter text-[11px] uppercase tracking-[0.12em] text-[var(--color-muted)] transition-colors hover:text-[var(--color-primary)]"
+                      className="self-start font-display text-[11px] uppercase tracking-[0.12em] text-zinc-500 transition-colors hover:text-zinc-900"
                     >
                       &larr; Back
                     </button>
@@ -2878,7 +2879,7 @@ const Checkout = () => {
                     <button
                       type="button"
                       onClick={handleNextStep}
-                      className="w-full rounded-[var(--border-radius)] bg-[var(--color-primary)] px-12 py-4 font-inter text-[11px] uppercase tracking-[0.18em] text-[var(--color-secondary)] transition-colors duration-300 hover:bg-[var(--color-accent)] hover:text-[var(--color-secondary)] md:w-auto"
+                      className="w-full bg-[#E8A811] px-10 py-4 font-display font-black text-[10px] uppercase tracking-widest text-black transition-colors hover:bg-zinc-900 hover:text-white md:w-auto"
                     >
                       Next Step
                     </button>
@@ -2889,7 +2890,7 @@ const Checkout = () => {
 
             {currentStep === "delivery" ? (
               <div>
-                <h1 className="font-manrope text-[32px]  text-[var(--color-primary)]">Delivery Address</h1>
+                <h1 className="font-display text-[32px]  text-zinc-900">Delivery Address</h1>
 
                 {isSessionChecked && isLoggedIn && savedAddresses.length > 0 ? (
                   <div className="mt-6">
@@ -2902,12 +2903,12 @@ const Checkout = () => {
                             type="button"
                             onClick={() => selectSavedAddress(address)}
                             className={`border p-3 text-left transition-colors ${
-                              isSelected ? "border-[var(--color-primary)]" : "border-[var(--color-border)] hover:border-[var(--color-primary)]"
+                              isSelected ? "border-[#E8A811]" : "border-[var(--color-border)] hover:border-[#E8A811]"
                             }`}
                           >
-                            <p className="font-inter text-[12px] text-[var(--color-primary)]">{address.label}</p>
-                            <p className="font-inter text-[12px] text-[var(--color-primary)]">{address.recipientName || "Saved recipient"}</p>
-                            <p className="truncate font-inter text-[12px] text-[var(--color-muted)]">{address.addressLine1}</p>
+                            <p className="font-display text-[12px] text-zinc-900">{address.label}</p>
+                            <p className="font-display text-[12px] text-zinc-900">{address.recipientName || "Saved recipient"}</p>
+                            <p className="truncate font-display text-[12px] text-zinc-500">{address.addressLine1}</p>
                           </button>
                         );
                       })}
@@ -2919,7 +2920,7 @@ const Checkout = () => {
                         setIsManualAddressOpen(true);
                         setSelectedSavedAddressId(null);
                       }}
-                      className="mt-3 font-inter text-[11px] uppercase tracking-[0.12em] text-[var(--color-accent)] transition-colors hover:text-[var(--color-primary)]"
+                      className="mt-3 font-display text-[11px] uppercase tracking-[0.12em] text-[#E8A811] transition-colors hover:text-zinc-900"
                     >
                       Use a different address
                     </button>
@@ -2995,7 +2996,7 @@ const Checkout = () => {
                     </div>
 
                     {deliveryValues.state && shippingQuote ? (
-                      <p className="mt-2 font-inter text-[11px] text-[var(--color-muted)]">
+                      <p className="mt-2 font-display text-[11px] text-zinc-500">
                         Delivery to {deliveryValues.state}: {formatPrice(shippingQuote.fee)} {"\u00B7"}{" "}
                         {shippingQuote.minDays}-
                         {shippingQuote.maxDays} business days
@@ -3003,7 +3004,7 @@ const Checkout = () => {
                     ) : null}
 
                     {deliveryValues.state && !shippingQuote && !isShippingRatesLoading ? (
-                      <p className="mt-2 font-inter text-[11px] text-[var(--color-danger)]">
+                      <p className="mt-2 font-display text-[11px] text-[var(--color-danger)]">
                         {shippingConfigurationError || getNoShippingRateForStateError(deliveryValues.state)}
                       </p>
                     ) : null}
@@ -3060,25 +3061,25 @@ const Checkout = () => {
                     />
                     <span
                       className={`mt-[2px] flex h-4 w-4 items-center justify-center border ${
-                        deliveryValues.saveForFuture ? "border-[var(--color-primary)] bg-[var(--color-primary)]" : "border-[var(--color-border)] bg-transparent"
+                        deliveryValues.saveForFuture ? "border-[#E8A811] bg-[#E8A811]" : "border-[var(--color-border)] bg-transparent"
                       }`}
                     >
                       {deliveryValues.saveForFuture ? <Check className="h-3 w-3 text-white" /> : null}
                     </span>
-                    <span className="font-inter text-[12px] text-[var(--color-muted)]">Save this address for future orders</span>
+                    <span className="font-display text-[12px] text-zinc-500">Save this address for future orders</span>
                   </label>
                 ) : null}
 
                 <div className="mt-10">
                   {stepAdvanceError ? (
-                    <p className="mb-3 font-inter text-[12px] text-[var(--color-danger)]">{stepAdvanceError}</p>
+                    <p className="mb-3 font-display text-[12px] text-[var(--color-danger)]">{stepAdvanceError}</p>
                   ) : null}
 
                   <div className="flex flex-col-reverse gap-3 md:flex-row md:items-center md:justify-between">
                     <button
                       type="button"
                       onClick={handleBack}
-                      className="self-start font-inter text-[11px] uppercase tracking-[0.12em] text-[var(--color-muted)] transition-colors hover:text-[var(--color-primary)]"
+                      className="self-start font-display text-[11px] uppercase tracking-[0.12em] text-zinc-500 transition-colors hover:text-zinc-900"
                     >
                       &larr; Back
                     </button>
@@ -3086,7 +3087,7 @@ const Checkout = () => {
                     <button
                       type="button"
                       onClick={handleNextStep}
-                      className="w-full rounded-[var(--border-radius)] bg-[var(--color-primary)] px-12 py-4 font-inter text-[11px] uppercase tracking-[0.18em] text-[var(--color-secondary)] transition-colors duration-300 hover:bg-[var(--color-accent)] hover:text-[var(--color-secondary)] md:w-auto"
+                      className="w-full bg-[#E8A811] px-10 py-4 font-display font-black text-[10px] uppercase tracking-widest text-black transition-colors hover:bg-zinc-900 hover:text-white md:w-auto"
                     >
                       Next Step
                     </button>
@@ -3097,12 +3098,12 @@ const Checkout = () => {
 
             {currentStep === "payment" ? (
               <div>
-                <h1 className="font-manrope text-[32px]  text-[var(--color-primary)]">How would you like to pay?</h1>
+                <h1 className="font-display text-[32px]  text-zinc-900">How would you like to pay?</h1>
 
                 {paymentSettings === null ? (
-                  <p className="mt-6 font-inter text-[12px] text-[var(--color-muted)]">Loading payment methods...</p>
+                  <p className="mt-6 font-display text-[12px] text-zinc-500">Loading payment methods...</p>
                 ) : hasNoAvailablePaymentMethods ? (
-                  <p className="font-inter text-[12px] text-[var(--color-danger)]">
+                  <p className="font-display text-[12px] text-[var(--color-danger)]">
                     No payment methods are currently available. Please contact the store.
                   </p>
                 ) : isFreeTierStore && onlinePaymentAvailable ? (
@@ -3115,19 +3116,19 @@ const Checkout = () => {
                         });
                       }}
                       className={`w-full rounded-[var(--border-radius)] border px-6 py-7 text-left transition-colors duration-200 ${
-                        paymentValues.method === "online" ? "border-[var(--color-primary)]" : "border-[var(--color-border)]"
+                        paymentValues.method === "online" ? "border-[#E8A811]" : "border-[var(--color-border)]"
                       }`}
                       style={{
                         backgroundColor:
                           paymentValues.method === "online" ? "rgba(var(--color-navbar-solid-foreground-rgb),0.08)" : "transparent",
                       }}
                     >
-                      <CreditCard size={28} strokeWidth={1.25} className="mb-4 text-[var(--color-accent)]" />
-                      <p className="font-manrope text-[18px]  text-[var(--color-primary)]">Pay Online</p>
-                      <p className="mt-1 font-inter text-[11px] font-light text-[var(--color-muted)]">
+                      <CreditCard size={28} strokeWidth={1.25} className="mb-4 text-[#E8A811]" />
+                      <p className="font-display text-[18px]  text-zinc-900">Pay Online</p>
+                      <p className="mt-1 font-display text-[11px] font-light text-zinc-500">
                         Pay securely with card or mobile money
                       </p>
-                      <p className="mt-3 font-inter text-[10px] uppercase tracking-[0.12em] text-[var(--color-accent)]">
+                      <p className="mt-3 font-display text-[10px] uppercase tracking-[0.12em] text-[#E8A811]">
                         Powered by Paystack
                       </p>
                     </button>
@@ -3143,16 +3144,16 @@ const Checkout = () => {
                           });
                         }}
                         className={`rounded-[var(--border-radius)] border px-6 py-7 text-left transition-colors duration-200 ${
-                          paymentValues.method === "online" ? "border-[var(--color-primary)]" : "border-[var(--color-border)]"
+                          paymentValues.method === "online" ? "border-[#E8A811]" : "border-[var(--color-border)]"
                         }`}
                         style={{
                           backgroundColor:
                             paymentValues.method === "online" ? "rgba(var(--color-navbar-solid-foreground-rgb),0.08)" : "transparent",
                         }}
                       >
-                        <CreditCard size={28} strokeWidth={1.25} className="mb-4 text-[var(--color-accent)]" />
-                        <p className="font-manrope text-[18px]  text-[var(--color-primary)]">Pay Online</p>
-                        <p className="mt-1 font-inter text-[11px] font-light text-[var(--color-muted)]">
+                        <CreditCard size={28} strokeWidth={1.25} className="mb-4 text-[#E8A811]" />
+                        <p className="font-display text-[18px]  text-zinc-900">Pay Online</p>
+                        <p className="mt-1 font-display text-[11px] font-light text-zinc-500">
                           Pay securely with card or mobile money via Paystack
                         </p>
                       </button>
@@ -3168,7 +3169,7 @@ const Checkout = () => {
                         }}
                         className={`rounded-[var(--border-radius)] border px-6 py-7 text-left transition-colors duration-200 ${
                           paymentValues.method === "cash_on_delivery"
-                            ? "border-[var(--color-primary)]"
+                            ? "border-[#E8A811]"
                             : "border-[var(--color-border)]"
                         }`}
                         style={{
@@ -3176,9 +3177,9 @@ const Checkout = () => {
                             paymentValues.method === "cash_on_delivery" ? "rgba(var(--color-navbar-solid-foreground-rgb),0.08)" : "transparent",
                         }}
                       >
-                        <Banknote size={28} strokeWidth={1.25} className="mb-4 text-[var(--color-accent)]" />
-                        <p className="font-manrope text-[18px]  text-[var(--color-primary)]">Cash on Delivery</p>
-                        <p className="mt-1 font-inter text-[11px] font-light text-[var(--color-muted)]">
+                        <Banknote size={28} strokeWidth={1.25} className="mb-4 text-[#E8A811]" />
+                        <p className="font-display text-[18px]  text-zinc-900">Cash on Delivery</p>
+                        <p className="mt-1 font-display text-[11px] font-light text-zinc-500">
                           Pay in cash when your order arrives
                         </p>
                       </button>
@@ -3188,14 +3189,14 @@ const Checkout = () => {
 
                 <div className="mt-10">
                   {stepAdvanceError ? (
-                    <p className="mb-3 font-inter text-[12px] text-[var(--color-danger)]">{stepAdvanceError}</p>
+                    <p className="mb-3 font-display text-[12px] text-[var(--color-danger)]">{stepAdvanceError}</p>
                   ) : null}
 
                   <div className="flex flex-col-reverse gap-3 md:flex-row md:items-center md:justify-between">
                     <button
                       type="button"
                       onClick={handleBack}
-                      className="self-start font-inter text-[11px] uppercase tracking-[0.12em] text-[var(--color-muted)] transition-colors hover:text-[var(--color-primary)]"
+                      className="self-start font-display text-[11px] uppercase tracking-[0.12em] text-zinc-500 transition-colors hover:text-zinc-900"
                     >
                       &larr; Back
                     </button>
@@ -3203,7 +3204,7 @@ const Checkout = () => {
                     <button
                       type="button"
                       onClick={handleNextStep}
-                      className="w-full rounded-[var(--border-radius)] bg-[var(--color-primary)] px-12 py-4 font-inter text-[11px] uppercase tracking-[0.18em] text-[var(--color-secondary)] transition-colors duration-300 hover:bg-[var(--color-accent)] hover:text-[var(--color-secondary)] md:w-auto"
+                      className="w-full bg-[#E8A811] px-10 py-4 font-display font-black text-[10px] uppercase tracking-widest text-black transition-colors hover:bg-zinc-900 hover:text-white md:w-auto"
                     >
                       Next Step
                     </button>
@@ -3214,7 +3215,7 @@ const Checkout = () => {
 
             {currentStep === "review" ? (
               <div>
-                <h1 className="font-manrope text-[32px]  text-[var(--color-primary)]">Review Your Order</h1>
+                <h1 className="font-display text-[32px]  text-zinc-900">Review Your Order</h1>
 
                 <div className="mt-6 space-y-4 border-b border-[var(--color-border)] pb-6">
                   {items.map((item) => (
@@ -3230,70 +3231,70 @@ const Checkout = () => {
                       />
 
                       <div className="min-w-0 flex-1">
-                        <p className="font-manrope text-[16px]  text-[var(--color-muted)]">{item.name}</p>
+                        <p className="font-display text-[16px]  text-zinc-500">{item.name}</p>
                         {item.variant_label ? (
-                          <p className="mt-[3px] mb-[6px] font-inter text-[10px] tracking-[0.05em] text-[var(--color-muted)]">
+                          <p className="mt-[3px] mb-[6px] font-display text-[10px] tracking-[0.05em] text-zinc-500">
                             {item.variant_label}
                           </p>
                         ) : null}
-                        <p className="font-inter text-[12px] text-[var(--color-muted)]">Qty: {item.quantity}</p>
+                        <p className="font-display text-[12px] text-zinc-500">Qty: {item.quantity}</p>
                       </div>
 
-                      <p className="font-inter text-[13px] text-[var(--color-primary)]">{formatPrice(item.price * item.quantity)}</p>
+                      <p className="font-display text-[13px] text-zinc-900">{formatPrice(item.price * item.quantity)}</p>
                     </div>
                   ))}
                 </div>
 
                 <div className="mt-5 space-y-2 border-b border-[var(--color-border)] pb-6">
-                  <div className="flex items-center justify-between font-inter text-[12px] text-[var(--color-muted)]">
+                  <div className="flex items-center justify-between font-display text-[12px] text-zinc-500">
                     <span>Subtotal</span>
                     <span>{formatPrice(subtotal)}</span>
                   </div>
 
-                  <div className="flex items-center justify-between font-inter text-[12px] text-[var(--color-muted)]">
+                  <div className="flex items-center justify-between font-display text-[12px] text-zinc-500">
                     <span>Shipping</span>
                     <span>{shippingQuote ? formatPrice(shippingQuote.fee) : deliveryValues.state ? "Unavailable" : "Select region"}</span>
                   </div>
 
                   {isDiscountCodesEnabled && appliedDiscount ? (
-                    <div className="flex items-center justify-between font-inter text-[12px] text-[var(--color-accent)]">
+                    <div className="flex items-center justify-between font-display text-[12px] text-[#E8A811]">
                       <span>Discount</span>
                       <span>- {formatPrice(discountAmount)}</span>
                     </div>
                   ) : null}
 
                   {isPaystackBuyerFeeApplicable ? (
-                    <div className="flex items-center justify-between font-inter text-[12px] text-[var(--color-muted)]">
+                    <div className="flex items-center justify-between font-display text-[12px] text-zinc-500">
                       <span>Paystack Fee ({PAYSTACK_BUYER_FEE_PERCENT}%)</span>
                       <span>{formatPrice(paystackBuyerFee)}</span>
                     </div>
                   ) : null}
 
-                  <div className="flex items-center justify-between font-inter text-[14px] font-medium text-[var(--color-primary)]">
+                  <div className="flex items-center justify-between font-display text-[14px] font-medium text-zinc-900">
                     <span>Total</span>
                     <span>{formatPrice(orderTotal)}</span>
                   </div>
                 </div>
 
                 {!shippingQuote && (deliveryValues.state || shippingRatesLoadError || !hasConfiguredShippingRates) ? (
-                  <p className="mt-3 font-inter text-[12px] text-[var(--color-danger)]">
+                  <p className="mt-3 font-display text-[12px] text-[var(--color-danger)]">
                     {shippingConfigurationError || SHIPPING_RATES_NOT_CONFIGURED_ERROR}
                   </p>
                 ) : null}
 
                 <div className="mt-6 border-b border-[var(--color-border)] pb-6">
                   <div className="mb-2 flex items-center justify-between">
-                    <p className="font-inter text-[10px] uppercase tracking-[0.12em] text-[var(--color-accent)]">Delivering to</p>
+                    <p className="font-display text-[10px] uppercase tracking-[0.12em] text-[#E8A811]">Delivering to</p>
                     <button
                       type="button"
                       onClick={() => navigate(STEP_PATH.delivery)}
-                      className="font-inter text-[11px] uppercase tracking-[0.1em] text-[var(--color-muted)] transition-colors hover:text-[var(--color-primary)]"
+                      className="font-display text-[11px] uppercase tracking-[0.1em] text-zinc-500 transition-colors hover:text-zinc-900"
                     >
                       Edit
                     </button>
                   </div>
 
-                  <p className="font-inter text-[13px] text-[var(--color-muted)]">
+                  <p className="font-display text-[13px] text-zinc-500">
                     {deliveryValues.addressLine1}
                     {deliveryValues.addressLine2 ? `, ${deliveryValues.addressLine2}` : ""}
                     <br />
@@ -3305,17 +3306,17 @@ const Checkout = () => {
 
                 <div className="mt-6 border-b border-[var(--color-border)] pb-6">
                   <div className="mb-2 flex items-center justify-between">
-                    <p className="font-inter text-[10px] uppercase tracking-[0.12em] text-[var(--color-accent)]">Contact</p>
+                    <p className="font-display text-[10px] uppercase tracking-[0.12em] text-[#E8A811]">Contact</p>
                     <button
                       type="button"
                       onClick={() => navigate(STEP_PATH.contact)}
-                      className="font-inter text-[11px] uppercase tracking-[0.1em] text-[var(--color-muted)] transition-colors hover:text-[var(--color-primary)]"
+                      className="font-display text-[11px] uppercase tracking-[0.1em] text-zinc-500 transition-colors hover:text-zinc-900"
                     >
                       Edit
                     </button>
                   </div>
 
-                  <p className="font-inter text-[13px] text-[var(--color-muted)]">
+                  <p className="font-display text-[13px] text-zinc-500">
                     {contactValues.firstName} {contactValues.lastName}
                     <br />
                     {contactValues.email}
@@ -3324,17 +3325,17 @@ const Checkout = () => {
 
                 <div className="mt-6 border-b border-[var(--color-border)] pb-6">
                   <div className="mb-2 flex items-center justify-between">
-                    <p className="font-inter text-[10px] uppercase tracking-[0.12em] text-[var(--color-accent)]">Payment</p>
+                    <p className="font-display text-[10px] uppercase tracking-[0.12em] text-[#E8A811]">Payment</p>
                     <button
                       type="button"
                       onClick={() => navigate(STEP_PATH.payment)}
-                      className="font-inter text-[11px] uppercase tracking-[0.1em] text-[var(--color-muted)] transition-colors hover:text-[var(--color-primary)]"
+                      className="font-display text-[11px] uppercase tracking-[0.1em] text-zinc-500 transition-colors hover:text-zinc-900"
                     >
                       Edit
                     </button>
                   </div>
 
-                  <p className="font-inter text-[13px] text-[var(--color-muted)]">
+                  <p className="font-display text-[13px] text-zinc-500">
                     {selectedPaymentLabel}
                   </p>
                 </div>
@@ -3357,30 +3358,30 @@ const Checkout = () => {
                   <button
                     type="button"
                     onClick={handleBack}
-                    className="mb-4 font-inter text-[11px] uppercase tracking-[0.12em] text-[var(--color-muted)] transition-colors hover:text-[var(--color-primary)]"
+                    className="mb-4 font-display text-[11px] uppercase tracking-[0.12em] text-zinc-500 transition-colors hover:text-zinc-900"
                   >
                     &larr; Back
                   </button>
 
-                  <p className="mb-4 font-inter text-[11px] text-[var(--color-muted-soft)]">
+                  <p className="mb-4 font-display text-[11px] text-zinc-400">
                     By placing your order you agree to our{" "}
-                    <Link to="/contact" className="text-[var(--color-muted)] transition-colors hover:text-[var(--color-primary)]">
+                    <Link to="/contact" className="text-zinc-500 transition-colors hover:text-zinc-900">
                       Terms &amp; Conditions
                     </Link>{" "}
                     and{" "}
-                    <Link to="/contact" className="text-[var(--color-muted)] transition-colors hover:text-[var(--color-primary)]">
+                    <Link to="/contact" className="text-zinc-500 transition-colors hover:text-zinc-900">
                       Privacy Policy
                     </Link>
                   </p>
 
                   {checkoutValidationErrors.length > 0 ? (
                     <div className="mb-3">
-                      <p className="mb-2 font-inter text-[12px] font-medium text-[var(--color-danger)]">
+                      <p className="mb-2 font-display text-[12px] font-medium text-[var(--color-danger)]">
                         Please review the following before placing your order:
                       </p>
                       <div className="space-y-1">
                         {checkoutValidationErrors.map((error, index) => (
-                          <p key={`checkout-validation-error-${index}`} className="font-inter text-[12px] text-[var(--color-danger)]">
+                          <p key={`checkout-validation-error-${index}`} className="font-display text-[12px] text-[var(--color-danger)]">
                             <span className="mr-1" aria-hidden="true">
                               &middot;
                             </span>
@@ -3392,14 +3393,14 @@ const Checkout = () => {
                   ) : null}
 
                   {submissionError ? (
-                    <p className="mb-3 font-inter text-[12px] text-[var(--color-danger)]">{submissionError}</p>
+                    <p className="mb-3 font-display text-[12px] text-[var(--color-danger)]">{submissionError}</p>
                   ) : null}
 
                   <button
                     type="button"
                     onClick={() => void handleConfirmOrder()}
                     disabled={submissionPhase !== "idle"}
-                    className="w-full rounded-[var(--border-radius)] bg-[var(--color-primary)] px-4 py-5 font-inter text-[11px] uppercase tracking-[0.18em] text-[var(--color-secondary)] transition-colors duration-300 hover:bg-[var(--color-accent)] hover:text-[var(--color-secondary)] disabled:cursor-not-allowed disabled:pointer-events-none disabled:opacity-65"
+                    className="w-full bg-[#E8A811] px-10 py-4 font-display font-black text-[10px] uppercase tracking-widest text-black transition-colors hover:bg-zinc-900 hover:text-white disabled:cursor-not-allowed disabled:pointer-events-none disabled:opacity-65"
                   >
                     {submissionPhase === "verifying"
                       ? "Verifying..."
@@ -3427,13 +3428,13 @@ const Checkout = () => {
 
           <div className="absolute inset-x-0 bottom-0 max-h-[85vh] overflow-y-auto bg-[var(--color-secondary)] px-5 pb-6 pt-5">
             <div className="mb-4 flex items-center justify-between">
-              <p className="font-inter text-[10px] uppercase tracking-[0.14em] text-[var(--color-muted)]">
+              <p className="font-display text-[10px] uppercase tracking-[0.14em] text-zinc-500">
                 {orderItemCountLabel} {"\u00B7"} {formatPrice(subtotal)}
               </p>
               <button
                 type="button"
                 onClick={() => setIsMobileSummaryOpen(false)}
-                className="text-[var(--color-muted)] transition-colors hover:text-[var(--color-primary)]"
+                className="text-zinc-500 transition-colors hover:text-zinc-900"
               >
                 <X className="h-4 w-4" />
               </button>

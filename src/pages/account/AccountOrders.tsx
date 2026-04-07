@@ -80,7 +80,7 @@ const AccountOrders = () => {
 
   return (
     <div>
-      <h1 className="font-manrope text-lg font-bold tracking-tight uppercase text-zinc-900">My Orders</h1>
+      <h1 className="font-display text-lg font-bold tracking-tight uppercase text-zinc-900">My Orders</h1>
 
       <div className="mt-5 border-b border-zinc-100 pb-4">
         <div className="flex flex-wrap gap-2.5">
@@ -115,10 +115,10 @@ const AccountOrders = () => {
         <p className="mt-8 font-inter text-[12px] text-red-600">{loadError}</p>
       ) : filteredOrders.length === 0 ? (
         <div className="mt-10">
-          <p className="font-manrope text-sm font-medium text-zinc-400">You haven't placed any orders yet.</p>
+          <p className="font-display text-sm font-medium text-zinc-400">You haven't placed any orders yet.</p>
           <Link
             to="/shop"
-            className="mt-5 inline-block font-manrope font-black text-[10px] uppercase tracking-widest border-b-2 border-zinc-900 pb-1 hover:text-[#E8A811] hover:border-[#E8A811] transition-all"
+            className="mt-5 inline-block font-display font-black text-[10px] uppercase tracking-widest border-b-2 border-zinc-900 pb-1 hover:text-[#E8A811] hover:border-[#E8A811] transition-all"
           >
             Start Shopping
           </Link>

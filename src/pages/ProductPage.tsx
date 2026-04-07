@@ -3,6 +3,7 @@ import { Link, useLocation, useParams } from "react-router-dom";
 import TryOnModal from "@/components/TryOnModal";
 import ProductFetchErrorState from "@/components/products/ProductFetchErrorState";
 import ProductImagePlaceholder from "@/components/products/ProductImagePlaceholder";
+import StorefrontProductCard from "@/components/products/StorefrontProductCard";
 import { storeConfig } from "@/config/store.config";
 import { useAuth } from "@/contexts/AuthContext";
 import { useCart } from "@/contexts/CartContext";
@@ -15,7 +16,7 @@ import { formatPrice } from "@/lib/price";
 import { shouldShowPriceVariesByVariantNote } from "@/lib/productPricing";
 import { fetchActiveShippingRates, type ShippingRateRow } from "@/services/orderService";
 import { getPaymentSettings, type PaymentSettings } from "@/services/paymentSettingsService";
-import { getFeaturedProducts, getRelatedProducts } from "@/services/productService";
+import { getRelatedProducts } from "@/services/productService";
 import {
   buildReviewerDisplayName,
   fetchCustomerProductReview,
@@ -95,53 +96,13 @@ const formatReviewDate = (value: string) => {
 };
 
 const RelatedProductSkeleton = () => (
-  <div className="flex h-full flex-col">
-    <div className="lux-product-shimmer aspect-[4/5] w-full" />
-    <div className="mt-3 space-y-2">
-      <div className="lux-product-shimmer h-4 w-2/3" />
-      <div className="lux-product-shimmer h-3 w-1/3" />
-    </div>
+  <div className="animate-pulse">
+    <div className="mb-5 aspect-[3/4] bg-zinc-100" />
+    <div className="h-5 w-2/3 bg-zinc-100 mb-2" />
+    <div className="h-4 w-1/3 bg-zinc-100" />
   </div>
 );
 
-const RelatedProductTile = ({ product }: { product: Product }) => {
-  const [hasImageError, setHasImageError] = useState(false);
-  const imageUrl = getPrimaryImage(product);
-
-  useEffect(() => {
-    setHasImageError(false);
-  }, [imageUrl, product.id]);
-
-  return (
-    <article className="group cursor-pointer">
-      <Link to={`/shop/${product.slug}`} className="mb-4 block">
-        <div className="relative overflow-hidden bg-white">
-          {imageUrl && !hasImageError ? (
-            <img
-              src={imageUrl}
-              alt={product.name}
-              className="w-full h-80 object-cover transition-transform duration-500 group-hover:scale-105"
-              loading="lazy"
-              onError={() => setHasImageError(true)}
-            />
-          ) : (
-            <ProductImagePlaceholder className="h-80 w-full" />
-          )}
-          <div className="absolute bottom-0 left-0 right-0 bg-white/80 backdrop-blur-md py-3 text-[10px] font-bold uppercase tracking-widest text-center opacity-0 translate-y-full group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-300">
-            Quick Add
-          </div>
-        </div>
-      </Link>
-      <Link to={`/shop/${product.slug}`} className="block space-y-1">
-        <h4 className="font-manrope font-bold text-sm text-black">{product.name}</h4>
-        {product.categories?.name ? (
-          <p className="text-zinc-500 text-[10px] uppercase font-medium mb-1">{product.categories.name}</p>
-        ) : null}
-        <p className="text-xs font-bold text-[#E8A811]">{formatPrice(product.price)}</p>
-      </Link>
-    </article>
-  );
-};
 
 const clothingSizeGuideRows = [
   { size: "XS", chest: "84-88", waist: "68-72", hips: "88-92" },
@@ -165,7 +126,7 @@ const shoeSizeGuideRows = [
 
 const ProductPageSkeleton = () => {
   return (
-    <div className="mx-auto max-w-screen-2xl px-4 pb-16 pt-12 md:px-8">
+    <div className="mx-auto max-w-[1440px] px-4 pb-16 pt-12 md:px-8">
       <div className="grid grid-cols-1 gap-12 lg:grid-cols-12 lg:items-start lg:gap-16">
         <div className="space-y-4 lg:col-span-7">
           <div className="lux-product-shimmer aspect-[4/5] w-full rounded-lg" />
@@ -499,6 +460,7 @@ const ProductPage = () => {
   const [visibleReviewCount, setVisibleReviewCount] = useState(3);
   const [shippingRates, setShippingRates] = useState<ShippingRateRow[]>([]);
   const [isShippingRatesLoading, setIsShippingRatesLoading] = useState(true);
+  const [selectedShippingLocation, setSelectedShippingLocation] = useState<string>("");
   const [paymentSettings, setPaymentSettings] = useState<PaymentSettings | null>(null);
   const lightboxTouchStartXRef = useRef<number | null>(null);
 
@@ -582,26 +544,9 @@ const ProductPage = () => {
         setOptionTypes(sortedOptionTypes);
         setSelectedOptions({});
 
-        if (mappedProduct?.categories?.id) {
-          const directRelated = (await getRelatedProducts(mappedProduct.categories.id, mappedProduct.id, 4)) ?? [];
-          let mergedRelated = directRelated;
-
-          if (mergedRelated.length < 4) {
-            try {
-              const featured = await getFeaturedProducts();
-              const existingIds = new Set(mergedRelated.map((entry) => entry.id));
-              existingIds.add(mappedProduct.id);
-
-              const filler = featured.filter((entry) => !existingIds.has(entry.id));
-              mergedRelated = [...mergedRelated, ...filler].slice(0, 4);
-            } catch (featuredError) {
-              if (import.meta.env.DEV) {
-                console.error("Failed to fetch featured fallback products", featuredError);
-              }
-            }
-          }
-
-          setRelatedProducts(mergedRelated);
+        if (mappedProduct) {
+          const scored = await getRelatedProducts(mappedProduct, 4).catch(() => [] as typeof relatedProducts);
+          setRelatedProducts(scored);
         } else {
           setRelatedProducts([]);
         }
@@ -905,27 +850,37 @@ const ProductPage = () => {
       : stockStatus.tone === "accent"
         ? "text-[var(--theme-accent)]"
         : stockStatus.tone === "muted"
-          ? "text-[var(--theme-text-muted)]"
+          ? "text-zinc-400"
           : "text-[var(--theme-success)]";
   const stockStatusIcon = stockStatus.tone === "danger" ? "error" : stockStatus.tone === "muted" ? "info" : "check_circle";
   const categoryShopLink = normalizedCategorySlug ? `/shop?category=${encodeURIComponent(normalizedCategorySlug)}` : "/shop";
   const selectedSku = selectedVariant?.sku?.trim() || product?.sku?.trim() || null;
   const productWeightLabel = formatProductWeight(product?.weight_grams);
-  const shippingRateHighlights = useMemo(
-    () =>
-      [...shippingRates]
-        .map((rate) => ({
-          id: rate.id,
-          rateName: typeof rate.name === "string" && rate.name.trim() ? rate.name.trim() : "Shipping",
-          coverageLabel: formatShippingCoverageLabel(parseShippingStateList(rate.states)),
-          fee: Math.max(0, Math.round(Number(rate.base_rate) || 0)),
-          deliveryWindow: formatDeliveryWindow(rate.estimated_days_min, rate.estimated_days_max),
-        }))
-        .sort((left, right) => left.fee - right.fee)
-        .slice(0, 3),
-    [shippingRates],
-  );
-  const hasAdditionalShippingRates = shippingRates.length > shippingRateHighlights.length;
+  const shippingLocationOptions = useMemo(() => {
+    const seen = new Set<string>();
+    const options: string[] = [];
+    for (const rate of shippingRates) {
+      for (const state of parseShippingStateList(rate.states)) {
+        const key = state.toLowerCase();
+        if (!seen.has(key)) {
+          seen.add(key);
+          options.push(state);
+        }
+      }
+    }
+    return options.sort((a, b) => a.localeCompare(b));
+  }, [shippingRates]);
+
+  const resolvedShippingRate = useMemo(() => {
+    if (!shippingRates.length) return null;
+    const defaultRate = shippingRates.find((r) => parseShippingStateList(r.states).length === 0) ?? shippingRates[0];
+    if (!selectedShippingLocation) return defaultRate;
+    const normalized = selectedShippingLocation.toLowerCase();
+    const match = shippingRates.find((r) =>
+      parseShippingStateList(r.states).some((s) => s.toLowerCase() === normalized),
+    );
+    return match ?? defaultRate;
+  }, [shippingRates, selectedShippingLocation]);
   const paymentMethodsSummary = useMemo(() => {
     const onlinePaymentEnabled = paymentSettings?.online_payment_enabled !== false;
     const cashOnDeliveryEnabled = Boolean(paymentSettings?.cash_on_delivery_enabled);
@@ -1279,8 +1234,8 @@ const ProductPage = () => {
   }
 
   return (
-    <div className="bg-surface font-manrope text-on-surface">
-      <main className={`mx-auto max-w-[1440px] px-8 pt-6 ${showTryOn ? "pb-44 md:pb-0" : "pb-28 md:pb-0"}`}>
+    <div className="bg-surface font-display text-on-surface">
+      <main className={`mx-auto max-w-[1440px] px-8 pt-6 ${showTryOn ? "pb-12 md:pb-0" : "pb-12 md:pb-0"}`}>
         <nav aria-label="Breadcrumb" className="py-6 flex flex-wrap items-center gap-2 text-[10px] uppercase tracking-widest text-zinc-400 font-medium">
           <Link to="/" className="transition-colors hover:text-black">
             Home
@@ -1297,7 +1252,7 @@ const ProductPage = () => {
           <span className="text-black">{product.name}</span>
         </nav>
 
-        <div className="grid grid-cols-1 gap-16 lg:grid-cols-12 lg:items-start mb-24">
+        <div className="grid grid-cols-1 gap-16 lg:grid-cols-12 lg:items-start mb-8">
           <div className="flex flex-col gap-3 lg:col-span-7 lg:gap-4">
             {galleryImages.length > 0 ? (
               <>
@@ -1323,7 +1278,7 @@ const ProductPage = () => {
                   </button>
                 </div>
 
-                <div className="flex gap-4">
+                <div className="flex gap-3 overflow-x-auto pb-1 lux-hide-scrollbar">
                   {galleryImages.map((image, index) => {
                     const hasThumbError = thumbnailErrors[image] === true;
                     const isActive = activeImage === image;
@@ -1337,7 +1292,7 @@ const ProductPage = () => {
                           setHasActiveImageError(false);
                           setLightboxIndex(index);
                         }}
-                        className={`w-24 h-24 overflow-hidden bg-white transition-all duration-200 ${
+                        className={`shrink-0 w-20 h-20 md:w-24 md:h-24 overflow-hidden bg-white transition-all duration-200 ${
                           isActive
                             ? "border border-black"
                             : "border border-zinc-200 hover:border-black"
@@ -1377,7 +1332,7 @@ const ProductPage = () => {
                     {stockStatus.text}
                   </span>
                 </div>
-                <h1 className="font-manrope font-extrabold text-4xl mb-4 tracking-tighter text-black leading-tight">{product.name}</h1>
+                <h1 className="font-display font-extrabold text-4xl mb-4 tracking-tighter text-black leading-tight">{product.name}</h1>
                 {storeConfig.features.reviews && reviewSummary.totalReviews > 0 ? (
                   <button
                     type="button"
@@ -1393,12 +1348,12 @@ const ProductPage = () => {
                   </button>
                 ) : null}
                 {(product.short_description || product.description) ? (
-                  <p className="font-manrope text-zinc-500 text-sm mb-4 leading-relaxed max-w-md">
+                  <p className="font-display text-zinc-500 text-sm mb-4 leading-relaxed max-w-md">
                     {product.short_description || product.description}
                   </p>
                 ) : null}
                 <div className="flex items-baseline gap-4 mb-8">
-                  <p className="text-2xl font-bold text-black font-manrope">{formatPrice(displayPrice)}</p>
+                  <p className="text-2xl font-bold text-black font-display">{formatPrice(displayPrice)}</p>
                   {displayComparePrice !== null && displayComparePrice > displayPrice ? (
                     <span className="text-sm text-zinc-400 line-through">{formatPrice(displayComparePrice)}</span>
                   ) : null}
@@ -1537,26 +1492,57 @@ const ProductPage = () => {
                 ) : null}
               </div>
 
-              <div className="space-y-3 mb-8 border-t border-zinc-100 pt-6">
-                <div className="flex items-center gap-3 text-zinc-600">
-                  <span className="material-symbols-outlined text-[#E8A811] text-[18px]">local_shipping</span>
-                  <div>
+              <div className="mb-8 border-t border-zinc-100 pt-5 space-y-4">
+                {/* Shipping rate row */}
+                <div className="flex items-start gap-3">
+                  <span className="material-symbols-outlined text-[#E8A811] text-[18px] mt-0.5 shrink-0">local_shipping</span>
+                  <div className="flex-1 min-w-0">
                     {isShippingRatesLoading ? (
-                      <p className="text-[11px] font-medium tracking-wide uppercase">Loading shipping rates...</p>
-                    ) : shippingRateHighlights.length > 0 ? (
-                      <p className="text-[11px] font-medium tracking-wide uppercase">
-                        {shippingRateHighlights[0].rateName} ({shippingRateHighlights[0].coverageLabel}){" "}
-                        <span className="text-zinc-300 mx-1">·</span> {formatPrice(shippingRateHighlights[0].fee)} delivery
-                        {shippingRateHighlights[0].deliveryWindow ? ` · ${shippingRateHighlights[0].deliveryWindow}` : ""}
-                      </p>
+                      <p className="text-[11px] font-semibold tracking-widest uppercase text-zinc-400">Calculating rates…</p>
+                    ) : resolvedShippingRate ? (
+                      <>
+                        <div className="flex items-baseline gap-2 flex-wrap mb-1.5">
+                          <span className="text-[11px] font-black tracking-widest uppercase text-zinc-900">
+                            {formatPrice(resolvedShippingRate.base_rate)} delivery
+                          </span>
+                          {resolvedShippingRate.estimated_days_min || resolvedShippingRate.estimated_days_max ? (
+                            <span className="text-[10px] text-zinc-400 font-medium tracking-wide">
+                              · {formatDeliveryWindow(resolvedShippingRate.estimated_days_min, resolvedShippingRate.estimated_days_max)}
+                            </span>
+                          ) : null}
+                        </div>
+                        {shippingLocationOptions.length > 0 && (
+                          <div className="flex items-center gap-1.5 mt-1">
+                            <span className="material-symbols-outlined text-zinc-400 text-[13px]">location_on</span>
+                            <select
+                              value={selectedShippingLocation}
+                              onChange={(e) => setSelectedShippingLocation(e.target.value)}
+                              className="text-[10px] font-semibold tracking-wide uppercase bg-transparent border-0 border-b border-zinc-200 text-zinc-500 pb-0.5 pr-4 appearance-none cursor-pointer focus:outline-none focus:border-zinc-400 hover:border-zinc-400 transition-colors"
+                            >
+                              <option value="">Select your location</option>
+                              {shippingLocationOptions.map((loc) => (
+                                <option key={loc} value={loc}>{loc}</option>
+                              ))}
+                            </select>
+                            <span className="material-symbols-outlined text-zinc-400 text-[13px] -ml-3 pointer-events-none">expand_more</span>
+                          </div>
+                        )}
+                      </>
                     ) : (
-                      <p className="text-[11px] font-medium tracking-wide uppercase">Shipping rates calculated at checkout</p>
+                      <p className="text-[11px] font-semibold tracking-widest uppercase text-zinc-400">Shipping calculated at checkout</p>
                     )}
                   </div>
                 </div>
-                <div className="flex items-center gap-3 text-zinc-600">
-                  <span className="material-symbols-outlined text-[#E8A811] text-[18px]">assignment_return</span>
-                  <p className="text-[11px] font-medium tracking-wide uppercase">7-day returns <span className="text-zinc-300 mx-1">·</span> Easy exchanges</p>
+
+                {/* Returns & exchanges row */}
+                <div className="flex items-start gap-3">
+                  <span className="material-symbols-outlined text-[#E8A811] text-[18px] mt-0.5 shrink-0">assignment_return</span>
+                  <div>
+                    <p className="text-[11px] font-black tracking-widest uppercase text-zinc-900 mb-0.5">Free Returns within 7 Days</p>
+                    <p className="text-[10px] text-zinc-400 font-medium leading-relaxed">
+                      Changed your mind? Return any unworn item in its original packaging within 7 days of delivery for a full refund or hassle-free exchange — no questions asked.
+                    </p>
+                  </div>
                 </div>
               </div>
 
@@ -1567,7 +1553,7 @@ const ProductPage = () => {
                     onClick={() => setAccordionNarrative((v) => !v)}
                     className="flex justify-between items-center w-full py-6 text-left"
                   >
-                    <span className="font-manrope font-bold text-sm tracking-tight text-black">Product Narrative</span>
+                    <span className="font-display font-bold text-sm tracking-tight text-black">Product Narrative</span>
                     <span className={`material-symbols-outlined text-[#E8A811] transition-transform duration-200 ${accordionNarrative ? "rotate-180" : "rotate-0"}`}>expand_more</span>
                   </button>
                   {accordionNarrative ? (
@@ -1583,7 +1569,7 @@ const ProductPage = () => {
                     onClick={() => setAccordionSpecs((v) => !v)}
                     className="flex justify-between items-center w-full py-6 text-left"
                   >
-                    <span className="font-manrope font-bold text-sm tracking-tight text-black">Technical Specifications</span>
+                    <span className="font-display font-bold text-sm tracking-tight text-black">Technical Specifications</span>
                     <span className={`material-symbols-outlined text-[#E8A811] transition-transform duration-200 ${accordionSpecs ? "rotate-180" : "rotate-0"}`}>expand_more</span>
                   </button>
                   {accordionSpecs ? (
@@ -1601,7 +1587,7 @@ const ProductPage = () => {
                     onClick={() => setAccordionShipping((v) => !v)}
                     className="flex justify-between items-center w-full py-6 text-left"
                   >
-                    <span className="font-manrope font-bold text-sm tracking-tight text-black">Shipping &amp; Returns</span>
+                    <span className="font-display font-bold text-sm tracking-tight text-black">Shipping &amp; Returns</span>
                     <span className={`material-symbols-outlined text-[#E8A811] transition-transform duration-200 ${accordionShipping ? "rotate-180" : "rotate-0"}`}>expand_more</span>
                   </button>
                   {accordionShipping ? (
@@ -1616,16 +1602,16 @@ const ProductPage = () => {
         </div>
 
         {storeConfig.features.reviews ? (
-          <section id="reviews-section" className={relatedProducts.length > 0 ? "mb-16" : "mb-0 pb-16"}>
+          <section id="reviews-section" className={relatedProducts.length > 0 ? "mb-8" : "mb-0 pb-8"}>
             {/* Section header */}
             <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4 mb-10 pb-6 border-b border-zinc-100">
               <div>
                 <p className="text-[10px] uppercase tracking-[0.2em] font-bold text-[#E8A811] mb-2">What People Say</p>
-                <h2 className="font-manrope font-extrabold text-3xl tracking-tighter text-black">Customer Reviews</h2>
+                <h2 className="font-display font-extrabold text-3xl tracking-tighter text-black">Customer Reviews</h2>
               </div>
               {reviewSummary.totalReviews > 0 ? (
                 <div className="flex items-center gap-3">
-                  <span className="text-4xl font-extrabold font-manrope text-black leading-none">{reviewAverageRating.toFixed(1)}</span>
+                  <span className="text-4xl font-extrabold font-display text-black leading-none">{reviewAverageRating.toFixed(1)}</span>
                   <div>
                     <StarRating rating={reviewAverageRating} className="h-4 w-4" />
                     <p className="text-[10px] uppercase tracking-widest font-bold text-zinc-400 mt-1">
@@ -1802,7 +1788,7 @@ const ProductPage = () => {
                                   <StarRating rating={review.rating} className="h-3.5 w-3.5" />
                                 </div>
                                 {review.title ? (
-                                  <h4 className="font-manrope font-bold text-sm text-black mb-2">{review.title}</h4>
+                                  <h4 className="font-display font-bold text-sm text-black mb-2">{review.title}</h4>
                                 ) : null}
                                 <p className="text-zinc-500 text-sm leading-relaxed">{review.body}</p>
                               </div>
@@ -1830,19 +1816,19 @@ const ProductPage = () => {
         ) : null}
 
         {relatedProducts.length > 0 ? (
-          <section className="mb-0 pb-16">
+          <section className="mb-0 pb-8">
             <div className="flex items-end justify-between mb-10 pb-6 border-b border-zinc-100">
               <div>
                 <p className="text-[10px] uppercase tracking-[0.2em] font-bold text-[#E8A811] mb-2">Style It With</p>
-                <h2 className="font-manrope font-extrabold text-3xl tracking-tighter text-black">Complete the Look</h2>
+                <h2 className="font-display font-extrabold text-3xl tracking-tighter text-black">Complete the Look</h2>
               </div>
               <Link to="/shop" className="text-[10px] font-bold uppercase tracking-widest text-zinc-400 hover:text-black transition-colors">
                 View All
               </Link>
             </div>
-            <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
+            <div className="grid grid-cols-2 lg:grid-cols-4 gap-x-4 md:gap-x-6 gap-y-8 md:gap-y-12">
               {relatedProducts.slice(0, 4).map((item) => (
-                <RelatedProductTile key={item.id} product={item} />
+                <StorefrontProductCard key={item.id} product={item} />
               ))}
             </div>
           </section>
@@ -1851,7 +1837,7 @@ const ProductPage = () => {
 
       {!isCartOpen ? (
         <div className="fixed inset-x-0 bottom-0 z-[900] border-t border-zinc-200 bg-white/95 backdrop-blur md:hidden">
-          <div className="mx-auto flex max-w-screen-2xl flex-col gap-2 px-4 pb-4 pt-3">
+          <div className="mx-auto flex max-w-[1440px] flex-col gap-2 px-4 pb-4 pt-3">
             <button
               type="button"
               onClick={handleAddToCart}
@@ -1948,7 +1934,7 @@ const ProductPage = () => {
             )}
           </div>
 
-          <p className="pointer-events-none fixed bottom-20 left-1/2 z-[2001] -translate-x-1/2 font-manrope text-[11px] tracking-[0.1em] text-white/50">
+          <p className="pointer-events-none fixed bottom-20 left-1/2 z-[2001] -translate-x-1/2 font-display text-[11px] tracking-[0.1em] text-white/50">
             {`${lightboxIndex + 1} / ${galleryImages.length}`}
           </p>
 
@@ -1988,23 +1974,23 @@ const ProductPage = () => {
             <button
               type="button"
               onClick={() => setSizeGuideOpen(false)}
-              className="absolute right-5 top-5 text-[var(--color-muted)] transition-colors duration-200 hover:text-[var(--color-primary)]"
+              className="absolute right-5 top-5 text-zinc-500 transition-colors duration-200 hover:text-zinc-900"
               aria-label="Close size guide"
             >
               <X size={20} strokeWidth={1.4} />
             </button>
 
-            <h3 className="font-manrope text-[28px]  text-[var(--color-primary)]">Size Guide</h3>
-            <p className="mb-8 font-manrope text-[11px] text-[var(--color-muted-soft)]">{categoryLabel}</p>
+            <h3 className="font-display text-[28px]  text-zinc-900">Size Guide</h3>
+            <p className="mb-8 font-display text-[11px] text-zinc-400">{categoryLabel}</p>
 
             {isBagCategory ? (
-              <p className="font-manrope text-[12px] leading-[1.8] text-[var(--color-muted)]">
+              <p className="font-display text-[12px] leading-[1.8] text-zinc-500">
                 One size - see product dimensions in the description.
               </p>
             ) : isShoeCategory ? (
               <table className="w-full border-collapse">
                 <thead>
-                  <tr className="bg-[var(--color-primary)] font-manrope text-[10px] uppercase tracking-[0.08em] text-[var(--color-secondary)]">
+                  <tr className="bg-[#E8A811] font-display text-[10px] uppercase tracking-[0.08em] text-black">
                     <th className="px-4 py-3 text-left">UK</th>
                     <th className="px-4 py-3 text-left">EU</th>
                     <th className="px-4 py-3 text-left">US</th>
@@ -2014,10 +2000,10 @@ const ProductPage = () => {
                 <tbody>
                   {shoeSizeGuideRows.map((row, index) => (
                     <tr key={row.uk} className={index % 2 === 0 ? "bg-[var(--color-secondary)]" : "bg-[rgba(var(--color-navbar-solid-foreground-rgb),0.03)]"}>
-                      <td className="px-4 py-2.5 font-manrope text-[12px] text-[var(--color-muted)]">{row.uk}</td>
-                      <td className="px-4 py-2.5 font-manrope text-[12px] text-[var(--color-muted)]">{row.eu}</td>
-                      <td className="px-4 py-2.5 font-manrope text-[12px] text-[var(--color-muted)]">{row.us}</td>
-                      <td className="px-4 py-2.5 font-manrope text-[12px] text-[var(--color-muted)]">{row.foot}</td>
+                      <td className="px-4 py-2.5 font-display text-[12px] text-zinc-500">{row.uk}</td>
+                      <td className="px-4 py-2.5 font-display text-[12px] text-zinc-500">{row.eu}</td>
+                      <td className="px-4 py-2.5 font-display text-[12px] text-zinc-500">{row.us}</td>
+                      <td className="px-4 py-2.5 font-display text-[12px] text-zinc-500">{row.foot}</td>
                     </tr>
                   ))}
                 </tbody>
@@ -2025,7 +2011,7 @@ const ProductPage = () => {
             ) : (
               <table className="w-full border-collapse">
                 <thead>
-                  <tr className="bg-[var(--color-primary)] font-manrope text-[10px] uppercase tracking-[0.08em] text-[var(--color-secondary)]">
+                  <tr className="bg-[#E8A811] font-display text-[10px] uppercase tracking-[0.08em] text-black">
                     <th className="px-4 py-3 text-left">Size</th>
                     <th className="px-4 py-3 text-left">Chest (cm)</th>
                     <th className="px-4 py-3 text-left">Waist (cm)</th>
@@ -2035,17 +2021,17 @@ const ProductPage = () => {
                 <tbody>
                   {clothingSizeGuideRows.map((row, index) => (
                     <tr key={row.size} className={index % 2 === 0 ? "bg-[var(--color-secondary)]" : "bg-[rgba(var(--color-navbar-solid-foreground-rgb),0.03)]"}>
-                      <td className="px-4 py-2.5 font-manrope text-[12px] text-[var(--color-muted)]">{row.size}</td>
-                      <td className="px-4 py-2.5 font-manrope text-[12px] text-[var(--color-muted)]">{row.chest}</td>
-                      <td className="px-4 py-2.5 font-manrope text-[12px] text-[var(--color-muted)]">{row.waist}</td>
-                      <td className="px-4 py-2.5 font-manrope text-[12px] text-[var(--color-muted)]">{row.hips}</td>
+                      <td className="px-4 py-2.5 font-display text-[12px] text-zinc-500">{row.size}</td>
+                      <td className="px-4 py-2.5 font-display text-[12px] text-zinc-500">{row.chest}</td>
+                      <td className="px-4 py-2.5 font-display text-[12px] text-zinc-500">{row.waist}</td>
+                      <td className="px-4 py-2.5 font-display text-[12px] text-zinc-500">{row.hips}</td>
                     </tr>
                   ))}
                 </tbody>
               </table>
             )}
 
-            <p className="mt-4 font-manrope text-[11px] leading-[1.8] text-[var(--color-muted-soft)]">
+            <p className="mt-4 font-display text-[11px] leading-[1.8] text-zinc-400">
               Measurements are approximate. If you are between sizes we recommend sizing up.
             </p>
           </div>

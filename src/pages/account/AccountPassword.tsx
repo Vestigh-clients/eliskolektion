@@ -112,7 +112,7 @@ const AccountPassword = () => {
 
   return (
     <div>
-      <h1 className="font-manrope text-lg font-bold tracking-tight uppercase text-zinc-900">Change Password</h1>
+      <h1 className="font-display text-lg font-bold tracking-tight uppercase text-zinc-900">Change Password</h1>
 
       <form onSubmit={handleSubmit} className="mt-5 max-w-[400px]">
         <AccountInputField
@@ -191,7 +191,7 @@ const AccountPassword = () => {
         <button
           type="submit"
           disabled={isSubmitting}
-          className="mt-6 bg-zinc-900 px-8 py-3 font-manrope font-black text-[11px] uppercase tracking-widest text-white transition-colors hover:bg-[#E8A811] hover:text-black disabled:cursor-not-allowed disabled:opacity-65"
+          className="mt-6 bg-[#E8A811] text-black px-8 py-3 font-display font-black text-[11px] uppercase tracking-widest transition-colors hover:bg-zinc-900 hover:text-white disabled:cursor-not-allowed disabled:opacity-65"
         >
           {isSubmitting ? "Updating..." : "Update Password"}
         </button>

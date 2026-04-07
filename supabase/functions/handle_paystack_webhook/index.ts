@@ -1,4 +1,4 @@
-import { createHmac } from "https://deno.land/std@0.168.0/node/crypto.ts";
+import { createHmac } from "node:crypto";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.58.0";
 
 const jsonResponse = (status: number, body: Record<string, unknown>) =>

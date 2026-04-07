@@ -1,6 +1,6 @@
 This favicon was generated using the following font:
 
-- Font Title: Ledger
+- Font Title: Leckerli One
 - Font Author: undefined
-- Font Source: https://fonts.gstatic.com/s/ledger/v16/j8_q6-HK1L3if_sxm8DwHTBhHw.ttf
+- Font Source: https://fonts.gstatic.com/s/leckerlione/v21/V8mCoQH8VCsNttEnxnGQ-1itLZxcBtItFw.ttf
 - Font License: undefined)

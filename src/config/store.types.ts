@@ -30,6 +30,7 @@ export type CategoryPageConfig = {
 
 export type PaymentsConfig = {
   mode: PaymentMode;
+  storeId: string;
   paystack: {
     publicKey: string;
     subaccount: {

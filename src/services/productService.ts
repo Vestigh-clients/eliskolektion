@@ -439,9 +439,45 @@ export const getTopSellingProductIds = async (limit = 4): Promise<string[]> => {
     .filter((productId): productId is string => typeof productId === "string" && productId.length > 0);
 };
 
-// Fetch related products
-// (same category, exclude current product)
-export const getRelatedProducts = async (categoryId: string, excludeProductId: string, limit = 3) => {
+const BRAND_TAG_PREFIX = "brand:";
+
+const extractBrandTag = (tags: string[] | undefined): string | null => {
+  const tag = (tags ?? []).find((t) => t.toLowerCase().startsWith(BRAND_TAG_PREFIX));
+  return tag ? tag.toLowerCase() : null;
+};
+
+const scoreCandidate = (source: Product, candidate: Product): number => {
+  let score = 0;
+
+  // Same category: strong signal
+  if (candidate.categories?.id === source.categories?.id) score += 3;
+
+  // Same brand: strong signal
+  const sourceBrand = extractBrandTag(source.tags);
+  const candidateBrand = extractBrandTag(candidate.tags);
+  if (sourceBrand && candidateBrand && sourceBrand === candidateBrand) score += 3;
+
+  // Shared non-brand tags: moderate signal (1 point each, up to 4)
+  const sourceTags = new Set(
+    (source.tags ?? [])
+      .filter((t) => !t.toLowerCase().startsWith(BRAND_TAG_PREFIX))
+      .map((t) => t.toLowerCase().trim()),
+  );
+  const sharedTags = (candidate.tags ?? [])
+    .filter((t) => !t.toLowerCase().startsWith(BRAND_TAG_PREFIX) && sourceTags.has(t.toLowerCase().trim()));
+  score += Math.min(sharedTags.length, 4);
+
+  // Price within ±30% of source price: moderate signal
+  if (source.price > 0) {
+    const ratio = candidate.price / source.price;
+    if (ratio >= 0.7 && ratio <= 1.3) score += 2;
+  }
+
+  return score;
+};
+
+// Fetch related products scored by brand, tag overlap, and price similarity
+export const getRelatedProducts = async (source: Product, limit = 4): Promise<Product[]> => {
   const { data, error } = await (supabase as any)
     .from("products_with_stock")
     .select(`
@@ -452,14 +488,21 @@ export const getRelatedProducts = async (categoryId: string, excludeProductId: s
       in_stock,
       is_available,
       has_variants,
-      images,
+      images, tags,
       categories ( id, name, slug )
     `)
     .eq("is_available", true)
-    .eq("category_id", categoryId)
-    .neq("id", excludeProductId)
-    .limit(limit);
+    .neq("id", source.id)
+    .limit(80);
 
   if (error) throw error;
-  return mapProducts(data);
+
+  const candidates = mapProducts(data) as Product[];
+
+  return candidates
+    .map((c) => ({ product: c, score: scoreCandidate(source, c) }))
+    .filter(({ score }) => score > 0)
+    .sort((a, b) => b.score - a.score || b.product.price - a.product.price)
+    .slice(0, limit)
+    .map(({ product }) => product);
 };

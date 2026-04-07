@@ -10,7 +10,7 @@ interface RouteGuardProps {
 
 const GuardLoadingScreen = () => (
   <div className="flex min-h-screen items-center justify-center bg-[var(--color-secondary)] px-6">
-    <p className="font-body text-[12px] uppercase tracking-[0.14em] text-[var(--color-muted)]">Loading...</p>
+    <p className="font-body text-[12px] uppercase tracking-[0.14em] text-zinc-500">Loading...</p>
   </div>
 );
 

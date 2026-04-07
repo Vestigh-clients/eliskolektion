@@ -97,20 +97,20 @@ const Footer = () => {
     setNewsletterEmail("");
   };
 
-  const linkClass = "text-zinc-500 text-[10px] uppercase tracking-widest font-bold font-manrope hover:text-[#E8A811] transition-colors";
-  const headingClass = "text-[11px] font-black uppercase tracking-widest text-black mb-4 md:mb-8 font-manrope";
+  const linkClass = "text-zinc-500 text-[10px] uppercase tracking-widest font-bold font-display hover:text-[#E8A811] transition-colors";
+  const headingClass = "text-[11px] font-black uppercase tracking-widest text-black mb-4 md:mb-8 font-display";
 
   return (
     <footer className="bg-white border-t border-zinc-100 pt-4 pb-4">
       <div className="px-6 w-full max-w-[1440px] mx-auto md:px-8">
         {/* Main grid */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-x-6 gap-y-10 md:gap-16 mb-10 md:mb-14">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-x-6 gap-y-10 md:gap-16 mb-4 md:mb-4">
           {/* Brand */}
           <div>
-            <div className="text-xl font-black text-black uppercase mb-6 tracking-tighter italic font-manrope">
+            <div className="text-xl font-black text-black uppercase mb-6 tracking-tighter italic font-display">
               {storefrontConfig.storeName}
             </div>
-            <p className="text-zinc-400 text-[11px] max-w-xs leading-relaxed uppercase tracking-[0.2em] font-medium font-manrope">
+            <p className="text-zinc-400 text-[11px] max-w-xs leading-relaxed uppercase tracking-[0.2em] font-medium font-display">
               {contentConfig.footer.description}
             </p>
           </div>
@@ -152,10 +152,10 @@ const Footer = () => {
           {/* Newsletter + Social */}
           <div>
             <h5 className={headingClass}>Join the Kolektion</h5>
-            <p className="text-zinc-400 text-[10px] uppercase tracking-[0.2em] font-medium font-manrope mb-6">
+            <p className="text-zinc-400 text-[10px] uppercase tracking-[0.2em] font-medium font-display mb-6">
               Early access to drops and exclusive pricing.
             </p>
-            <form onSubmit={handleNewsletterSubmit} className="mb-10">
+            <form onSubmit={handleNewsletterSubmit} className="mb-4">
               <div className="flex border-b border-zinc-300 pb-3 focus-within:border-[#E8A811] transition-colors">
                 <input
                   type="email"
@@ -163,11 +163,11 @@ const Footer = () => {
                   onChange={(e) => setNewsletterEmail(e.target.value)}
                   required
                   placeholder="ENTER YOUR EMAIL"
-                  className="bg-transparent border-none focus:ring-0 focus:outline-none text-[10px] font-bold uppercase tracking-widest w-full p-0 placeholder:text-zinc-400 font-manrope"
+                  className="bg-transparent border-none focus:ring-0 focus:outline-none text-[10px] font-bold uppercase tracking-widest w-full p-0 placeholder:text-zinc-400 font-display"
                 />
                 <button
                   type="submit"
-                  className="text-[10px] font-black uppercase tracking-widest ml-4 hover:text-[#E8A811] transition-colors whitespace-nowrap font-manrope"
+                  className="text-[10px] font-black uppercase tracking-widest ml-4 hover:text-[#E8A811] transition-colors whitespace-nowrap font-display"
                 >
                   Join Now
                 </button>
@@ -198,7 +198,7 @@ const Footer = () => {
 
         {/* Bottom bar */}
         <div className="flex flex-col md:flex-row justify-between items-center gap-6 border-t border-zinc-100 pt-2">
-          <div className="text-[10px] text-zinc-400 uppercase tracking-[0.2em] font-bold font-manrope">
+          <div className="text-[10px] text-zinc-400 uppercase tracking-[0.2em] font-bold font-display">
             &copy; {new Date().getFullYear()} {storefrontConfig.storeName}. Crafted for the Digital Curator.
           </div>
           <div className="flex gap-6">
